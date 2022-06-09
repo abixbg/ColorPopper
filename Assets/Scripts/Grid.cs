@@ -1,27 +1,36 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 
 public class Grid : MonoBehaviour
 {
     public Slot slotPrefab;
     public Dot dotPrefab;
     public Loot lootPrefab;
+    public BoardCellGenerator generator;
     
 
-    public float offset;
+    public float CellSize;
 
     public int countX;
     public int countY;
 
     public ColorPalette colorPalette;
 
-    public Slot[] gridSlots;
+    public List<Slot> gridSlots;
     public List<Color> dotColors;
+
+    private void Awake()
+    {
+        generator.Construct(new int2(countX, countY), CellSize, slotPrefab, gameObject.transform);
+        generator.GenerateCells();
+        gridSlots = generator.Slots;
+    }
 
     void Start()
     {
-        GenerateSlots();
+
         LockWithDots();
         FillWithLoot();
 
@@ -64,7 +73,7 @@ public class Grid : MonoBehaviour
     {
         if (dotColors.Count > 0 )
         {
-            int index = Random.Range(0, dotColors.Count);
+            int index = UnityEngine.Random.Range(0, dotColors.Count);
             ///Debug.Log(dotColors.Count);
             return dotColors[index];
         }
@@ -72,10 +81,10 @@ public class Grid : MonoBehaviour
     }
 
     // instantiates slot objects in grid
-    public void GenerateSlots()
+    public void GenerateCells()
     {
         int count = countX * countY;
-        gridSlots = new Slot[count];
+        gridSlots = new List<Slot>();
 
         int index = 0;
 
@@ -83,10 +92,10 @@ public class Grid : MonoBehaviour
         {
             for (int j = 0; j < countY; j++)
             {
-                Vector3 pos = new Vector3(i * offset, j * offset, 0) + transform.position;
+                Vector3 pos = new Vector3(i * CellSize, j * CellSize, 0) + transform.position;
 
                 //instantiating dots in grid
-                gridSlots[index] = Instantiate(slotPrefab, pos, Quaternion.identity) as Slot;
+                gridSlots.Add(Instantiate(slotPrefab, pos, Quaternion.identity));
 
                 //make slots gameobjects parent of grid
                 gridSlots[index].transform.parent = gameObject.transform;
@@ -99,7 +108,7 @@ public class Grid : MonoBehaviour
     // fills the grid with dot gameobjects
     public void LockWithDots()
     {
-        for (int i = 0; i < gridSlots.Length; i++)
+        for (int i = 0; i < gridSlots.Count; i++)
         {
             //instantiating dots in grid
             gridSlots[i].keyhole = Instantiate(dotPrefab, gridSlots[i].transform.position, Quaternion.identity) as Dot;
@@ -115,7 +124,7 @@ public class Grid : MonoBehaviour
 
     public void FillWithLoot()
     { 
-        for (int i = 0; i < gridSlots.Length; i++)
+        for (int i = 0; i < gridSlots.Count; i++)
         {
             //instantiating dots in grid
             gridSlots[i].loot = Instantiate(lootPrefab, gridSlots[i].transform.position, Quaternion.identity) as Loot;

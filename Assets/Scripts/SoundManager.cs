@@ -7,6 +7,9 @@ public class SoundManager : MonoBehaviour
     public static SoundManager current;
 
     public AudioSource[] dotPop;
+    public AudioSource LootActivate;
+    public AudioSource LootBreak;
+    public AudioSource CellOpen;
     public AudioSource dotFail;
     public AudioSource collectorColorChange;
 
@@ -20,16 +23,4 @@ public class SoundManager : MonoBehaviour
 
         //DontDestroyOnLoad(gameObject);       
     }
-
-    // Use this for initialization
-    void Start ()
-    {
-	    
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-	
-	}
 }

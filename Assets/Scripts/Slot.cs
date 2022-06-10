@@ -5,7 +5,9 @@ using System.Collections;
 public class Slot : MonoBehaviour
 {
     public Dot keyhole { get; set; }
-    public Loot loot;
+    
+    [SerializeField] private Loot loot;
+    public Loot Loot { get => loot; set => loot = value; }
 
     public int index;
 
@@ -51,11 +53,24 @@ public class Slot : MonoBehaviour
         border.enabled = false;
 
         // activate slot contents
-        loot.Activate();
+        if (loot != null)
+        {
+            loot.Activate();
+        }
+        else
+        {
+            SoundManager.current.CellOpen.Play();
+        }
+            
 
         // disable dot
         keyhole.gameObject.SetActive(false);
 
+        //switches colorcollector by % chance
+        if (Random.value <= 0.3f)
+        {
+            GameManager.current.currentDotCollector.SwitchAcceptedColor();
+        }
     }
 
     void BreakSlot()
@@ -67,7 +82,12 @@ public class Slot : MonoBehaviour
         border.color = new Color32(140,30,30,255);
 
         //disable slot contents
-        loot.Break();
+        if (loot != null)
+        {
+            loot.Break();
+        }
+
+        SoundManager.current.LootBreak.Play();
 
         // disable dot
         keyhole.gameObject.SetActive(false);

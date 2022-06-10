@@ -141,11 +141,16 @@ public class Grid : MonoBehaviour
     { 
         for (int i = 0; i < gridSlots.Count; i++)
         {
-            //instantiating dots in grid
-            gridSlots[i].loot = Instantiate(lootPrefab, gridSlots[i].transform.position, Quaternion.identity) as Loot;
+            bool hasLoot = UnityEngine.Random.value >= 0.6f;
 
-            //make dot gameobjects parent of slot
-            gridSlots[i].loot.transform.parent = gridSlots[i].transform;
+            if (hasLoot)
+            {
+                //instantiating dots in grid
+                gridSlots[i].Loot = Instantiate(lootPrefab, gridSlots[i].transform.position, Quaternion.identity) as Loot;
+
+                //make dot gameobjects parent of slot
+                gridSlots[i].Loot.transform.parent = gridSlots[i].transform;
+            }
         }
     }
 

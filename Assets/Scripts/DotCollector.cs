@@ -1,15 +1,21 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
 
 public class DotCollector : MonoBehaviour
 {
 
-    public Color acceptedColor;
+    [SerializeField] private Color acceptedColor;
     public SpriteRenderer spriteColor;
     // Use this for initialization
 
+    public Color AcceptedColor { get => acceptedColor; }
 
+    public event Action AcceptedColorChanged;
 
+    public void Init()
+    {
+        SwitchAcceptedColor();
+    }
 
     public bool IsAcceptableColor(Color col)
     {
@@ -18,22 +24,25 @@ public class DotCollector : MonoBehaviour
         return foo;
     }
 
-    
-
-
-
     public void SwitchAcceptedColor()
     {
-        Debug.Log("set new color collector");
+        var current = acceptedColor;
 
-        //play sound when color changes
-        SoundManager.current.collectorColorChange.Play();
+        Debug.Log("pick new color collector");
 
         //get random color from the remaining in the grid
         acceptedColor = GameManager.current.currentGrid.GetRandomColor();
 
-        //set accepted color
-        spriteColor.color = acceptedColor;
+        //play sound when color changes
+        if (acceptedColor != current)
+        {
+            //there is actual change of the color so notify the player
+            SoundManager.current.collectorColorChange.Play();
+            //set accepted color
+            spriteColor.color = acceptedColor;
+        }     
+
+        AcceptedColorChanged?.Invoke();
     }
 
 

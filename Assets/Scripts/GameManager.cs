@@ -28,15 +28,12 @@ public class GameManager : MonoBehaviour
     void Start ()
     {
         // currentDotCollector.SetAcceptedColor(Color.blue);
-        Debug.LogError("GameManager", gameObject);
+
+        currentDotCollector.Init();
     }
 
     public void CmdRestartScene()
     {
         SceneManager.LoadScene(0, LoadSceneMode.Single);
     }
-
-
-
-
 }

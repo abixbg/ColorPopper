@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     //public UIPlayerInput playerUiInput;
     public UIScorePanel scorePanel;
     public UIClockPanel clockPanlel;
+    public AcceptedColorPanel acceptedColorPanel;
 
 
     void Awake()
@@ -21,8 +22,5 @@ public class UIManager : MonoBehaviour
             current = this;
         else if (current != this)
             Destroy(gameObject);
-
-        //DontDestroyOnLoad(gameObject);
     }
-
 }

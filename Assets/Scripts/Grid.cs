@@ -13,7 +13,8 @@ public class Grid : MonoBehaviour
     public BoardCellGenerator generator;
 
     public CameraScreenFit gameView;
-    
+
+    [SerializeField] private ColorPalette colorPalette;
 
     public float CellSize;
 
@@ -22,7 +23,7 @@ public class Grid : MonoBehaviour
     [SerializeField] private float2 _boardSize;
     public float2 BoardSize { get => _boardSize; }
 
-    public ColorPalette colorPalette;
+    private BubblePoolColors bubblePool;
 
     public List<Slot> gridSlots;
     public List<Color> dotColors;
@@ -31,6 +32,8 @@ public class Grid : MonoBehaviour
 
     private void Awake()
     {
+        bubblePool = new BubblePoolColors(colorPalette);
+
         float halfcell = CellSize * 0.5f;
 
         generator.Construct(new int2(countX, countY), CellSize, slotPrefab, gameObject.transform);
@@ -129,7 +132,7 @@ public class Grid : MonoBehaviour
             gridSlots[i].keyhole.transform.parent = gridSlots[i].transform;
 
             //assigning colors from the palette
-            gridSlots[i].keyhole.SetColor(colorPalette.GetRandomColor());
+            gridSlots[i].keyhole.SetColor(bubblePool.GetRandomColor());
         }
     }
 

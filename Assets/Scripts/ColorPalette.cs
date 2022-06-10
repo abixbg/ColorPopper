@@ -1,16 +1,11 @@
-﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class ColorPalette : MonoBehaviour
+[CreateAssetMenu(fileName = "colorPallete", menuName = "Assets/palete")]
+public class ColorPalette : ScriptableObject
 {
+    [SerializeField] private List<Color> paletteColors;
 
-    //public int size;
-    public Color[] paletteColor;
-
-    public Color GetRandomColor()
-    {
-        int index = Random.Range(0, paletteColor.Length);
-
-        return paletteColor[index];
-    }
+    public List<Color> Colors { get => paletteColors; }
 }

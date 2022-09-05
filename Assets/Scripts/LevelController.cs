@@ -9,6 +9,12 @@ public class LevelController
     public Color AcceptedColor { get => _acceptedColor; }
 
     public event Action AcceptedColorChanged;
+    public event Action LevelPhaseChanged; //NOTE: for now only called once on level start 
+
+    public void SetPhaseInitialize()
+    {
+        LevelPhaseChanged?.Invoke();
+    }
 
     public void StartLevel()
     {

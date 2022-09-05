@@ -5,7 +5,7 @@ using Unity.Mathematics;
 
 public class CameraScreenFit : MonoBehaviour
 {
-    public Grid board;
+    public Board board;
 
     public float unitsPerPixel;
     public Transform quad;
@@ -51,7 +51,7 @@ public class CameraScreenFit : MonoBehaviour
 
     private void HandleBoardChanged()
     {
-        ZoomTo(board.BoardSize.x);
+        ZoomTo(board.BoardRect.x);
     }
 
     private void ZoomTo(float width)

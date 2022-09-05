@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public int dotScore;
 
     private LevelController levelController;
-    public Grid currentGrid;
+    public Board currentGrid;
     public Countdown remainingCountdown;
 
     public LevelController Level => levelController;
@@ -30,8 +30,11 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         remainingCountdown = new Countdown(defaultLevelCountdownSec);
-        //currentDotCollector.Init();
         levelController = new LevelController();
+
+        currentGrid.Construct(levelController);
+
+        levelController.SetPhaseInitialize();
         levelController.StartLevel();
 
         UIManager.Instance.Init(this);

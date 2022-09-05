@@ -14,21 +14,18 @@ namespace Popper.UI.Panels
 
         public float3 LootCollectionWorldPos => GetCollectorWorldPos(Camera.main);
 
-        //services
-        private GameManager _gameManager;
-        private LevelController _level;
-
-        public void Construct(GameManager gameManager, LevelController level)
+        public void Construct(GameManager gameManager, LevelController level, ScoreController score)
         {
-            _gameManager = gameManager;
-            _level = level;
+            btnReset.onClick.AddListener(delegate {gameManager.CmdRestartScene(); });
 
-            btnReset.onClick.AddListener(delegate { _gameManager.CmdRestartScene(); });
-
-            acceptedColorPanel.Construct(_level);
+            acceptedColorPanel.Construct(level);
             acceptedColorPanel.SetInitialState();
 
+            scorePanel.Construct(score);
+            scorePanel.SetInitialState();
+
             clockPanlel.Construct(level.Countdown);
+
         }
 
         private void OnDestroy()

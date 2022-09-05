@@ -25,8 +25,7 @@ public class Loot : MonoBehaviour
         GameManager.current.Level.SwitchAcceptedColor();
 
         // give points for that 
-        GameManager.current.dotScore += 10;
-        UIManager.Instance.TopPanel.scorePanel.UpdateValues(GameManager.current.dotScore);
+        GameManager.current.Score.AddPointsLevel(10);
 
         //add bonus time for collecting correct
         //GameManager.current.remainingCountdown.AddTime(0.5F); //TODO: only Time Buff loot will add time!!!

@@ -27,7 +27,7 @@ namespace Popper.UI
         public void Init(GameManager gameManager)
         {
             _topPanel = Instantiate(topPanelPrefab, safeArea, false);
-            _topPanel.Construct(gameManager, gameManager.Level);
+            _topPanel.Construct(gameManager, gameManager.Level, gameManager.Score);
         }
     }
 }

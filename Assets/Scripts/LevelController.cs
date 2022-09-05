@@ -4,22 +4,35 @@ using UnityEngine;
 
 public class LevelController
 {
+    private LevelConfigData _levelData;
     private Color _acceptedColor;
 
     public Color AcceptedColor { get => _acceptedColor; }
+    public LevelConfigData Config => _levelData;
 
     public event Action AcceptedColorChanged;
+    public event Action LevelPhaseChanged; //NOTE: for now only called once on level start 
+
+    public LevelController(LevelConfigData levelData)
+    {
+        _levelData = levelData;
+    }
+
+    public void SetPhaseInitialize()
+    {
+        Debug.Log("[Level] Initialilze!");
+        LevelPhaseChanged?.Invoke();
+    }
 
     public void StartLevel()
     {
+        Debug.Log("[Level] Start!");
         SwitchAcceptedColor();
     }
 
     public void SwitchAcceptedColor()
     {
         var current = _acceptedColor;
-
-        Debug.Log("pick new color collector");
 
         //get random color from the remaining in the grid
         _acceptedColor = GameManager.current.currentGrid.GetRandomColor();

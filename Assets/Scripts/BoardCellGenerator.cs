@@ -8,11 +8,6 @@ using Unity.Mathematics;
 /// </summary>
 public class BoardCellGenerator : MonoBehaviour
 {
-    // instantiates slot objects in grid
-    //[SerializeField] private int2 srBoardSize;
-    //[SerializeField] private float srCellSize;
-    //[SerializeField] private Slot srSlotPrefab;
-
     [SerializeField] private List<float3> cellRootCoordiantes;
     [SerializeField] private List<CellData> cellCoordinatesData;
 
@@ -25,9 +20,9 @@ public class BoardCellGenerator : MonoBehaviour
 
     public List<Slot> Slots { get => _gridSlots; }
 
-    public void Construct(int2 boardSize, float cellSize, Slot slotPrefab, Transform origin)
+    public void Construct(LevelConfigData levelData, float cellSize, Slot slotPrefab, Transform origin)
     {
-        this.boardSize = boardSize;
+        this.boardSize = levelData.BoardSize;
         this.cellSize = cellSize;
         this.slotPrefab = slotPrefab;
         this.origin = new float3(origin.position.x, origin.position.y, origin.position.z);

@@ -5,14 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private int defaultLevelCountdownSec;
-    public static GameManager current;
-    public int currentDifficultyLevel;
+    //[SerializeField] private int defaultLevelCountdownSec;
+    [SerializeField] private LevelConfigAsset levelAsset;
 
+    public static GameManager current;
     public int dotScore;
 
     private LevelController levelController;
-    public Grid currentGrid;
+    public Board currentGrid;
     public Countdown remainingCountdown;
 
     public LevelController Level => levelController;
@@ -29,9 +29,13 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        remainingCountdown = new Countdown(defaultLevelCountdownSec);
-        //currentDotCollector.Init();
-        levelController = new LevelController();
+        
+        levelController = new LevelController(levelAsset.Data);
+
+        currentGrid.Construct(levelController);
+        remainingCountdown = new Countdown(levelController.Config.TimeSec);
+
+        levelController.SetPhaseInitialize();
         levelController.StartLevel();
 
         UIManager.Instance.Init(this);

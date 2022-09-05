@@ -5,24 +5,21 @@ using System.Collections;
 public class Loot : MonoBehaviour
 {
     private EventBus _events;
+    private UIManager _ui;
 
-    public void Construct(EventBus events)
+    public void Construct(EventBus events, UIManager uiManager)
     {
         _events = events;
+        _ui = uiManager;
     }
 
     public void Activate()
     {
-        // activete pop sound
-        //int popSoundId = Random.Range(0, SoundManager.current.dotPop.Length - 1);
-        //SoundManager.current.dotPop[popSoundId].Play();
-        SoundManager.current.LootActivate.Play();
+        //broadcast event
+        _events.InvokeLootActivated();
 
         // move graphic to the collector
         StartCoroutine(MoveTooCollector());
-
-        //broadcast event
-        _events.InvokeLootActivated();
     }
 
     // destroys loot
@@ -34,9 +31,9 @@ public class Loot : MonoBehaviour
     IEnumerator MoveTooCollector()
     {
         float speed = 15f;
-        while (gameObject.transform.position != UIManager.Instance.LootDestinationWorldPos)
+        while (gameObject.transform.position !=_ui.LootDestinationWorldPos)
         {
-            gameObject.transform.position = Vector2.MoveTowards(gameObject.transform.position, UIManager.Instance.LootDestinationWorldPos, speed * Time.deltaTime);
+            gameObject.transform.position = Vector2.MoveTowards(gameObject.transform.position, _ui.LootDestinationWorldPos, speed * Time.deltaTime);
             yield return null;
         }
     }

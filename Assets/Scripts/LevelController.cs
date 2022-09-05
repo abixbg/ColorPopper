@@ -12,7 +12,6 @@ public class LevelController : ILootActivated
     public Color AcceptedColor { get => _acceptedColor; }
     public LevelConfigData Config => _levelData;
     public Countdown Countdown => countdown;
-    
 
     public float TimeRemaining => countdown.TimeRemaining;
 

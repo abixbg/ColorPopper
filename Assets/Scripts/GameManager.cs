@@ -4,6 +4,7 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private int defaultLevelCountdownSec;
 
     public static GameManager current;
     public int currentDifficultyLevel;
@@ -28,8 +29,13 @@ public class GameManager : MonoBehaviour
     void Start ()
     {
         // currentDotCollector.SetAcceptedColor(Color.blue);
-
+        remainingCountdown = new Countdown(defaultLevelCountdownSec);
         currentDotCollector.Init();
+    }
+
+    private void Update()
+    {
+        remainingCountdown.OnGameClockUpdate(Time.deltaTime);
     }
 
     public void CmdRestartScene()

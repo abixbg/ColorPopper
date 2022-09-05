@@ -11,11 +11,14 @@ public class GameManager : MonoBehaviour
 
     private LevelController levelController;
     private ScoreController scoreController;
+    private EventBus events;
+
     public Board currentGrid;
 
     public LevelController Level => levelController;
 
     public ScoreController Score => scoreController;
+    public EventBus Events => events;
 
     void Awake()
     {
@@ -25,11 +28,13 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
 
         //DontDestroyOnLoad(gameObject);
+
+        events = new EventBus();
     }
 
     void Start()
     {
-        levelController = new LevelController(levelAsset.Data);
+        levelController = new LevelController(levelAsset.Data, events);
         scoreController = new ScoreController();
 
         currentGrid.Construct(levelController);

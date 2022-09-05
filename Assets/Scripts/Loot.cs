@@ -4,6 +4,13 @@ using System.Collections;
 
 public class Loot : MonoBehaviour
 {
+    private EventBus _events;
+
+    public void Construct(EventBus events)
+    {
+        _events = events;
+    }
+
     public void Activate()
     {
         // activete pop sound
@@ -14,21 +21,11 @@ public class Loot : MonoBehaviour
         // move graphic to the collector
         StartCoroutine(MoveTooCollector());
 
-        //switches colorcollector by % chance
-        if (Random.value <= 0.3f)
-        {
-            //Color nextColor = GameManager.current.currentGrid.colorPalette.GetRandomColor();
-            GameManager.current.Level.SwitchAcceptedColor();
-        }
-
-        //Always Switch Color on Loot activation
-        GameManager.current.Level.SwitchAcceptedColor();
-
         // give points for that 
         GameManager.current.Score.AddPointsLevel(10);
 
-        //add bonus time for collecting correct
-        //GameManager.current.remainingCountdown.AddTime(0.5F); //TODO: only Time Buff loot will add time!!!
+        //broadcast event
+        _events.InvokeLootActivated();
     }
 
     // destroys loot

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Popper.Events;
 
-public class LevelController
+public class LevelController : ILootActivated
 {
     private LevelConfigData _levelData;
     private Color _acceptedColor;
@@ -18,11 +19,12 @@ public class LevelController
     public event Action AcceptedColorChanged;
     public event Action LevelPhaseChanged; //NOTE: for now only called once on level start 
 
-    public LevelController(LevelConfigData levelData)
+    public LevelController(LevelConfigData levelData, EventBus levelEvents)
     {
         _levelData = levelData;
 
         countdown = new Countdown(levelData.TimeSec);
+        levelEvents.LootActivated += OnLootActivated;
     }
 
     public void SetPhaseInitialize()
@@ -59,5 +61,23 @@ public class LevelController
         bool foo = false;
         if (col == _acceptedColor) foo = true;
         return foo;
+    }
+
+    public void OnLootActivated()
+    {
+
+
+        //Always Switch Color on Loot activation
+        GameManager.current.Level.SwitchAcceptedColor();
+
+        Debug.Log("[Level] AddTime!");
+        countdown.AddTime(3);
+
+        //switches colorcollector by % chance
+        if (UnityEngine.Random.value <= 0.3f)
+        {
+            //Color nextColor = GameManager.current.currentGrid.colorPalette.GetRandomColor();
+            GameManager.current.Level.SwitchAcceptedColor();
+        }
     }
 }

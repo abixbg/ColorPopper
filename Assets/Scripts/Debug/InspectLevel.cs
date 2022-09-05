@@ -6,6 +6,7 @@ using UnityEngine;
 public class InspectLevel : MonoBehaviour
 {
     public Color acceptedColor;
+    public float time;
 
     private GameManager _gameManager;
     private void Awake()
@@ -17,6 +18,7 @@ public class InspectLevel : MonoBehaviour
         if (_gameManager.Level != null)
         {
             acceptedColor = _gameManager.Level.AcceptedColor;
+            time = _gameManager.Level.TimeRemaining;
         }
     }
 }

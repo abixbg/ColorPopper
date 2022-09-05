@@ -110,7 +110,7 @@ public class Board : MonoBehaviour
             {
                 //instantiating dots in grid
                 gridSlots[i].Loot = Instantiate(lootPrefab, gridSlots[i].transform.position, Quaternion.identity) as Loot;
-                gridSlots[i].Loot.Construct(GameManager.current.Events);
+                gridSlots[i].Loot.Construct(GameManager.current.Events, GameManager.current.UiManager);
 
                 //make dot gameobjects parent of slot
                 gridSlots[i].Loot.transform.parent = gridSlots[i].transform;

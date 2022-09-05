@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public ScoreController Score => scoreController;
     public EventBus Events => events;
     public SoundManager SoundManager => soundManager;
+    public UIManager UiManager => uiManager;
 
     void Awake()
     {

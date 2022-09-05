@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Data:
     boardSize:
-      x: 7
+      x: 5
       y: 7
+    timeSec: 47

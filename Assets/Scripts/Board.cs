@@ -18,9 +18,6 @@ public class Board : MonoBehaviour
     public BoardCellGenerator generator;
     public CameraScreenFit gameView;
 
-    [SerializeField] private LevelConfigAsset levelAsset;
-    private LevelConfigData levelData;
-
     private readonly float _cellRectSize = 1f;
     private LevelController _levelController;
     private LevelController LevelController => _levelController;
@@ -47,7 +44,7 @@ public class Board : MonoBehaviour
     void UpdateColorList()
     {
         dotColors.Clear();
-        for (int i = 0; i < levelData.BoardSize.x * levelData.BoardSize.y; i++)
+        for (int i = 0; i < LevelController.Config.BoardSize.x * LevelController.Config.BoardSize.y; i++)
         {
             if (dotColors.Contains(gridSlots[i].keyhole.color) == false)
             {
@@ -65,10 +62,10 @@ public class Board : MonoBehaviour
         UpdateColorList();
 
         // check if grid have unopened slots with collector color and switch it if not
-        if (dotColors.Contains(GameManager.current.Level.AcceptedColor) == false)
+        if (dotColors.Contains(LevelController.AcceptedColor) == false)
         {
             Debug.Log("nothing");
-            GameManager.current.Level.SwitchAcceptedColor();
+            LevelController.SwitchAcceptedColor();
         }
     }
 
@@ -126,19 +123,16 @@ public class Board : MonoBehaviour
 
         float halfcell = _cellRectSize * 0.5f;
 
-        generator.Construct(levelData, _cellRectSize, slotPrefab, gameObject.transform);
+        generator.Construct(LevelController.Config, _cellRectSize, slotPrefab, gameObject.transform);
         generator.GenerateCells();
         gridSlots = generator.Slots;
 
-        _boardRect = new float2(levelData.BoardSize.x * _cellRectSize + halfcell, levelData.BoardSize.y * _cellRectSize + halfcell);
+        _boardRect = new float2(LevelController.Config.BoardSize.x * _cellRectSize + halfcell, LevelController.Config.BoardSize.y * _cellRectSize + halfcell);
     }
 
 
     public void OnLevelPhaseInitialize()
     {
-        Debug.Log("GenerateGrid!");
-
-        levelData = levelAsset.Data;
         GenerateCells();
 
         LockWithDots(colorPalette);

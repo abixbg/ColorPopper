@@ -7,5 +7,7 @@ using Unity.Mathematics;
 public struct LevelConfigData
 {
     [SerializeField] private int2 boardSize;
+    [SerializeField] private int timeSec;
     public int2 BoardSize => boardSize;
+    public int TimeSec => timeSec;
 }

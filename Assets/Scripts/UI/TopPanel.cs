@@ -23,6 +23,9 @@ namespace Popper.UI.Panels
 
             scorePanel.Construct(score);
             scorePanel.SetInitialState();
+
+            clockPanlel.Construct(level.Countdown);
+
         }
 
         private void OnDestroy()

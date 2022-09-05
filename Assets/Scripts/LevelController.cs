@@ -6,9 +6,14 @@ public class LevelController
 {
     private LevelConfigData _levelData;
     private Color _acceptedColor;
+    private Countdown countdown;
 
     public Color AcceptedColor { get => _acceptedColor; }
     public LevelConfigData Config => _levelData;
+    public Countdown Countdown => countdown;
+    
+
+    public float TimeRemaining => countdown.TimeRemaining;
 
     public event Action AcceptedColorChanged;
     public event Action LevelPhaseChanged; //NOTE: for now only called once on level start 
@@ -16,6 +21,8 @@ public class LevelController
     public LevelController(LevelConfigData levelData)
     {
         _levelData = levelData;
+
+        countdown = new Countdown(levelData.TimeSec);
     }
 
     public void SetPhaseInitialize()

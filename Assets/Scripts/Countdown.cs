@@ -1,4 +1,5 @@
 ﻿using Popper.UI;
+using System;
 
 public class Countdown
 {
@@ -8,23 +9,19 @@ public class Countdown
         _timeRemaining = initialSec;
     }
 
-    public void OnGameClockUpdate(float deltaTime)
+    public float TimeRemaining => _timeRemaining;
+
+    public event Action ValueUpdated;
+
+    public void ConsumeTime(float deltaTime)
     {
         if (_timeRemaining > 0)
         {
             _timeRemaining -= deltaTime;
-
-            //TODO: Emit message that timer value changed (clock UI should be subscribed)
-            UIManager.Instance.TopPanel.clockPanlel.timeText.text = FormatToSec(_timeRemaining);
+            ValueUpdated?.Invoke();
         }
     }
 
-    string FormatToSec(float time)
-    {
-        int roundedToInt = (int)time;
-        string formatedTimeString = roundedToInt.ToString();
-        return formatedTimeString;
-    }
 
     public void AddTime(float time)
     {

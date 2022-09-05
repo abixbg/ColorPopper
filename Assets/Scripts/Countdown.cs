@@ -1,20 +1,20 @@
 ﻿using Popper.UI;
 using UnityEngine;
-using System.Collections;
 
-public class Countdown : MonoBehaviour {
+public class Countdown : MonoBehaviour
+{
 
     public float timeFrom;
     float timeRemaining;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start()
     {
         timeRemaining = timeFrom;
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    }
+
+    // Update is called once per frame
+    void Update()
     {
         if (timeRemaining > 0)
         {
@@ -22,7 +22,7 @@ public class Countdown : MonoBehaviour {
             UIManager.Instance.TopPanel.clockPanlel.timeText.text = FormatToSec(timeRemaining);
         }
 
-	}
+    }
 
     string FormatToSec(float time)
     {

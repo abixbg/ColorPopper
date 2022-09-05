@@ -7,11 +7,24 @@ namespace Popper.UI.Panels
     {
         public UIScorePanel scorePanel;
         public UIClockPanel clockPanlel;
+        public AcceptedColorPanel acceptedColorPanel;
         public Button btnReset;
 
-        private void Start()
+        //services
+        private GameManager _gameManager;
+        private LevelController _level;
+        private DotCollector _collector;
+
+        public void Construct(GameManager gameManager, LevelController level, DotCollector collector)
         {
-            btnReset.onClick.AddListener(delegate { GameManager.current.CmdRestartScene(); });
+            _gameManager = gameManager;
+            _level = level;
+            _collector = collector;
+
+            btnReset.onClick.AddListener(delegate { _gameManager.CmdRestartScene(); });
+
+            acceptedColorPanel.Construct(_level, _collector);
+            acceptedColorPanel.SetInitialState();
         }
 
         private void OnDestroy()

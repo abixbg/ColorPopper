@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Popper.UI;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private int defaultLevelCountdownSec;
+    [SerializeField] private Transform lootDestination; //Where loot icons will go and be destroyed
 
     public static GameManager current;
     public int currentDifficultyLevel;
@@ -12,10 +14,15 @@ public class GameManager : MonoBehaviour
     public int dotScore;
 
     public DotCollector currentDotCollector;
+    private LevelController levelController;
     public Grid currentGrid;
     public Countdown remainingCountdown;
     //public Transform collectorPosition;
-    
+
+    public LevelController Level => levelController;
+    public Transform LootDestination => lootDestination;
+
+
     void Awake()
     {
         if (current == null)
@@ -23,14 +30,17 @@ public class GameManager : MonoBehaviour
         else if (current != this)
             Destroy(gameObject);
 
-        //DontDestroyOnLoad(gameObject);       
+        //DontDestroyOnLoad(gameObject);
     }
 
     void Start ()
     {
-        // currentDotCollector.SetAcceptedColor(Color.blue);
         remainingCountdown = new Countdown(defaultLevelCountdownSec);
-        currentDotCollector.Init();
+        //currentDotCollector.Init();
+        levelController = new LevelController(currentDotCollector);
+        levelController.StartLevel();
+
+        UIManager.Instance.Init(this);
     }
 
     private void Update()

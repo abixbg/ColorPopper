@@ -4,8 +4,6 @@ using System.Collections;
 [System.Serializable]
 public class Dot : MonoBehaviour
 {
-
-
     // the color of the dot
     [SerializeField]
     Color dotColor;
@@ -33,11 +31,11 @@ public class Dot : MonoBehaviour
 
     public bool TryUnlock()
     {
-        if (GameManager.current.currentDotCollector.IsAcceptableColor(color) == true)
+        if (GameManager.current.Level.IsAcceptableColor(color) == true)
         {
             return true;
         }
-        else return false;        
+        else return false;
     }
 
 }

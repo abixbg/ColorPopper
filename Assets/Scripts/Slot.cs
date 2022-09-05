@@ -69,7 +69,7 @@ public class Slot : MonoBehaviour
         //switches colorcollector by % chance
         if (Random.value <= 0.3f)
         {
-            GameManager.current.currentDotCollector.SwitchAcceptedColor();
+            GameManager.current.Level.SwitchAcceptedColor();
         }
     }
 

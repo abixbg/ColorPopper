@@ -6,24 +6,35 @@ using UnityEngine.UI;
 public class AcceptedColorPanel : MonoBehaviour
 {
     [SerializeField] private Image colorImage; 
-    [SerializeField] private DotCollector collector;
+    private DotCollector _collector;
+    private LevelController _level;
 
+    private DotCollector Collector => _collector;
+    private LevelController Level => _level;
 
-    private void Start()
+    #region Unity MonoBehaviour
+    private void OnDestroy()
     {
-        collector = GameManager.current.currentDotCollector;
-        collector.AcceptedColorChanged += OnAcceptedColorChanged;
-        SetColor(collector.AcceptedColor);
+        Level.AcceptedColorChanged -= OnAcceptedColorChanged;
+    }
+    #endregion
+
+    public void Construct(LevelController level, DotCollector collector)
+    {
+        _level = level;
+        _collector = collector;
+
+        _level.AcceptedColorChanged += OnAcceptedColorChanged;
     }
 
-    private void OnDisable()
-    {        
-        collector.AcceptedColorChanged -= OnAcceptedColorChanged;
+    public void SetInitialState()
+    {
+        SetColor(Level.AcceptedColor);
     }
 
     private void OnAcceptedColorChanged()
     {
-        SetColor(collector.AcceptedColor);
+        SetColor(Level.AcceptedColor);
     }
 
     private void SetColor(Color color)

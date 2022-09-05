@@ -1,16 +1,15 @@
-using System.Collections;
+using Unity.Mathematics;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class AcceptedColorPanel : MonoBehaviour
 {
-    [SerializeField] private Image colorImage; 
-    private DotCollector _collector;
+    [SerializeField] private Image colorImage;
     private LevelController _level;
 
-    private DotCollector Collector => _collector;
     private LevelController Level => _level;
+
 
     #region Unity MonoBehaviour
     private void OnDestroy()
@@ -19,11 +18,9 @@ public class AcceptedColorPanel : MonoBehaviour
     }
     #endregion
 
-    public void Construct(LevelController level, DotCollector collector)
+    public void Construct(LevelController level)
     {
         _level = level;
-        _collector = collector;
-
         _level.AcceptedColorChanged += OnAcceptedColorChanged;
     }
 

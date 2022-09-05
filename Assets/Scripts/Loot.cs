@@ -41,9 +41,9 @@ public class Loot : MonoBehaviour
     IEnumerator MoveTooCollector()
     {
         float speed = 15f;
-        while (gameObject.transform.position != GameManager.current.LootDestination.position)
+        while (gameObject.transform.position != UIManager.Instance.LootDestinationWorldPos)
         {
-            gameObject.transform.position = Vector2.MoveTowards(gameObject.transform.position, GameManager.current.LootDestination.position, speed * Time.deltaTime);
+            gameObject.transform.position = Vector2.MoveTowards(gameObject.transform.position, UIManager.Instance.LootDestinationWorldPos, speed * Time.deltaTime);
             yield return null;
         }
     }

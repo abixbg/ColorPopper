@@ -5,15 +5,10 @@ using UnityEngine;
 public class LevelController
 {
     private Color _acceptedColor;
-    private readonly DotCollector collector;
 
     public Color AcceptedColor { get => _acceptedColor; }
 
     public event Action AcceptedColorChanged;
-    public LevelController(DotCollector collector)
-    {
-        this.collector = collector;
-    }
 
     public void StartLevel()
     {
@@ -34,8 +29,6 @@ public class LevelController
         {
             //there is actual change of the color so notify the player
             SoundManager.current.collectorColorChange.Play();
-            //set accepted color
-            collector.spriteColor.color = _acceptedColor;
         }
 
         AcceptedColorChanged?.Invoke();

@@ -427,6 +427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14acfbd48e425294f969de8b1fc796f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lootDestination: {fileID: 2504382090596975077}
   scorePanel: {fileID: 6747927693144835589}
   clockPanlel: {fileID: 5901764919369179595}
   acceptedColorPanel: {fileID: 9220128511169320565}

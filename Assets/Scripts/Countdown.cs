@@ -18,7 +18,7 @@ public class Countdown : MonoBehaviour {
         if (timeRemaining > 0)
         {
             timeRemaining -= Time.deltaTime;
-            UIManager.current.clockPanlel.timeText.text = FormatToSec(timeRemaining);
+            UIManager.Instance.TopPanel.clockPanlel.timeText.text = FormatToSec(timeRemaining);
         }
 
 	}

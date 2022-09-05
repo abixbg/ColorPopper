@@ -1,5 +1,56 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1117881843325893273
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6363996409011122699}
+  - component: {fileID: 6747927693144835589}
+  m_Layer: 5
+  m_Name: Score
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6363996409011122699
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117881843325893273}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2504382091982984013}
+  m_Father: {fileID: 2504382091454880192}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6747927693144835589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117881843325893273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7be3ff80a507426439c805cbd2a8a09a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dotScoreText: {fileID: 2504382091982984014}
 --- !u!1 &2504382090275997425
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,8 +356,7 @@ GameObject:
   - component: {fileID: 2504382091454880192}
   - component: {fileID: 2504382091454880195}
   - component: {fileID: 2504382091454880194}
-  - component: {fileID: 2504382091454880193}
-  - component: {fileID: 2504382091454880204}
+  - component: {fileID: 6466338805159860926}
   m_Layer: 5
   m_Name: TopPanel
   m_TagString: Untagged
@@ -326,7 +376,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2504382091982984013}
+  - {fileID: 6363996409011122699}
   - {fileID: 2504382091404267268}
   - {fileID: 2504382090964335124}
   - {fileID: 2504382091851018547}
@@ -360,7 +410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 0, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -377,7 +427,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2504382091454880193
+--- !u!114 &6466338805159860926
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -386,23 +436,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2504382091454880199}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7be3ff80a507426439c805cbd2a8a09a, type: 3}
+  m_Script: {fileID: 11500000, guid: 14acfbd48e425294f969de8b1fc796f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dotScoreText: {fileID: 2504382091982984014}
---- !u!114 &2504382091454880204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2504382091454880199}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac3dbdfac7fa71047aa60d52638bc8bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeText: {fileID: 2504382091663177200}
+  scorePanel: {fileID: 6747927693144835589}
+  clockPanlel: {fileID: 5901764919369179595}
 --- !u!1 &2504382091663177206
 GameObject:
   m_ObjectHideFlags: 0
@@ -494,6 +532,7 @@ GameObject:
   - component: {fileID: 2504382091851018547}
   - component: {fileID: 2504382091851018557}
   - component: {fileID: 2504382091851018556}
+  - component: {fileID: 5901764919369179595}
   m_Layer: 5
   m_Name: Countdown
   m_TagString: Untagged
@@ -564,6 +603,19 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 'TIME:'
+--- !u!114 &5901764919369179595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2504382091851018546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac3dbdfac7fa71047aa60d52638bc8bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeText: {fileID: 2504382091663177200}
 --- !u!1 &2504382091982984012
 GameObject:
   m_ObjectHideFlags: 0
@@ -576,7 +628,7 @@ GameObject:
   - component: {fileID: 2504382091982984015}
   - component: {fileID: 2504382091982984014}
   m_Layer: 5
-  m_Name: score
+  m_Name: text-score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -589,17 +641,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2504382091982984012}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2504382091454880192}
+  m_Father: {fileID: 6363996409011122699}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: -52.08}
+  m_AnchoredPosition: {x: 0, y: -117.08}
   m_SizeDelta: {x: 673.2, y: 60}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &2504382091982984015

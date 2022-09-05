@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Loot : MonoBehaviour
 {
-
     public void Activate()
     {
         // activete pop sound
@@ -24,10 +23,9 @@ public class Loot : MonoBehaviour
         //Always Switch Color on Loot activation
         GameManager.current.currentDotCollector.SwitchAcceptedColor();
 
-
         // give points for that 
         GameManager.current.dotScore += 10;
-        UIManager.current.scorePanel.UpdateValues();
+        UIManager.Instance.TopPanel.scorePanel.UpdateValues(GameManager.current.dotScore);
 
         //add bonus time for collecting correct
         //GameManager.current.remainingCountdown.AddTime(0.5F); //TODO: only Time Buff loot will add time!!!

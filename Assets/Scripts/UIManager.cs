@@ -1,26 +1,41 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using Popper.UI.Panels;
 
+
+//TODO: Rename to OverlayUIManager
 public class UIManager : MonoBehaviour
 {
-    public static UIManager current;
+    
+    [SerializeField] private TopPanel topPanelPrefab;
+    [SerializeField] private RectTransform safeArea;
 
-    //Ui Dialogs
-    //public UIGameOverDialog dlgGameOver;
-    //public UIHelpDialog dlgHelp;
-    ////public UIHelpDialog pauseDialog;
-    //public UIPlayerInput playerUiInput;
-    public UIScorePanel scorePanel;
-    public UIClockPanel clockPanlel;
+
     public AcceptedColorPanel acceptedColorPanel;
 
+    private static UIManager _instance;
+    private TopPanel _topPanel;
+
+    public static UIManager Instance => _instance;
+
+    public TopPanel TopPanel => _topPanel;
 
     void Awake()
     {
-        if (current == null)
-            current = this;
-        else if (current != this)
+        if (_instance == null)
+            _instance = this;
+        else if (_instance != this)
             Destroy(gameObject);
+    }
+
+    private void Start()
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        _topPanel = Instantiate(topPanelPrefab, safeArea, false);
     }
 }

@@ -9,12 +9,11 @@ public class UIScorePanel : MonoBehaviour
 
     void Start()
     {
-        UpdateValues();
+        UpdateValues(0);
     }
 
-    public void UpdateValues()
+    public void UpdateValues(int score)
     {
-        //Debug.Log("setscore");
-        dotScoreText.text = GameManager.current.dotScore.ToString();       
+        dotScoreText.text = score.ToString();
     }
 }

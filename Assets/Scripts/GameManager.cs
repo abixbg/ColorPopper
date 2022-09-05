@@ -5,17 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    //[SerializeField] private int defaultLevelCountdownSec;
     [SerializeField] private LevelConfigAsset levelAsset;
 
     public static GameManager current;
-    public int dotScore;
 
     private LevelController levelController;
+    private ScoreController scoreController;
     public Board currentGrid;
     public Countdown remainingCountdown;
 
     public LevelController Level => levelController;
+    public ScoreController Score => scoreController;
 
     void Awake()
     {
@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     {
         
         levelController = new LevelController(levelAsset.Data);
+        scoreController = new ScoreController();
 
         currentGrid.Construct(levelController);
         remainingCountdown = new Countdown(levelController.Config.TimeSec);

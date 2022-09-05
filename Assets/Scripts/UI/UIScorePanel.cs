@@ -7,12 +7,30 @@ public class UIScorePanel : MonoBehaviour
 
     public Text dotScoreText;
 
-    void Start()
+    private ScoreController scoreController;
+
+    private void OnDestroy()
+    {
+        scoreController.ScoreChanged -= OnScoreUpdate;
+    }
+    public void Construct(ScoreController scoreController)
+    {
+        this.scoreController = scoreController;
+
+        scoreController.ScoreChanged += OnScoreUpdate;
+    }
+
+    public void SetInitialState()
     {
         UpdateValues(0);
     }
 
-    public void UpdateValues(int score)
+    private void OnScoreUpdate()
+    {
+        UpdateValues(scoreController.ScoreData.Level);
+    }
+
+    private void UpdateValues(int score)
     {
         dotScoreText.text = score.ToString();
     }

@@ -21,9 +21,6 @@ public class Loot : MonoBehaviour
         // move graphic to the collector
         StartCoroutine(MoveTooCollector());
 
-        // give points for that 
-        GameManager.current.Score.AddPointsLevel(10);
-
         //broadcast event
         _events.InvokeLootActivated();
     }
@@ -43,5 +40,4 @@ public class Loot : MonoBehaviour
             yield return null;
         }
     }
-
 }

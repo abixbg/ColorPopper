@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         levelController = new LevelController(levelAsset.Data, events);
-        scoreController = new ScoreController();
+        scoreController = new ScoreController(events);
 
         currentGrid.Construct(levelController);
 

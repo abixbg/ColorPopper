@@ -1297,7 +1297,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelAsset: {fileID: 11400000, guid: 39b3f695ea589104c9553928e72ac403, type: 2}
-  dotScore: 0
+  soundManager: {fileID: 843048398}
+  uiManager: {fileID: 1023830115}
   currentGrid: {fileID: 803949103}
 --- !u!4 &1053201648
 Transform:
@@ -1327,6 +1328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   acceptedColor: {r: 0, g: 0, b: 0, a: 0}
+  time: 0
 --- !u!1 &1090255483
 GameObject:
   m_ObjectHideFlags: 0

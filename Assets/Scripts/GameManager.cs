@@ -11,11 +11,16 @@ public class GameManager : MonoBehaviour
 
     private LevelController levelController;
     private ScoreController scoreController;
+    private EventBus events;
+    [SerializeField] private SoundManager soundManager;
+    [SerializeField] private UIManager uiManager;
     public Board currentGrid;
 
     public LevelController Level => levelController;
-
     public ScoreController Score => scoreController;
+    public EventBus Events => events;
+    public SoundManager SoundManager => soundManager;
+    public UIManager UiManager => uiManager;
 
     void Awake()
     {
@@ -25,19 +30,22 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
 
         //DontDestroyOnLoad(gameObject);
+
+        events = new EventBus();
     }
 
     void Start()
     {
-        levelController = new LevelController(levelAsset.Data);
-        scoreController = new ScoreController();
+        levelController = new LevelController(levelAsset.Data, events);
+        scoreController = new ScoreController(events);
+
+        soundManager.Construct(events);
+        uiManager.Construct(this, levelController, scoreController);
 
         currentGrid.Construct(levelController);
 
         levelController.SetPhaseInitialize();
         levelController.StartLevel();
-
-        UIManager.Instance.Init(this);
     }
 
     private void Update()

@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Popper.Events;
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : MonoBehaviour, ILootActivated
 {
+
+    public EventBus _sfxEvents;
 
     public static SoundManager current;
 
@@ -21,6 +24,19 @@ public class SoundManager : MonoBehaviour
         else if (current != this)
             Destroy(gameObject);
 
-        //DontDestroyOnLoad(gameObject);       
+        //DontDestroyOnLoad(gameObject);
+    }
+
+    public void Construct(EventBus events)
+    {
+        _sfxEvents = events;
+
+        _sfxEvents.LootActivated += OnLootActivated;
+    }
+
+    public void OnLootActivated()
+    {
+        Debug.Log($"[Sound] (Play) sfx=Lootactivated");
+        LootActivate.Play();
     }
 }

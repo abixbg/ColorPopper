@@ -1,41 +1,37 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
-using Popper.UI.Panels;
+﻿using Popper.UI.Panels;
+using UnityEngine;
 
-
-//TODO: Rename to OverlayUIManager
-public class UIManager : MonoBehaviour
+namespace Popper.UI
 {
-    
-    [SerializeField] private TopPanel topPanelPrefab;
-    [SerializeField] private RectTransform safeArea;
-
-
-    public AcceptedColorPanel acceptedColorPanel;
-
-    private static UIManager _instance;
-    private TopPanel _topPanel;
-
-    public static UIManager Instance => _instance;
-
-    public TopPanel TopPanel => _topPanel;
-
-    void Awake()
+    //TODO: Rename to OverlayUIManager
+    public class UIManager : MonoBehaviour
     {
-        if (_instance == null)
-            _instance = this;
-        else if (_instance != this)
-            Destroy(gameObject);
-    }
+        [SerializeField] private RectTransform safeArea;
+        [SerializeField] private TopPanel topPanelPrefab;
 
-    private void Start()
-    {
-        Init();
-    }
+        private static UIManager _instance;
+        private TopPanel _topPanel;
 
-    private void Init()
-    {
-        _topPanel = Instantiate(topPanelPrefab, safeArea, false);
+        public static UIManager Instance => _instance;
+
+        public TopPanel TopPanel => _topPanel;
+
+        void Awake()
+        {
+            if (_instance == null)
+                _instance = this;
+            else if (_instance != this)
+                Destroy(gameObject);
+        }
+
+        private void Start()
+        {
+            Init();
+        }
+
+        private void Init()
+        {
+            _topPanel = Instantiate(topPanelPrefab, safeArea, false);
+        }
     }
 }

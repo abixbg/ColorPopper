@@ -1384,11 +1384,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6667487976946814695ffe05e90dda6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topPanelPrefab: {fileID: 6466338805159860926, guid: e8226325f814efd448462666ee1d7e75, type: 3}
   safeArea: {fileID: 1668906527}
-  scorePanel: {fileID: 0}
-  clockPanlel: {fileID: 0}
-  acceptedColorPanel: {fileID: 0}
+  topPanelPrefab: {fileID: 6466338805159860926, guid: e8226325f814efd448462666ee1d7e75, type: 3}
 --- !u!4 &1023830116
 Transform:
   m_ObjectHideFlags: 0
@@ -1397,7 +1394,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1023830114}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.3545829, y: -0.04624062, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

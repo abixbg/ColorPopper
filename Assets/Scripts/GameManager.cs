@@ -13,10 +13,8 @@ public class GameManager : MonoBehaviour
 
     private LevelController levelController;
     public Board currentGrid;
-    public Countdown remainingCountdown;
 
     public LevelController Level => levelController;
-
     void Awake()
     {
         if (current == null)
@@ -29,11 +27,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        
         levelController = new LevelController(levelAsset.Data);
 
         currentGrid.Construct(levelController);
-        remainingCountdown = new Countdown(levelController.Config.TimeSec);
 
         levelController.SetPhaseInitialize();
         levelController.StartLevel();
@@ -43,7 +39,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        remainingCountdown.OnGameClockUpdate(Time.deltaTime);
+        levelController.Countdown.ConsumeTime(Time.deltaTime);
     }
 
     public void CmdRestartScene()

@@ -27,6 +27,8 @@ namespace Popper.UI.Panels
 
             acceptedColorPanel.Construct(_level);
             acceptedColorPanel.SetInitialState();
+
+            clockPanlel.Construct(level.Countdown);
         }
 
         private void OnDestroy()

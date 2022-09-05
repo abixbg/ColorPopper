@@ -1,27 +1,22 @@
 ﻿using Popper.UI;
-using UnityEngine;
 
-public class Countdown : MonoBehaviour
+public class Countdown
 {
-
-    public float timeFrom;
-    float timeRemaining;
-
-    // Use this for initialization
-    void Start()
+    private float _timeRemaining;
+    public Countdown(int initialSec)
     {
-        timeRemaining = timeFrom;
+        _timeRemaining = initialSec;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnGameClockUpdate(float deltaTime)
     {
-        if (timeRemaining > 0)
+        if (_timeRemaining > 0)
         {
-            timeRemaining -= Time.deltaTime;
-            UIManager.Instance.TopPanel.clockPanlel.timeText.text = FormatToSec(timeRemaining);
-        }
+            _timeRemaining -= deltaTime;
 
+            //TODO: Emit message that timer value changed (clock UI should be subscribed)
+            UIManager.Instance.TopPanel.clockPanlel.timeText.text = FormatToSec(_timeRemaining);
+        }
     }
 
     string FormatToSec(float time)
@@ -33,6 +28,6 @@ public class Countdown : MonoBehaviour
 
     public void AddTime(float time)
     {
-        timeRemaining += time;
+        _timeRemaining += time;
     }
 }

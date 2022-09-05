@@ -76,10 +76,10 @@ public class Grid : MonoBehaviour
         UpdateColorList();
 
         // check if grid have unopened slots with collector color and switch it if not
-        if (dotColors.Contains(GameManager.current.currentDotCollector.AcceptedColor) == false)
+        if (dotColors.Contains(GameManager.current.Level.AcceptedColor) == false)
         {
-            Debug.Log("nothing");         
-            GameManager.current.currentDotCollector.SwitchAcceptedColor();
+            Debug.Log("nothing");
+            GameManager.current.Level.SwitchAcceptedColor();
         }
     }
 

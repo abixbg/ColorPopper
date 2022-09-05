@@ -18,11 +18,11 @@ public class Loot : MonoBehaviour
         if (Random.value <= 0.3f)
         {
             //Color nextColor = GameManager.current.currentGrid.colorPalette.GetRandomColor();
-            GameManager.current.currentDotCollector.SwitchAcceptedColor();
+            GameManager.current.Level.SwitchAcceptedColor();
         }
 
         //Always Switch Color on Loot activation
-        GameManager.current.currentDotCollector.SwitchAcceptedColor();
+        GameManager.current.Level.SwitchAcceptedColor();
 
         // give points for that 
         GameManager.current.dotScore += 10;
@@ -41,9 +41,9 @@ public class Loot : MonoBehaviour
     IEnumerator MoveTooCollector()
     {
         float speed = 15f;
-        while (gameObject.transform.position != GameManager.current.currentDotCollector.transform.position)
+        while (gameObject.transform.position != UIManager.Instance.LootDestinationWorldPos)
         {
-            gameObject.transform.position = Vector2.MoveTowards(gameObject.transform.position, GameManager.current.currentDotCollector.transform.position, speed * Time.deltaTime);
+            gameObject.transform.position = Vector2.MoveTowards(gameObject.transform.position, UIManager.Instance.LootDestinationWorldPos, speed * Time.deltaTime);
             yield return null;
         }
     }

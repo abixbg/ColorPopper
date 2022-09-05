@@ -13,8 +13,8 @@ namespace Popper.UI
         private TopPanel _topPanel;
 
         public static UIManager Instance => _instance;
-
         public TopPanel TopPanel => _topPanel;
+        public Vector3 LootDestinationWorldPos => _topPanel.LootCollectionWorldPos;
 
         void Awake()
         {
@@ -24,14 +24,10 @@ namespace Popper.UI
                 Destroy(gameObject);
         }
 
-        private void Start()
-        {
-            Init();
-        }
-
-        private void Init()
+        public void Init(GameManager gameManager)
         {
             _topPanel = Instantiate(topPanelPrefab, safeArea, false);
+            _topPanel.Construct(gameManager, gameManager.Level);
         }
     }
 }

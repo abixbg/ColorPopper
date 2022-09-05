@@ -1,21 +1,22 @@
-﻿using UnityEngine;
+﻿using Popper.UI;
+using Unity.Mathematics;
+using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private int defaultLevelCountdownSec;
-
     public static GameManager current;
     public int currentDifficultyLevel;
-    
+
     public int dotScore;
 
-    public DotCollector currentDotCollector;
+    private LevelController levelController;
     public Grid currentGrid;
     public Countdown remainingCountdown;
-    //public Transform collectorPosition;
-    
+
+    public LevelController Level => levelController;
+
     void Awake()
     {
         if (current == null)
@@ -23,14 +24,17 @@ public class GameManager : MonoBehaviour
         else if (current != this)
             Destroy(gameObject);
 
-        //DontDestroyOnLoad(gameObject);       
+        //DontDestroyOnLoad(gameObject);
     }
 
-    void Start ()
+    void Start()
     {
-        // currentDotCollector.SetAcceptedColor(Color.blue);
         remainingCountdown = new Countdown(defaultLevelCountdownSec);
-        currentDotCollector.Init();
+        //currentDotCollector.Init();
+        levelController = new LevelController();
+        levelController.StartLevel();
+
+        UIManager.Instance.Init(this);
     }
 
     private void Update()

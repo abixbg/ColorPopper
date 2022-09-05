@@ -427,8 +427,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14acfbd48e425294f969de8b1fc796f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lootDestination: {fileID: 2504382090596975077}
   scorePanel: {fileID: 6747927693144835589}
   clockPanlel: {fileID: 5901764919369179595}
+  acceptedColorPanel: {fileID: 9220128511169320565}
   btnReset: {fileID: 2504382090964335125}
 --- !u!1 &2504382091663177206
 GameObject:
@@ -795,3 +797,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5134193691219101902, guid: eb6d29fa05f7e3a4baa02d5b537e3cc6, type: 3}
   m_PrefabInstance: {fileID: 7314140240070347051}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9220128511169320565 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1906555138474663774, guid: eb6d29fa05f7e3a4baa02d5b537e3cc6, type: 3}
+  m_PrefabInstance: {fileID: 7314140240070347051}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 111cde9ab707aa1468b688bd64b1682b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

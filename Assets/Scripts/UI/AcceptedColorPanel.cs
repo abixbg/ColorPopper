@@ -1,29 +1,37 @@
-using System.Collections;
+using Unity.Mathematics;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class AcceptedColorPanel : MonoBehaviour
 {
-    [SerializeField] private Image colorImage; 
-    [SerializeField] private DotCollector collector;
+    [SerializeField] private Image colorImage;
+    private LevelController _level;
+
+    private LevelController Level => _level;
 
 
-    private void Start()
+    #region Unity MonoBehaviour
+    private void OnDestroy()
     {
-        collector = GameManager.current.currentDotCollector;
-        collector.AcceptedColorChanged += OnAcceptedColorChanged;
-        SetColor(collector.AcceptedColor);
+        Level.AcceptedColorChanged -= OnAcceptedColorChanged;
+    }
+    #endregion
+
+    public void Construct(LevelController level)
+    {
+        _level = level;
+        _level.AcceptedColorChanged += OnAcceptedColorChanged;
     }
 
-    private void OnDisable()
-    {        
-        collector.AcceptedColorChanged -= OnAcceptedColorChanged;
+    public void SetInitialState()
+    {
+        SetColor(Level.AcceptedColor);
     }
 
     private void OnAcceptedColorChanged()
     {
-        SetColor(collector.AcceptedColor);
+        SetColor(Level.AcceptedColor);
     }
 
     private void SetColor(Color color)

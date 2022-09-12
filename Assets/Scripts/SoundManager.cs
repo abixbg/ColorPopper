@@ -9,11 +9,15 @@ public class SoundManager : MonoBehaviour, ILootActivated
 
     public static SoundManager current;
 
+    private IAudioPlayer _player; 
+
+
+    public AudioClip lootActivated;
+
+    public AudioSource defaultSource;
     public AudioSource[] dotPop;
-    public AudioSource LootActivate;
     public AudioSource LootBreak;
     public AudioSource CellOpen;
-    public AudioSource dotFail;
     public AudioSource collectorColorChange;
 
 
@@ -24,7 +28,7 @@ public class SoundManager : MonoBehaviour, ILootActivated
         else if (current != this)
             Destroy(gameObject);
 
-        //DontDestroyOnLoad(gameObject);
+        _player = new AudioPlayer(defaultSource);
     }
 
     public void Construct(EventBus events)
@@ -36,7 +40,8 @@ public class SoundManager : MonoBehaviour, ILootActivated
 
     public void OnLootActivated()
     {
-        Debug.Log($"[Sound] (Play) sfx=Lootactivated");
-        LootActivate.Play();
+
+        var data = new AudioAssetData("sfx_star_activated", lootActivated);
+        _player.PlaySound(data);
     }
 }

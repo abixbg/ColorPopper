@@ -49,7 +49,7 @@ public class LevelController : ILootActivated
         if (_acceptedColor != current)
         {
             //there is actual change of the color so notify the player
-            SoundManager.current.collectorColorChange.Play();
+            SoundManager.current.PlaySFX("sfx-color_change");
         }
 
         AcceptedColorChanged?.Invoke();
@@ -64,8 +64,6 @@ public class LevelController : ILootActivated
 
     public void OnLootActivated()
     {
-
-
         //Always Switch Color on Loot activation
         GameManager.current.Level.SwitchAcceptedColor();
 

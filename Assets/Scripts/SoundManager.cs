@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using Popper.Events;
+using AGK.Audio;
 
 public class SoundManager : MonoBehaviour, ILootActivated
 {
@@ -9,13 +10,12 @@ public class SoundManager : MonoBehaviour, ILootActivated
 
     public static SoundManager current;
 
-    public AudioSource[] dotPop;
-    public AudioSource LootActivate;
-    public AudioSource LootBreak;
-    public AudioSource CellOpen;
-    public AudioSource dotFail;
-    public AudioSource collectorColorChange;
+    private IAudioPlayer _player; 
 
+    [SerializeField] private List<AudioAssetData> clipLibrary;
+
+    public AudioSource defaultSource;
+    //public AudioSource CellOpen;
 
     void Awake()
     {
@@ -24,19 +24,37 @@ public class SoundManager : MonoBehaviour, ILootActivated
         else if (current != this)
             Destroy(gameObject);
 
-        //DontDestroyOnLoad(gameObject);
+        _player = new AudioPlayer(defaultSource);
     }
 
     public void Construct(EventBus events)
     {
         _sfxEvents = events;
-
-        _sfxEvents.LootActivated += OnLootActivated;
+        //_sfxEvents.LootActivated += OnLootActivated;
+        _sfxEvents.LootConsumed += OnLootConsumed;
     }
 
     public void OnLootActivated()
     {
-        Debug.Log($"[Sound] (Play) sfx=Lootactivated");
-        LootActivate.Play();
+        PlaySFX("sfx-star_activated");
+    }
+
+    public void OnLootConsumed()
+    {
+        PlaySFX("sfx-star_activated");
+    }
+
+    public void PlaySFX(string key)
+    {
+        var data = new AudioAssetData(key, GetClip(key));
+        _player.PlaySound(data);
+    }
+
+    public AudioClip GetClip(string key)
+    {
+        var audioAsset  = clipLibrary.Find(cl => string.Equals(key, cl.Key));
+        if (audioAsset.Clip == null)
+            Debug.LogAssertion($"Not Found: {key}");
+        return audioAsset.Clip;
     }
 }

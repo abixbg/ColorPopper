@@ -57,11 +57,9 @@ public class Slot : MonoBehaviour
         {
             loot.Activate();
         }
-        else
-        {
-            SoundManager.current.CellOpen.Play();
-        }
-            
+
+        SoundManager.current.PlaySFX("sfx-cell_open");
+
 
         // disable dot
         keyhole.gameObject.SetActive(false);
@@ -87,9 +85,9 @@ public class Slot : MonoBehaviour
             loot.Break();
         }
 
-        SoundManager.current.LootBreak.Play();
+        SoundManager.current.PlaySFX("sfx-break_slot");
 
-        // disable dot
+        //disable dot
         keyhole.gameObject.SetActive(false);
     } 
 

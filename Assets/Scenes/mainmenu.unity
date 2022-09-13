@@ -1213,16 +1213,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31f39d4dfc5388a4f805c42a8acd8414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clipLibrary:
+  - key: sfx-break_slot
+    clip: {fileID: 8300000, guid: 408d424ce73001e4abaab1613c4d5db3, type: 3}
+  - key: sfx-star_activated
+    clip: {fileID: 8300000, guid: b6933d55f98b5e044926e99a0cbec846, type: 3}
+  - key: sfx-color_change
+    clip: {fileID: 8300000, guid: c0278a184375f524db34635f580821bc, type: 3}
+  - key: sfx-cell_open
+    clip: {fileID: 8300000, guid: 66608ed080f2fec448e021978098331d, type: 3}
   defaultSource: {fileID: 1857798029}
-  lootActivated: {fileID: 8300000, guid: b6933d55f98b5e044926e99a0cbec846, type: 3}
-  dotPop:
-  - {fileID: 1090255485}
-  - {fileID: 1090255485}
-  LootActivate: {fileID: 766415004}
-  LootBreak: {fileID: 185996720}
-  CellOpen: {fileID: 1090255485}
-  dotFail: {fileID: 441718252}
-  collectorColorChange: {fileID: 1304104887}
 --- !u!1 &1023830114
 GameObject:
   m_ObjectHideFlags: 0

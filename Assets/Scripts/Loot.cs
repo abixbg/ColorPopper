@@ -1,6 +1,7 @@
 ﻿using Popper.UI;
 using UnityEngine;
 using System.Collections;
+using System.Threading.Tasks;
 
 public class Loot : MonoBehaviour
 {
@@ -13,13 +14,16 @@ public class Loot : MonoBehaviour
         _ui = uiManager;
     }
 
-    public void Activate()
+    public async void Activate()
     {
+        Debug.LogError("Started");
         //broadcast event
         _events.InvokeLootActivated();
 
-        // move graphic to the collector
-        StartCoroutine(MoveTooCollector());
+        await MoveToCollectorAsync();
+
+        Debug.LogError("Finished");
+        _events.InvokeLootConsumed();
     }
 
     // destroys loot
@@ -28,13 +32,20 @@ public class Loot : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    IEnumerator MoveTooCollector()
+    private async Task MoveToCollectorAsync()
     {
-        float speed = 15f;
-        while (gameObject.transform.position !=_ui.LootDestinationWorldPos)
+        float speed = 8f;
+
+        while (ReachedDestination())
         {
             gameObject.transform.position = Vector2.MoveTowards(gameObject.transform.position, _ui.LootDestinationWorldPos, speed * Time.deltaTime);
-            yield return null;
+            await Task.Yield();
         }
+    }
+
+    private bool ReachedDestination()
+    {
+        var dist = Vector2.Distance(gameObject.transform.position, _ui.LootDestinationWorldPos);
+        return dist > 0.2f;
     }
 }

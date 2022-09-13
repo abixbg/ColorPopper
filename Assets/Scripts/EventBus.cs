@@ -4,10 +4,16 @@ using System;
 public class EventBus
 {
     public event Action LootActivated;
+    public event Action LootConsumed;
 
     public void InvokeLootActivated()
     {
         LootActivated?.Invoke();
+    }
+
+    public void InvokeLootConsumed()
+    {
+        LootConsumed?.Invoke();
     }
 
     public void SubscribeLootActivated(Action callback)

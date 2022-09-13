@@ -30,10 +30,16 @@ public class SoundManager : MonoBehaviour, ILootActivated
     public void Construct(EventBus events)
     {
         _sfxEvents = events;
-        _sfxEvents.LootActivated += OnLootActivated;
+        //_sfxEvents.LootActivated += OnLootActivated;
+        _sfxEvents.LootConsumed += OnLootConsumed;
     }
 
     public void OnLootActivated()
+    {
+        PlaySFX("sfx-star_activated");
+    }
+
+    public void OnLootConsumed()
     {
         PlaySFX("sfx-star_activated");
     }

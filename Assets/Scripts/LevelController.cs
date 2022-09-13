@@ -64,8 +64,6 @@ public class LevelController : ILootActivated
 
     public void OnLootActivated()
     {
-
-
         //Always Switch Color on Loot activation
         GameManager.current.Level.SwitchAcceptedColor();
 

@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.abixinteractive.adventurekit": {
+      "version": "https://github.com/abixbg/agk-audio.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f98e0e3df9973a2d733790832f77d2d85390c2eb"
+    },
     "com.unity.2d.animation": {
       "version": "7.0.5",
       "depth": 0,

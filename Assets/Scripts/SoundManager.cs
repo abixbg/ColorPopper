@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Popper.Events;
+using AGK.Audio;
 
 public class SoundManager : MonoBehaviour, ILootActivated
 {
@@ -11,7 +12,7 @@ public class SoundManager : MonoBehaviour, ILootActivated
 
     private IAudioPlayer _player; 
 
-
+    
     public AudioClip lootActivated;
 
     public AudioSource defaultSource;

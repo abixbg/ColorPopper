@@ -46,11 +46,11 @@ public class Board : MonoBehaviour
         dotColors.Clear();
         for (int i = 0; i < LevelController.Config.BoardSize.x * LevelController.Config.BoardSize.y; i++)
         {
-            if (dotColors.Contains(gridSlots[i].keyhole.color) == false)
+            if (dotColors.Contains(gridSlots[i].Keyhole.color) == false)
             {
                 if (gridSlots[i].isActive == true)
                 {
-                    dotColors.Add(gridSlots[i].keyhole.color);
+                    dotColors.Add(gridSlots[i].Keyhole.color);
                 }               
             }
         }
@@ -64,8 +64,8 @@ public class Board : MonoBehaviour
         // check if grid have unopened slots with collector color and switch it if not
         if (dotColors.Contains(LevelController.AcceptedColor) == false)
         {
-            Debug.Log("nothing");
-            LevelController.SwitchAcceptedColor();
+            Debug.LogError("TODO: SwitchAcceptedColor");
+            //LevelController.SwitchAcceptedColor();
         }
     }
 
@@ -89,13 +89,13 @@ public class Board : MonoBehaviour
         for (int i = 0; i < gridSlots.Count; i++)
         {
             //instantiating dots in grid
-            gridSlots[i].keyhole = Instantiate(dotPrefab, gridSlots[i].transform.position, Quaternion.identity) as Dot;
+            gridSlots[i].Keyhole = Instantiate(dotPrefab, gridSlots[i].transform.position, Quaternion.identity) as Dot;
 
             //make dot gameobjects parent of slot
-            gridSlots[i].keyhole.transform.parent = gridSlots[i].transform;
+            gridSlots[i].Keyhole.transform.parent = gridSlots[i].transform;
 
             //assigning colors from the palette
-            gridSlots[i].keyhole.SetColor(bubblePool.GetRandomColor());
+            gridSlots[i].Keyhole.SetColor(bubblePool.GetRandomColor());
         }
     }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Popper.Events;
 using AGK.Audio;
 
-public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed
+public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAcceptedColorChanged, ISlotStateChanged
 {
 
     public EventBus _sfxEvents;
@@ -31,16 +31,8 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed
         _sfxEvents = events;
         _sfxEvents.Subscribe<ILootPicked>(this);
         _sfxEvents.Subscribe<ILootConsumed>(this);
-    }
-
-    public void OnLootPicked()
-    {
-        PlaySFX("sfx-star_activated");
-    }
-
-    public void OnLootConsumed()
-    {
-        PlaySFX("sfx-star_activated");
+        _sfxEvents.Subscribe<IAcceptedColorChanged>(this);
+        _sfxEvents.Subscribe<ISlotStateChanged>(this);
     }
 
     public void PlaySFX(string key)
@@ -55,5 +47,30 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed
         if (audioAsset.Clip == null)
             Debug.LogAssertion($"Not Found: {key}");
         return audioAsset.Clip;
+    }
+
+    void ILootPicked.OnLootPicked()
+    {
+        PlaySFX("sfx-star_activated");
+    }
+
+    void ILootConsumed.OnLootConsumed()
+    {
+        PlaySFX("sfx-star_activated");
+    }
+
+    void IAcceptedColorChanged.OnAcceptedColorChange(Color _)
+    {
+        PlaySFX("sfx-color_change");
+    }
+
+    void ISlotStateChanged.OnSlotOpen(Slot slot)
+    {
+        PlaySFX("sfx-cell_open");
+    }
+
+    void ISlotStateChanged.OnSlotBreak(Slot slot)
+    {
+        PlaySFX("sfx-break_slot");
     }
 }

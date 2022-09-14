@@ -2,40 +2,36 @@ using Unity.Mathematics;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Popper.Events;
 
-public class AcceptedColorPanel : MonoBehaviour
+public class AcceptedColorPanel : MonoBehaviour, IAcceptedColorChanged
 {
     [SerializeField] private Image colorImage;
-    private LevelController _level;
-
-    private LevelController Level => _level;
-
 
     #region Unity MonoBehaviour
     private void OnDestroy()
     {
-        Level.AcceptedColorChanged -= OnAcceptedColorChanged;
+        GameManager.current.Events.Unsubscribe<IAcceptedColorChanged>(this);
     }
     #endregion
 
-    public void Construct(LevelController level)
+    public void Construct()
     {
-        _level = level;
-        _level.AcceptedColorChanged += OnAcceptedColorChanged;
+        GameManager.current.Events.Subscribe<IAcceptedColorChanged>(this);
     }
 
-    public void SetInitialState()
+    public void SetInitialState(Color color)
     {
-        SetColor(Level.AcceptedColor);
-    }
-
-    private void OnAcceptedColorChanged()
-    {
-        SetColor(Level.AcceptedColor);
+        SetColor(color);
     }
 
     private void SetColor(Color color)
     {
         colorImage.color = color;
+    }
+
+    void IAcceptedColorChanged.OnAcceptedColorChange(Color color)
+    {
+        SetColor(color);
     }
 }

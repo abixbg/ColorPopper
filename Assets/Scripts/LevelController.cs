@@ -4,7 +4,7 @@ using UnityEngine;
 using Popper.Events;
 using EventBroadcast;
 
-public class LevelController : ILootPicked, ISlotClicked
+public class LevelController : ILootPicked, ISlotClicked, ISlotStateChanged
 {
     private LevelConfigData _levelData;
     private Color _acceptedColor;
@@ -17,9 +17,10 @@ public class LevelController : ILootPicked, ISlotClicked
     public float TimeRemaining => _countdown.TimeRemaining;
 
     private IEventBus _events;
+    private Board _board;
 
     //public event Action AcceptedColorChanged;
-    public event Action LevelPhaseChanged; //NOTE: for now only called once on level start 
+    //public event Action LevelPhaseChanged; //NOTE: for now only called once on level start 
 
     public LevelController(LevelConfigData levelData, EventBus levelEvents)
     {
@@ -29,12 +30,14 @@ public class LevelController : ILootPicked, ISlotClicked
         
         _events.Subscribe<ILootPicked>(this);
         _events.Subscribe<ISlotClicked>(this);
+        _events.Subscribe<ISlotStateChanged>(this);
     }
 
-    public void SetPhaseInitialize()
+    public void SetPhaseInitialize(Board board)
     {
+        _board = board;
+        _board.SetInitialState();
         Debug.Log("[Level] Initialilze!");
-        LevelPhaseChanged?.Invoke();
     }
 
     public void StartLevel()
@@ -45,10 +48,8 @@ public class LevelController : ILootPicked, ISlotClicked
 
     private void SwitchAcceptedColor()
     {
-        var current = _acceptedColor;
-
         //get random color from the remaining in the grid
-        _acceptedColor = GameManager.current.currentGrid.GetRandomColor();
+        _acceptedColor = GameManager.current.Board.GetRandomColor();
         _events.Broadcast<IAcceptedColorChanged>(s => s.OnAcceptedColorChange(_acceptedColor));
     }
 
@@ -80,8 +81,6 @@ public class LevelController : ILootPicked, ISlotClicked
         {
             SwitchAcceptedColor();
         }
-
-
     }
 
     public bool Accepted(Slot slot)
@@ -91,5 +90,24 @@ public class LevelController : ILootPicked, ISlotClicked
             return true;
         }
         else return false;
+    }
+
+    void ISlotStateChanged.OnSlotOpen(Slot slot)
+    {
+        ValidateBoard();
+    }
+
+    void ISlotStateChanged.OnSlotBreak(Slot slot)
+    {
+        ValidateBoard();
+    }
+
+    private void ValidateBoard()
+    {
+        GameManager.current.Board.UpdateColorList();
+        if (!GameManager.current.Board.DotColors.Contains(_acceptedColor))
+        {
+            SwitchAcceptedColor();
+        }
     }
 }

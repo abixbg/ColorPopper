@@ -26,22 +26,17 @@ public class Board : MonoBehaviour
     public float2 BoardRect { get => _boardRect; }
 
     public List<Slot> gridSlots;
-    public List<Color> dotColors;
+    [SerializeField] private List<Color> dotColors;
+    public List<Color> DotColors => dotColors;
 
     public Action OnBoardChanged;
-
-    private void OnDestroy()
-    {
-        LevelController.LevelPhaseChanged -= OnLevelPhaseInitialize;
-    }
 
     public void Construct(LevelController levelController)
     {
         _levelController = levelController;
-        levelController.LevelPhaseChanged += OnLevelPhaseInitialize;
     }
 
-    void UpdateColorList()
+    public void UpdateColorList()
     {
         dotColors.Clear();
         for (int i = 0; i < LevelController.Config.BoardSize.x * LevelController.Config.BoardSize.y; i++)
@@ -55,20 +50,6 @@ public class Board : MonoBehaviour
             }
         }
     }
-
-    public void ValidateGrid()
-    {
-        // update avaiable colors in grid
-        UpdateColorList();
-
-        // check if grid have unopened slots with collector color and switch it if not
-        if (dotColors.Contains(LevelController.AcceptedColor) == false)
-        {
-            Debug.LogError("TODO: SwitchAcceptedColor");
-            //LevelController.SwitchAcceptedColor();
-        }
-    }
-
 
     public Color GetRandomColor()
     {
@@ -132,7 +113,7 @@ public class Board : MonoBehaviour
     }
 
 
-    public void OnLevelPhaseInitialize()
+    public void SetInitialState()
     {
         GenerateCells();
 

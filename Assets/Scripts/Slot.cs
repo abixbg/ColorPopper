@@ -63,7 +63,7 @@ public class Slot : MonoBehaviour
             loot.Break();
         }
 
-        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpen(this));
+        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotBreak(this));
         HideSlot();
     }
 
@@ -71,6 +71,5 @@ public class Slot : MonoBehaviour
     {
         //disable dot
         Keyhole.gameObject.SetActive(false);
-        GameManager.current.currentGrid.ValidateGrid(); //TODO: make this event
     }
 }

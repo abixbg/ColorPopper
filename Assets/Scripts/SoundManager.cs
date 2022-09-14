@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Popper.Events;
 using AGK.Audio;
 
-public class SoundManager : MonoBehaviour, ILootActivated
+public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAcceptedColorChanged, ISlotStateChanged
 {
 
     public EventBus _sfxEvents;
@@ -15,7 +15,6 @@ public class SoundManager : MonoBehaviour, ILootActivated
     [SerializeField] private List<AudioAssetData> clipLibrary;
 
     public AudioSource defaultSource;
-    //public AudioSource CellOpen;
 
     void Awake()
     {
@@ -30,18 +29,10 @@ public class SoundManager : MonoBehaviour, ILootActivated
     public void Construct(EventBus events)
     {
         _sfxEvents = events;
-        //_sfxEvents.LootActivated += OnLootActivated;
-        _sfxEvents.LootConsumed += OnLootConsumed;
-    }
-
-    public void OnLootActivated()
-    {
-        PlaySFX("sfx-star_activated");
-    }
-
-    public void OnLootConsumed()
-    {
-        PlaySFX("sfx-star_activated");
+        _sfxEvents.Subscribe<ILootPicked>(this);
+        _sfxEvents.Subscribe<ILootConsumed>(this);
+        _sfxEvents.Subscribe<IAcceptedColorChanged>(this);
+        _sfxEvents.Subscribe<ISlotStateChanged>(this);
     }
 
     public void PlaySFX(string key)
@@ -56,5 +47,36 @@ public class SoundManager : MonoBehaviour, ILootActivated
         if (audioAsset.Clip == null)
             Debug.LogAssertion($"Not Found: {key}");
         return audioAsset.Clip;
+    }
+
+    void ILootPicked.OnLootPicked()
+    {
+
+    }
+
+    void ILootConsumed.OnLootConsumed()
+    {
+        PlaySFX("sfx-star_activated");
+    }
+
+    void IAcceptedColorChanged.OnAcceptedColorChange(Color _)
+    {
+        PlaySFX("sfx-color_change");
+
+        //Vibrate
+        Debug.LogError("Vibrate!");
+        Handheld.Vibrate();
+    }
+
+    void ISlotStateChanged.OnSlotOpen(Slot slot)
+    {
+        //only play 
+        if (slot.Loot == null)
+            PlaySFX("sfx-cell_open");
+    }
+
+    void ISlotStateChanged.OnSlotBreak(Slot slot)
+    {
+        PlaySFX("sfx-break_slot");
     }
 }

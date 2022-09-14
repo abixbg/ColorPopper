@@ -1,11 +1,11 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Popper.Events;
+using UnityEngine;
 
 [System.Serializable]
 public class Slot : MonoBehaviour
 {
-    public Dot keyhole { get; set; }
-    
+    public Dot Keyhole { get; set; }
+
     [SerializeField] private Loot loot;
     public Loot Loot { get => loot; set => loot = value; }
 
@@ -16,36 +16,23 @@ public class Slot : MonoBehaviour
     public bool isLocked;
     public bool isActive;
 
+    private EventBus Events => GameManager.current.Events;
+
     void Awake()
     {
         isActive = true;
     }
 
-
     public void CmdClicked()
     {
         if (isActive == true)
         {
-            TryKeyhole();            
+            Events.Broadcast<ISlotClicked>(s => s.OnSlotClicked(this));
         }
     }
 
-    void TryKeyhole()
-    {    
-        if (keyhole.TryUnlock() == true)
-        { 
-            OpenSlot();     
-        }
-        else
-        {
-            BreakSlot();                 
-        }
-        GameManager.current.currentGrid.ValidateGrid();
-    }
-
-    void OpenSlot()
+    public void OpenSlot()
     {
-
         isActive = false;
         isLocked = false;
 
@@ -58,26 +45,17 @@ public class Slot : MonoBehaviour
             loot.Activate();
         }
 
-        SoundManager.current.PlaySFX("sfx-cell_open");
-
-
-        // disable dot
-        keyhole.gameObject.SetActive(false);
-
-        //switches colorcollector by % chance
-        if (Random.value <= 0.3f)
-        {
-            GameManager.current.Level.SwitchAcceptedColor();
-        }
+        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpen(this));
+        HideSlot();
     }
 
-    void BreakSlot()
+    public void BreakSlot()
     {
         isActive = false;
         isLocked = true;
 
         //update graphics to broken state
-        border.color = new Color32(140,30,30,255);
+        border.color = new Color32(140, 30, 30, 255);
 
         //disable slot contents
         if (loot != null)
@@ -85,10 +63,13 @@ public class Slot : MonoBehaviour
             loot.Break();
         }
 
-        SoundManager.current.PlaySFX("sfx-break_slot");
+        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotBreak(this));
+        HideSlot();
+    }
 
+    private void HideSlot()
+    {
         //disable dot
-        keyhole.gameObject.SetActive(false);
-    } 
-
+        Keyhole.gameObject.SetActive(false);
+    }
 }

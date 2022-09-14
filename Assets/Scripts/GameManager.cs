@@ -1,4 +1,5 @@
 ﻿using Popper.UI;
+using Popper.Events;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,8 +15,9 @@ public class GameManager : MonoBehaviour
     private EventBus events;
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private UIManager uiManager;
-    public Board currentGrid;
+    [SerializeField] private Board currentGrid;
 
+    public Board Board => currentGrid;
     public LevelController Level => levelController;
     public ScoreController Score => scoreController;
     public EventBus Events => events;
@@ -44,7 +46,7 @@ public class GameManager : MonoBehaviour
 
         currentGrid.Construct(levelController);
 
-        levelController.SetPhaseInitialize();
+        levelController.SetPhaseInitialize(currentGrid);
         levelController.StartLevel();
     }
 

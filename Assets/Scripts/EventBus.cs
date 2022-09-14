@@ -1,28 +1,63 @@
+using EventBroadcast;
 using System;
+using System.Collections.Generic;
 
-//TODO: replace this with proper event broadcast system
-public class EventBus
+namespace Popper.Events
 {
-    public event Action LootActivated;
-    public event Action LootConsumed;
-
-    public void InvokeLootActivated()
+    public class EventBus : IEventBus
     {
-        LootActivated?.Invoke();
-    }
+        private readonly Dictionary<Type, List<IEventSubscriber>> _subscribers;
 
-    public void InvokeLootConsumed()
-    {
-        LootConsumed?.Invoke();
-    }
+        public EventBus()
+        {
+            _subscribers = new Dictionary<Type, List<IEventSubscriber>>();
+        }
 
-    public void SubscribeLootActivated(Action callback)
-    {
-        LootActivated += callback;
-    }
+        public void Subscribe<T>(T subscriber) where T : IEventSubscriber
+        {
+            Type key = typeof(T);
+            if (!_subscribers.ContainsKey(key))
+            {
+                _subscribers.Add(key, new List<IEventSubscriber> { subscriber });
+            }
+            else
+            {
+                if (_subscribers[key].Contains(subscriber))
+                {
+                    UnityEngine.Debug.LogAssertion($"Already subscribed {key.Name}");
+                    return;
+                }
+                _subscribers[key].Add(subscriber);
+            }
+        }
 
-    public void UnubscribeLootActivated(Action callback)
-    {
-        LootActivated -= callback;
+        public void Unsubscribe<T>(T subscriber) where T : IEventSubscriber
+        {
+            Type key = typeof(T);
+            if (_subscribers.ContainsKey(key))
+                _subscribers[key].Remove(subscriber);
+        }
+
+        public void Broadcast<T>(Action<T> callback) where T : class, IEventSubscriber
+        {
+            Type key = typeof(T);
+
+            if (_subscribers.ContainsKey(key))
+            {
+                List<IEventSubscriber> subscribers = _subscribers[key];
+
+                foreach (var subscriber in subscribers)
+                {
+                    try
+                    {
+                        callback.Invoke(subscriber as T);
+                    }
+                    catch (Exception e)
+                    {
+                        UnityEngine.Debug.LogAssertion(e);
+                    }
+                }
+            }
+        }
     }
 }

@@ -29,13 +29,6 @@ public class Dot : MonoBehaviour
         colorSprite.color = dotColor;
     }
 
-    public bool TryUnlock()
-    {
-        if (GameManager.current.Level.IsAcceptableColor(color) == true)
-        {
-            return true;
-        }
-        else return false;
-    }
+
 
 }

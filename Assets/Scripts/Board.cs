@@ -18,6 +18,7 @@ public class Board : MonoBehaviour
     public BoardCellGenerator generator;
     public CameraScreenFit gameView;
 
+    public int RemainingColors { get => dotColors.Count; }
     private readonly float _cellRectSize = 1f;
     private LevelController _levelController;
     private LevelController LevelController => _levelController;
@@ -82,12 +83,14 @@ public class Board : MonoBehaviour
 
 
     public void FillWithLoot()
-    { 
+    {
+        int addedLoot = 0; 
+
         for (int i = 0; i < gridSlots.Count; i++)
         {
             bool hasLoot = UnityEngine.Random.value >= 0.6f;
 
-            if (hasLoot)
+            if (hasLoot && addedLoot < 5)
             {
                 //instantiating dots in grid
                 gridSlots[i].Loot = Instantiate(lootPrefab, gridSlots[i].transform.position, Quaternion.identity) as Loot;
@@ -95,6 +98,7 @@ public class Board : MonoBehaviour
 
                 //make dot gameobjects parent of slot
                 gridSlots[i].Loot.transform.parent = gridSlots[i].transform;
+                addedLoot++;
             }
         }
     }
@@ -113,7 +117,7 @@ public class Board : MonoBehaviour
     }
 
 
-    public void SetInitialState()
+    public void OnLevelPhaseInitialize()
     {
         GenerateCells();
 

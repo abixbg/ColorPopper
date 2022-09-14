@@ -51,7 +51,7 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
 
     void ILootPicked.OnLootPicked()
     {
-        PlaySFX("sfx-star_activated");
+
     }
 
     void ILootConsumed.OnLootConsumed()
@@ -62,11 +62,17 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
     void IAcceptedColorChanged.OnAcceptedColorChange(Color _)
     {
         PlaySFX("sfx-color_change");
+
+        //Vibrate
+        Debug.LogError("Vibrate!");
+        Handheld.Vibrate();
     }
 
     void ISlotStateChanged.OnSlotOpen(Slot slot)
     {
-        PlaySFX("sfx-cell_open");
+        //only play 
+        if (slot.Loot == null)
+            PlaySFX("sfx-cell_open");
     }
 
     void ISlotStateChanged.OnSlotBreak(Slot slot)

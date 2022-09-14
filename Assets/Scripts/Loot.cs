@@ -16,13 +16,9 @@ public class Loot : MonoBehaviour
 
     public async void Activate()
     {
-        Debug.LogError("Started");
         //broadcast event
         _events.Broadcast<ILootPicked>(sub => sub.OnLootPicked());
-
         await MoveToCollectorAsync();
-
-        Debug.LogError("Finished");
         _events.Broadcast<ILootConsumed>(sub => sub.OnLootConsumed());
     }
 
@@ -34,7 +30,7 @@ public class Loot : MonoBehaviour
 
     private async Task MoveToCollectorAsync()
     {
-        float speed = 8f;
+        float speed = 10f;
 
         while (ReachedDestination())
         {

@@ -1,10 +1,11 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-using Popper.Events;
 using EventBroadcast;
+using Popper.Events;
+using UnityEngine;
 
-public class LevelController : ILootPicked, ISlotClicked, ISlotStateChanged
+public class LevelController :
+    ISlotClicked,
+    ISlotStateChanged,
+    ILootConsumed
 {
     private LevelConfigData _levelData;
     private Color _acceptedColor;
@@ -19,16 +20,13 @@ public class LevelController : ILootPicked, ISlotClicked, ISlotStateChanged
     private IEventBus _events;
     private Board _board;
 
-    //public event Action AcceptedColorChanged;
-    //public event Action LevelPhaseChanged; //NOTE: for now only called once on level start 
-
     public LevelController(LevelConfigData levelData, EventBus levelEvents)
     {
         _levelData = levelData;
         _events = levelEvents;
         _countdown = new Countdown(levelData.TimeSec);
-        
-        _events.Subscribe<ILootPicked>(this);
+
+        _events.Subscribe<ILootConsumed>(this);
         _events.Subscribe<ISlotClicked>(this);
         _events.Subscribe<ISlotStateChanged>(this);
     }
@@ -36,7 +34,7 @@ public class LevelController : ILootPicked, ISlotClicked, ISlotStateChanged
     public void SetPhaseInitialize(Board board)
     {
         _board = board;
-        _board.SetInitialState();
+        _board.OnLevelPhaseInitialize();
         Debug.Log("[Level] Initialilze!");
     }
 
@@ -48,8 +46,16 @@ public class LevelController : ILootPicked, ISlotClicked, ISlotStateChanged
 
     private void SwitchAcceptedColor()
     {
+        var current = _acceptedColor;
+
         //get random color from the remaining in the grid
         _acceptedColor = GameManager.current.Board.GetRandomColor();
+
+        //Make sure it's really changed
+        while (_acceptedColor == current && GameManager.current.Board.RemainingColors > 1)
+            _acceptedColor = GameManager.current.Board.GetRandomColor();
+
+        //only rise event when the 
         _events.Broadcast<IAcceptedColorChanged>(s => s.OnAcceptedColorChange(_acceptedColor));
     }
 
@@ -60,27 +66,12 @@ public class LevelController : ILootPicked, ISlotClicked, ISlotStateChanged
         return foo;
     }
 
-    void ILootPicked.OnLootPicked()
-    {
-        //Always Switch Color on Loot activation
-        SwitchAcceptedColor();
-
-        Debug.Log("[Level] AddTime!");
-        _countdown.AddTime(3);
-    }
-
     void ISlotClicked.OnSlotClicked(Slot slot)
     {
         if (Accepted(slot))
             slot.OpenSlot();
         else
             slot.BreakSlot();
-
-        //switches colorcollector by % chance
-        if (UnityEngine.Random.value <= 0.3f)
-        {
-            SwitchAcceptedColor();
-        }
     }
 
     public bool Accepted(Slot slot)
@@ -94,20 +85,31 @@ public class LevelController : ILootPicked, ISlotClicked, ISlotStateChanged
 
     void ISlotStateChanged.OnSlotOpen(Slot slot)
     {
-        ValidateBoard();
+        GameManager.current.Board.UpdateColorList();
+
+        bool validBoard = ValidBoard();
+        bool randomSwitch = UnityEngine.Random.value <= 0.05f;
+        bool hasLoot = slot.Loot != null;
+
+        if (!validBoard || randomSwitch || hasLoot)
+            SwitchAcceptedColor();
     }
 
     void ISlotStateChanged.OnSlotBreak(Slot slot)
     {
-        ValidateBoard();
+        GameManager.current.Board.UpdateColorList();
+        SwitchAcceptedColor();
     }
 
-    private void ValidateBoard()
+    private bool ValidBoard()
     {
-        GameManager.current.Board.UpdateColorList();
-        if (!GameManager.current.Board.DotColors.Contains(_acceptedColor))
-        {
-            SwitchAcceptedColor();
-        }
+        bool valid = GameManager.current.Board.DotColors.Contains(_acceptedColor);
+        return valid;
+    }
+
+    void ILootConsumed.OnLootConsumed()
+    {
+        Debug.Log("[Level] AddTime!");
+        _countdown.AddTime(3);
     }
 }

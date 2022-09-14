@@ -1,7 +1,7 @@
-﻿using Popper.UI;
-using UnityEngine;
-using System.Collections;
+﻿using Popper.Events;
+using Popper.UI;
 using System.Threading.Tasks;
+using UnityEngine;
 
 public class Loot : MonoBehaviour
 {
@@ -18,12 +18,12 @@ public class Loot : MonoBehaviour
     {
         Debug.LogError("Started");
         //broadcast event
-        _events.InvokeLootActivated();
+        _events.Broadcast<ILootPicked>(sub => sub.OnLootPicked());
 
         await MoveToCollectorAsync();
 
         Debug.LogError("Finished");
-        _events.InvokeLootConsumed();
+        _events.Broadcast<ILootConsumed>(sub => sub.OnLootConsumed());
     }
 
     // destroys loot

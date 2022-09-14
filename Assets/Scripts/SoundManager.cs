@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Popper.Events;
 using AGK.Audio;
 
-public class SoundManager : MonoBehaviour, ILootActivated
+public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed
 {
 
     public EventBus _sfxEvents;
@@ -15,7 +15,6 @@ public class SoundManager : MonoBehaviour, ILootActivated
     [SerializeField] private List<AudioAssetData> clipLibrary;
 
     public AudioSource defaultSource;
-    //public AudioSource CellOpen;
 
     void Awake()
     {
@@ -30,11 +29,11 @@ public class SoundManager : MonoBehaviour, ILootActivated
     public void Construct(EventBus events)
     {
         _sfxEvents = events;
-        //_sfxEvents.LootActivated += OnLootActivated;
-        _sfxEvents.LootConsumed += OnLootConsumed;
+        _sfxEvents.Subscribe<ILootPicked>(this);
+        _sfxEvents.Subscribe<ILootConsumed>(this);
     }
 
-    public void OnLootActivated()
+    public void OnLootPicked()
     {
         PlaySFX("sfx-star_activated");
     }

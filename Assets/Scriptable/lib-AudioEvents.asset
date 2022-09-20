@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b2babbd59542a34c86dd763f5720445, type: 3}
+  m_Name: lib-AudioEvents
+  m_EditorClassIdentifier: 
+  data:
+  - uid: sfx-star_activated
+    volume: 1
+    pitch: 1
+    loop: 0
+    randomAsset: 0
+    clips:
+    - uid: star_activate
+  - uid: sfx-color_change
+    volume: 1
+    pitch: 1
+    loop: 0
+    randomAsset: 0
+    clips:
+    - uid: color_change
+  - uid: sfx-cell_open
+    volume: 1
+    pitch: 1
+    loop: 0
+    randomAsset: 1
+    clips:
+    - uid: pop_0
+    - uid: pop_1
+    - uid: pop_2
+    - uid: pop_3
+  - uid: sfx-break_slot
+    volume: 1
+    pitch: 1
+    loop: 0
+    randomAsset: 0
+    clips:
+    - uid: break_slot

@@ -10,11 +10,10 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
 
     public static SoundManager current;
 
-    private IAudioPlayer _player; 
+    private IAudioEventPlayer _player;
 
-    [SerializeField] private List<AudioAssetData> clipLibrary;
-
-    public AudioSource defaultSource;
+    [SerializeField] private AudioEventLib eventLibrary;
+    [SerializeField] private AudioClipLib clipLibrary;
 
     void Awake()
     {
@@ -23,7 +22,7 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
         else if (current != this)
             Destroy(gameObject);
 
-        _player = new AudioPlayer(defaultSource);
+        _player = new AudioPlayerMultiTrack(5, clipLibrary, transform);
     }
 
     public void Construct(EventBus events)
@@ -37,16 +36,7 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
 
     public void PlaySFX(string key)
     {
-        var data = new AudioAssetData(key, GetClip(key));
-        _player.PlaySound(data);
-    }
-
-    public AudioClip GetClip(string key)
-    {
-        var audioAsset  = clipLibrary.Find(cl => string.Equals(key, cl.Key));
-        if (audioAsset.Clip == null)
-            Debug.LogAssertion($"Not Found: {key}");
-        return audioAsset.Clip;
+        _player.PlaySound(eventLibrary.GetEventData(key), out _);
     }
 
     void ILootPicked.OnLootPicked()
@@ -64,8 +54,8 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
         PlaySFX("sfx-color_change");
 
         //Vibrate
-        Debug.LogError("Vibrate!");
-        Handheld.Vibrate();
+        //Debug.LogError("Vibrate!");
+        //Handheld.Vibrate();
     }
 
     void ISlotStateChanged.OnSlotOpen(Slot slot)

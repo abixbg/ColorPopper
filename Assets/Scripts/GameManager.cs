@@ -19,9 +19,7 @@ public class GameManager : MonoBehaviour
 
     public Board Board => currentGrid;
     public LevelController Level => levelController;
-    public ScoreController Score => scoreController;
     public EventBus Events => events;
-    public SoundManager SoundManager => soundManager;
     public UIManager UiManager => uiManager;
 
     void Awake()

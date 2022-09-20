@@ -18,36 +18,29 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     randomAsset: 0
-    assets:
-    - key: star_activate
-      clip: {fileID: 8300000, guid: b6933d55f98b5e044926e99a0cbec846, type: 3}
+    clips:
+    - uid: star_activate
   - uid: sfx-color_change
     volume: 1
     pitch: 1
     loop: 0
     randomAsset: 0
-    assets:
-    - key: color_change
-      clip: {fileID: 8300000, guid: c0278a184375f524db34635f580821bc, type: 3}
+    clips:
+    - uid: color_change
   - uid: sfx-cell_open
     volume: 1
     pitch: 1
     loop: 0
     randomAsset: 1
-    assets:
-    - key: pop_0
-      clip: {fileID: 8300000, guid: 66608ed080f2fec448e021978098331d, type: 3}
-    - key: pop_1
-      clip: {fileID: 8300000, guid: 17913d4fb289b704887ff71a8fd1024d, type: 3}
-    - key: pop_2
-      clip: {fileID: 8300000, guid: 497a2df47ef9baa4d9ab5ce5eb83d2ba, type: 3}
-    - key: pop_3
-      clip: {fileID: 8300000, guid: 4e60a32fc5348a84cb477be537345ed2, type: 3}
+    clips:
+    - uid: pop_0
+    - uid: pop_1
+    - uid: pop_2
+    - uid: pop_3
   - uid: sfx-break_slot
     volume: 1
     pitch: 1
     loop: 0
     randomAsset: 0
-    assets:
-    - key: bang
-      clip: {fileID: 8300000, guid: f4df6221147ef1d4784523a007494e4e, type: 3}
+    clips:
+    - uid: break_slot

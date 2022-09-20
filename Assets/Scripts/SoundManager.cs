@@ -13,6 +13,7 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
     private IAudioEventPlayer _player;
 
     [SerializeField] private AudioEventLib eventLibrary;
+    [SerializeField] private AudioClipLib clipLibrary;
 
     void Awake()
     {
@@ -21,7 +22,7 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
         else if (current != this)
             Destroy(gameObject);
 
-        _player = new AudioPlayerMultiTrack(3, transform);
+        _player = new AudioPlayerMultiTrack(5, clipLibrary, transform);
     }
 
     public void Construct(EventBus events)
@@ -53,8 +54,8 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
         PlaySFX("sfx-color_change");
 
         //Vibrate
-        Debug.LogError("Vibrate!");
-        Handheld.Vibrate();
+        //Debug.LogError("Vibrate!");
+        //Handheld.Vibrate();
     }
 
     void ISlotStateChanged.OnSlotOpen(Slot slot)

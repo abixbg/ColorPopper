@@ -694,6 +694,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventLibrary: {fileID: 11400000, guid: 81a6b2c98cefe4949963c2feb0ab7bb9, type: 2}
+  clipLibrary: {fileID: 11400000, guid: 76b2c15c6dc251342b25dc2cc6a742a1, type: 2}
 --- !u!1 &1023830114
 GameObject:
   m_ObjectHideFlags: 0

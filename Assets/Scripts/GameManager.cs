@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private UIManager uiManager;
     [SerializeField] private Board currentGrid;
+    [SerializeField] private GameClock clock;
 
     public Board Board => currentGrid;
     public LevelController Level => levelController;
@@ -36,7 +37,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        levelController = new LevelController(levelAsset.Data, events);
+        levelController = new LevelController(levelAsset.Data, events, clock);
         scoreController = new ScoreController(events);
 
         soundManager.Construct(events);

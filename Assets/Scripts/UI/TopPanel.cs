@@ -24,7 +24,7 @@ namespace Popper.UI.Panels
             scorePanel.Construct(score);
             scorePanel.SetInitialState();
 
-            clockPanlel.Construct(level.Countdown);
+            clockPanlel.Construct(level.Countdown, level.Stopwatch);
 
         }
 

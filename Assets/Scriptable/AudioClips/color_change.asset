@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: color_change
   m_EditorClassIdentifier: 
   uid: color_change
-  clip: {fileID: 8300000, guid: c0278a184375f524db34635f580821bc, type: 3}
+  clip: {fileID: 8300000, guid: f0a1836160a469040a3ed02931a7aa30, type: 3}

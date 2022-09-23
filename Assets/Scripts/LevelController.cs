@@ -10,21 +10,24 @@ public class LevelController :
     private LevelConfigData _levelData;
     private Color _acceptedColor;
     private readonly Countdown _countdown;
+    private readonly Stopwatch _stopwatch;
 
     public Color AcceptedColor { get => _acceptedColor; }
     public LevelConfigData Config => _levelData;
     public Countdown Countdown => _countdown;
+    public Stopwatch Stopwatch => _stopwatch;
 
     public float TimeRemaining => _countdown.TimeRemaining;
 
     private IEventBus _events;
     private Board _board;
 
-    public LevelController(LevelConfigData levelData, EventBus levelEvents)
+    public LevelController(LevelConfigData levelData, EventBus levelEvents, GameClock clock)
     {
         _levelData = levelData;
         _events = levelEvents;
         _countdown = new Countdown(levelData.TimeSec);
+        _stopwatch = new Stopwatch(clock);
 
         _events.Subscribe<ILootConsumed>(this);
         _events.Subscribe<ISlotClicked>(this);

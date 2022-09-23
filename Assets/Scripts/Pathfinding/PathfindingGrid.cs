@@ -34,46 +34,46 @@ namespace Pathfinding
             return nodes.Find(n => GridPosition.Equals(n.Position, location));
         }
 
-        public List<TNode> GetAllNeighbours(PathNode currentNode)
+        public List<TNode> GetAllNeighbours(TNode currentNode)
         {
             var neighbours = new List<TNode>();
 
             Debug.LogError($"GRID --> {_size}");
 
-            if (currentNode.Location.X - 1 >= 0)
+            if (currentNode.Position.X - 1 >= 0)
             {
                 //SW
-                if (currentNode.Location.Y - 1 >= 0)
-                    neighbours.Add(GetNodeAt(new GridPosition(currentNode.Location.X - 1, currentNode.Location.Y - 1)));
+                if (currentNode.Position.Y - 1 >= 0)
+                    neighbours.Add(GetNodeAt(new GridPosition(currentNode.Position.X - 1, currentNode.Position.Y - 1)));
 
                 //W
-                neighbours.Add(GetNodeAt(new GridPosition(currentNode.Location.X - 1, currentNode.Location.Y)));
+                neighbours.Add(GetNodeAt(new GridPosition(currentNode.Position.X - 1, currentNode.Position.Y)));
 
                 //NW
-                if (currentNode.Location.Y + 1 >= 0)
-                    neighbours.Add(GetNodeAt(new GridPosition(currentNode.Location.X - 1, currentNode.Location.Y + 1)));
+                if (currentNode.Position.Y + 1 >= 0)
+                    neighbours.Add(GetNodeAt(new GridPosition(currentNode.Position.X - 1, currentNode.Position.Y + 1)));
             }
 
             //S
-            if (currentNode.Location.Y - 1 >= 0)
-                neighbours.Add(GetNodeAt(new GridPosition(currentNode.Location.X, currentNode.Location.Y - 1)));
+            if (currentNode.Position.Y - 1 >= 0)
+                neighbours.Add(GetNodeAt(new GridPosition(currentNode.Position.X, currentNode.Position.Y - 1)));
 
             //N
-            if (currentNode.Location.Y + 1 >= 0)
-                neighbours.Add(GetNodeAt(new GridPosition(currentNode.Location.X, currentNode.Location.Y + 1)));
+            if (currentNode.Position.Y + 1 >= 0)
+                neighbours.Add(GetNodeAt(new GridPosition(currentNode.Position.X, currentNode.Position.Y + 1)));
 
-            if (currentNode.Location.X + 1 < _size.x)
+            if (currentNode.Position.X + 1 < _size.x)
             {
                 //SE
-                if (currentNode.Location.Y - 1 >= 0)
-                    neighbours.Add(GetNodeAt(new GridPosition(currentNode.Location.X + 1, currentNode.Location.Y - 1)));
+                if (currentNode.Position.Y - 1 >= 0)
+                    neighbours.Add(GetNodeAt(new GridPosition(currentNode.Position.X + 1, currentNode.Position.Y - 1)));
 
                 //E
-                neighbours.Add(GetNodeAt(new GridPosition(currentNode.Location.X + 1, currentNode.Location.Y)));
+                neighbours.Add(GetNodeAt(new GridPosition(currentNode.Position.X + 1, currentNode.Position.Y)));
 
                 //NE
-                if (currentNode.Location.Y + 1 < _size.y)
-                    neighbours.Add(GetNodeAt(new GridPosition(currentNode.Location.X + 1, currentNode.Location.Y + 1)));
+                if (currentNode.Position.Y + 1 < _size.y)
+                    neighbours.Add(GetNodeAt(new GridPosition(currentNode.Position.X + 1, currentNode.Position.Y + 1)));
             }
             return neighbours;
         }

@@ -7,20 +7,22 @@ namespace Pathfinding
     {
         [SerializeField] private GridPosition location;
         [SerializeField] private bool blocked;
-        [SerializeField] private PathNode cameFrom;
+        [SerializeField] private IPathNode cameFrom;
 
         public int gCost;
         public int hCost;
         public int fCost;
         
-        public PathNode CameFrom;
-
         public GridPosition Location { get => location;}
         GridPosition IPathNode.Position { get => location; set => location = value; }
-        public string LocString => $"[{location.X},{location.Y}]";
 
         public bool HighLight { get; set; }
-        public bool Blocked => blocked;
+
+        bool IPathNode.Blocked => blocked;
+        IPathNode IPathNode.CameFrom { get => cameFrom; set => cameFrom = value; }
+        int IPathNode.CostG { get => gCost; set => gCost = value; }
+        int IPathNode.CostH { get => hCost; set => gCost = value; }
+        int IPathNode.CostF { get => gCost + hCost; }
 
         public PathNode()
         {

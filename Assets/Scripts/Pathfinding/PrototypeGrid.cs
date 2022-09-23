@@ -14,14 +14,14 @@ public class PrototypeGrid : MonoBehaviour
     public PathfindingGrid<PathNode> grid;
     public PathfindingGrid<PathNode> Grid => grid;
 
-    private Pathfinder pathfinder;
+    private Pathfinder<PathNode> pathfinder;
 
     public List<PathNode> Path => pathfinder.FindPath(start, end);
 
     void Start()
     {
         grid = new PathfindingGrid<PathNode>(gridSize);
-        pathfinder = new Pathfinder(grid);
+        pathfinder = new Pathfinder<PathNode>(grid);
 
         MakeUnwalkable();
     }

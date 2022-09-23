@@ -35,7 +35,7 @@ public class NodeVisual : MonoBehaviour
 
         coordinates.text = $"({node.Location.X},{node.Location.Y} )";
 
-        background.color = node.Blocked ? Color.red : Color.grey;
+        background.color = ((IPathNode)node).Blocked ? Color.red : Color.grey;
         highlight.color = node.HighLight ? Color.green : Color.grey;
     }
 }

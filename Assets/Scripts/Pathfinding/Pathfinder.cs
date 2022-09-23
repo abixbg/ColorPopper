@@ -5,51 +5,46 @@ using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
-public class Pathfinder
+public class Pathfinder<TNode> where TNode : IPathNode, new()
 {
     private const int COST_STRAIGHT = 10;
     private const int COST_DIAGONAL = 14;
 
-    private PathfindingGrid<PathNode> grid;
+    private readonly PathfindingGrid<TNode> grid;
 
-    private List<PathNode> openList;
-    private List<PathNode> closedList;
-
-    public Pathfinder(PathfindingGrid<PathNode> grid)
+    public Pathfinder(PathfindingGrid<TNode> grid)
     {
         this.grid = grid;
     }
 
-    public List<PathNode> FindPath(GridPosition start, GridPosition end)
+    public List<TNode> FindPath(GridPosition start, GridPosition end)
     {
-        PathNode startNode = grid.GetNodeAt(start);
-        PathNode endNode = grid.GetNodeAt(end);
+        TNode startNode = grid.GetNodeAt(start);
+        TNode endNode = grid.GetNodeAt(end);
 
-        openList = new List<PathNode> { startNode };
-        closedList = new List<PathNode>();
+        var openList = new List<TNode> { startNode };
+        var closedList = new List<TNode>();
 
         foreach (var node in grid.Nodes)
         {
-            node.gCost = int.MaxValue;
-            node.CalculateFCost();
+            node.CostG = int.MaxValue;
             node.CameFrom = null;
         }
 
         //Start
-        startNode.gCost = 0;
-        startNode.hCost = CalculateDistanceCost(startNode, endNode);
-        startNode.CalculateFCost();
+        startNode.CostG = 0;
+        startNode.CostH = CalculateDistanceCost(startNode, endNode);
 
-        Debug.LogWarning($"h={startNode.hCost} | f={startNode.fCost} | g={startNode.gCost}");
+        Debug.LogWarning($"h={startNode.CostH} | f={startNode.CostF} | g={startNode.CostG}");
 
         //others
         while (openList.Count > 0)
-        {           
-            PathNode currentNode = GetLowestFCostNode(openList);
+        {
+            TNode currentNode = GetLowestFCostNode(openList);
 
-            Debug.LogError($"Check: {currentNode.LocString}");
+            Debug.LogError($"Check: {currentNode.Position.LocString}");
 
-            if (currentNode == endNode)
+            if (currentNode.Position == endNode.Position)
             {
                 //reached final
                 Debug.Log("Done!");
@@ -70,16 +65,15 @@ public class Pathfinder
                     continue;
                 }
 
-                Debug.LogWarning($"[{neughbour.Location.X},{neughbour.Location.Y}] === h={neughbour.hCost} | f={neughbour.fCost}");
+                Debug.LogWarning($"{neughbour.Position.LocString} === h={neughbour.CostH} | f={neughbour.CostF}");
 
-                int provisionalGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neughbour);
+                int provisionalGCost = currentNode.CostG + CalculateDistanceCost(currentNode, neughbour);
 
-                if (provisionalGCost < neughbour.gCost)
+                if (provisionalGCost < neughbour.CostG)
                 {
                     neughbour.CameFrom = currentNode;
-                    neughbour.gCost = provisionalGCost;
-                    neughbour.hCost = CalculateDistanceCost(neughbour, endNode);
-                    neughbour.CalculateFCost();
+                    neughbour.CostG = provisionalGCost;
+                    neughbour.CostH = CalculateDistanceCost(neughbour, endNode);
 
                     if (!openList.Contains(neughbour))
                         openList.Add(neughbour);
@@ -92,44 +86,44 @@ public class Pathfinder
         return null;
     }
 
-    private List<PathNode> CalculatePath(PathNode endnode)
+    private List<TNode> CalculatePath(TNode endnode)
     {
-        List<PathNode> path = new List<PathNode>();
+        List<TNode> path = new List<TNode>();
 
         path.Add(endnode);
 
-        PathNode currentNode = endnode;
+        TNode currentNode = endnode;
 
         while (currentNode.CameFrom != null)
         {
             path.Add(currentNode);
-            currentNode = currentNode.CameFrom;
+            currentNode = (TNode)currentNode.CameFrom;
         }
 
         path.Reverse();
         return path;
     }
 
-    private int CalculateDistanceCost(PathNode a, PathNode b)
+    private int CalculateDistanceCost(TNode a, TNode b)
     {
-        int xDist = (int)MathF.Abs(a.Location.X - b.Location.X);
-        int yDist = (int)MathF.Abs(a.Location.Y - b.Location.Y);
+        int xDist = (int)MathF.Abs(a.Position.X - b.Position.X);
+        int yDist = (int)MathF.Abs(a.Position.Y - b.Position.Y);
         int remaining = (int)MathF.Abs(xDist - yDist);
 
         int dist = COST_DIAGONAL * Mathf.Min(xDist, yDist) + COST_STRAIGHT * remaining;
 
-        Debug.Log($"{a.LocString} --> {b.LocString}| Dist={dist}");
+        Debug.Log($"{a.Position.LocString} --> {b.Position.LocString}| Dist={dist}");
 
         return dist;
     }
 
-    private PathNode GetLowestFCostNode(List<PathNode> nodes)
+    private TNode GetLowestFCostNode(List<TNode> nodes)
     {
         var lowest = nodes[0];
 
         for (int i = 0; i < nodes.Count; i++)
         {
-            if (nodes[i].fCost < lowest.fCost)
+            if (nodes[i].CostF < lowest.CostF)
             {
                 lowest = nodes[i];
             }

@@ -20,7 +20,7 @@ public class Pathfinder
         this.grid = grid;
     }
 
-    public List<PathNode> FindPath(int2 start, int2 end)
+    public List<PathNode> FindPath(GridPosition start, GridPosition end)
     {
         PathNode startNode = grid.GetNodeAt(start);
         PathNode endNode = grid.GetNodeAt(end);
@@ -70,7 +70,7 @@ public class Pathfinder
                     continue;
                 }
 
-                Debug.LogWarning($"[{neughbour.Location.x},{neughbour.Location.y}] === h={neughbour.hCost} | f={neughbour.fCost}");
+                Debug.LogWarning($"[{neughbour.Location.X},{neughbour.Location.Y}] === h={neughbour.hCost} | f={neughbour.fCost}");
 
                 int provisionalGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neughbour);
 
@@ -98,40 +98,40 @@ public class Pathfinder
 
         Debug.LogError($"GRID --> {grid.Size}");
 
-        if (currentNode.Location.x - 1 >= 0)
+        if (currentNode.Location.X - 1 >= 0)
         {
             //SW
-            if (currentNode.Location.y - 1 >= 0)
-                neighbours.Add(grid.GetNodeAt(new int2(currentNode.Location.x - 1, currentNode.Location.y - 1)));
+            if (currentNode.Location.Y - 1 >= 0)
+                neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X - 1, currentNode.Location.Y - 1)));
 
             //W
-            neighbours.Add(grid.GetNodeAt(new int2(currentNode.Location.x - 1, currentNode.Location.y)));
+            neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X - 1, currentNode.Location.Y)));
 
             //NW
-            if (currentNode.Location.y + 1 >= 0)
-                neighbours.Add(grid.GetNodeAt(new int2(currentNode.Location.x - 1, currentNode.Location.y + 1)));
+            if (currentNode.Location.Y + 1 >= 0)
+                neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X - 1, currentNode.Location.Y + 1)));
         }
 
         //S
-        if (currentNode.Location.y - 1 >= 0)
-            neighbours.Add(grid.GetNodeAt(new int2(currentNode.Location.x, currentNode.Location.y - 1)));
+        if (currentNode.Location.Y - 1 >= 0)
+            neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X, currentNode.Location.Y - 1)));
 
         //N
-        if (currentNode.Location.y + 1 >= 0)
-            neighbours.Add(grid.GetNodeAt(new int2(currentNode.Location.x, currentNode.Location.y + 1)));
+        if (currentNode.Location.Y + 1 >= 0)
+            neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X, currentNode.Location.Y + 1)));
 
-        if (currentNode.Location.x + 1 < grid.Size.x)
+        if (currentNode.Location.X + 1 < grid.Size.x)
         {
             //SE
-            if (currentNode.Location.y - 1 >= 0)
-                neighbours.Add(grid.GetNodeAt(new int2(currentNode.Location.x + 1, currentNode.Location.y - 1)));
+            if (currentNode.Location.Y - 1 >= 0)
+                neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X + 1, currentNode.Location.Y - 1)));
 
             //E
-            neighbours.Add(grid.GetNodeAt(new int2(currentNode.Location.x + 1, currentNode.Location.y)));
+            neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X + 1, currentNode.Location.Y)));
 
             //NE
-            if (currentNode.Location.y + 1 < grid.Size.y)
-                neighbours.Add(grid.GetNodeAt(new int2(currentNode.Location.x + 1, currentNode.Location.y + 1)));
+            if (currentNode.Location.Y + 1 < grid.Size.y)
+                neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X + 1, currentNode.Location.Y + 1)));
         }
         return neighbours;
     }
@@ -156,8 +156,8 @@ public class Pathfinder
 
     private int CalculateDistanceCost(PathNode a, PathNode b)
     {
-        int xDist = (int)MathF.Abs(a.Location.x - b.Location.x);
-        int yDist = (int)MathF.Abs(a.Location.y - b.Location.y);
+        int xDist = (int)MathF.Abs(a.Location.X - b.Location.X);
+        int yDist = (int)MathF.Abs(a.Location.Y - b.Location.Y);
         int remaining = (int)MathF.Abs(xDist - yDist);
 
         int dist = COST_DIAGONAL * Mathf.Min(xDist, yDist) + COST_STRAIGHT * remaining;

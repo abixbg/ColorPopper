@@ -8,8 +8,8 @@ public class PrototypeGrid : MonoBehaviour
     // Start is called before the first frame update
 
     [SerializeField] private int2 gridSize;
-    [SerializeField] private int2 start;
-    [SerializeField] private int2 end;
+    [SerializeField] private GridPosition start;
+    [SerializeField] private GridPosition end;
 
     public PathfindingGrid grid;
     public PathfindingGrid Grid => grid;
@@ -28,12 +28,12 @@ public class PrototypeGrid : MonoBehaviour
 
     private void MakeUnwalkable()
     {
-        grid.GetNodeAt(new int2(0, 3)).SetUnwalkable();
-        grid.GetNodeAt(new int2(1, 3)).SetUnwalkable();
-        grid.GetNodeAt(new int2(2, 3)).SetUnwalkable();
-        grid.GetNodeAt(new int2(3, 3)).SetUnwalkable();
-        grid.GetNodeAt(new int2(5, 3)).SetUnwalkable();
-        grid.GetNodeAt(new int2(6, 3)).SetUnwalkable();
-        grid.GetNodeAt(new int2(7, 3)).SetUnwalkable();
+        grid.GetNodeAt(new GridPosition(0, 3)).SetUnwalkable();
+        grid.GetNodeAt(new GridPosition(1, 3)).SetUnwalkable();
+        grid.GetNodeAt(new GridPosition(2, 3)).SetUnwalkable();
+        grid.GetNodeAt(new GridPosition(3, 3)).SetUnwalkable();
+        grid.GetNodeAt(new GridPosition(5, 3)).SetUnwalkable();
+        grid.GetNodeAt(new GridPosition(6, 3)).SetUnwalkable();
+        grid.GetNodeAt(new GridPosition(7, 3)).SetUnwalkable();
     }
 }

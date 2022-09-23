@@ -9,7 +9,7 @@ namespace Pathfinding
     {
 
         private PathfindingGrid grid;
-        [SerializeField] private int2 location;
+        [SerializeField] private GridPosition location;
         [SerializeField] private bool walkable;
 
         public int gCost;
@@ -19,13 +19,13 @@ namespace Pathfinding
 
         public PathNode CameFrom;
 
-        public int2 Location { get => location;}
-        public string LocString => $"[{location.x},{location.y}]";
+        public GridPosition Location { get => location;}
+        public string LocString => $"[{location.X},{location.Y}]";
 
         public bool HighLight { get; set; }
         public bool Walkable => walkable;
 
-        public PathNode(int2 location)
+        public PathNode(GridPosition location)
         {
             this.location = location;
             this.walkable = true;

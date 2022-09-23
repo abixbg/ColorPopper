@@ -46,7 +46,7 @@ public class InspectGrid : MonoBehaviour
         {
             var nodeObj = Instantiate(nodePrefab, transform);
 
-            nodeObj.transform.localPosition = new Vector3(node.Location.x, node.Location.y, 0) * cellSize;
+            nodeObj.transform.localPosition = new Vector3(node.Location.X, node.Location.Y, 0) * cellSize;
             nodeObj.Cosntruct(node.Location);
             nodeVisuals.Add(nodeObj);
         }

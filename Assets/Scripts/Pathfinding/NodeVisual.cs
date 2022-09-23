@@ -14,10 +14,10 @@ public class NodeVisual : MonoBehaviour
     [SerializeField] private SpriteRenderer background;
     [SerializeField] private SpriteRenderer highlight;
 
-    private int2 locationData;
-    public int2 LocationData => locationData;
+    private GridPosition locationData;
+    public GridPosition LocationData => locationData;
  
-    public void Cosntruct(int2 location)
+    public void Cosntruct(GridPosition location)
     {
         locationData = location;
     }
@@ -33,7 +33,7 @@ public class NodeVisual : MonoBehaviour
         
         hText.text = node.hCost.ToString();
 
-        coordinates.text = $"({node.Location.x},{node.Location.y} )";
+        coordinates.text = $"({node.Location.X},{node.Location.Y} )";
 
         background.color = node.Walkable ? Color.grey : Color.red;
         highlight.color = node.HighLight ? Color.green : Color.grey;

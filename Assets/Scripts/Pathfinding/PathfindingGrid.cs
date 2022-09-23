@@ -24,7 +24,7 @@ namespace Pathfinding
             {
                 for (int y = 0; y < locArray.GetLength(1); y++)
                 {
-                    var node = new PathNode(new int2(x,y));
+                    var node = new PathNode(new GridPosition(x,y));
                     nodes.Add(node);
                 }
             }
@@ -34,9 +34,9 @@ namespace Pathfinding
             Debug.Log($"Size =({_size.x}, {_size.y}) | coutn = {nodes.Count}");
         }
 
-        public PathNode GetNodeAt(int2 location)
+        public PathNode GetNodeAt(GridPosition location)
         {
-            return nodes.Find(n => n.Location.x == location.x && n.Location.y == location.y);
+            return nodes.Find(n => n.Location.X == location.x && n.Location.Y == location.y);
         }
     }
 }

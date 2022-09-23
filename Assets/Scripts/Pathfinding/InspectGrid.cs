@@ -1,6 +1,5 @@
-using Pathfinding;
+using AGK.GameGrids.Pathfinding;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class InspectGrid : MonoBehaviour
@@ -19,13 +18,13 @@ public class InspectGrid : MonoBehaviour
 
     private void Update()
     {
-        if (!isInit && _prototype.Grid!=null)
+        if (!isInit && _prototype.Grid != null)
             Init();
 
         if (isInit)
         {
             UpdateUI();
-        }        
+        }
     }
 
     private void UpdateUI()

@@ -1,4 +1,5 @@
-using Pathfinding;
+using AGK.GameGrids;
+using AGK.GameGrids.Pathfinding;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -14,14 +15,14 @@ public class PrototypeGrid : MonoBehaviour
     public PathfindingGrid<PathNode> grid;
     public PathfindingGrid<PathNode> Grid => grid;
 
-    private Pathfinder<PathNode> pathfinder;
+    private Pathfinder<PathfindingGrid<PathNode>, PathNode> pathfinder;
 
     public List<PathNode> Path => pathfinder.FindPath(start, end);
 
     void Start()
     {
         grid = new PathfindingGrid<PathNode>(gridSize);
-        pathfinder = new Pathfinder<PathNode>(grid);
+        pathfinder = new Pathfinder<PathfindingGrid<PathNode>, PathNode>(grid);
 
         MakeUnwalkable();
     }

@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Pathfinding;
+using AGK.GameGrids;
+using AGK.GameGrids.Pathfinding;
 using Unity.Mathematics;
 using UnityEngine.UIElements;
 

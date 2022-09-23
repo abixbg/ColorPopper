@@ -11,8 +11,8 @@ public class PrototypeGrid : MonoBehaviour
     [SerializeField] private GridPosition start;
     [SerializeField] private GridPosition end;
 
-    public PathfindingGrid grid;
-    public PathfindingGrid Grid => grid;
+    public PathfindingGrid<PathNode> grid;
+    public PathfindingGrid<PathNode> Grid => grid;
 
     private Pathfinder pathfinder;
 
@@ -20,7 +20,7 @@ public class PrototypeGrid : MonoBehaviour
 
     void Start()
     {
-        grid = new PathfindingGrid(gridSize);
+        grid = new PathfindingGrid<PathNode>(gridSize);
         pathfinder = new Pathfinder(grid);
 
         MakeUnwalkable();

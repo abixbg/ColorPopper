@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class InspectGrid : MonoBehaviour
 {
-    [SerializeField] private int2 gridSize;
     [SerializeField] private List<NodeVisual> nodeVisuals;
     [SerializeField] private List<PathNode> nodes;
 
@@ -14,7 +13,7 @@ public class InspectGrid : MonoBehaviour
     [SerializeField] private float cellSize;
     [SerializeField] private NodeVisual nodePrefab;
 
-    private PathfindingGrid Grid => _prototype.Grid;
+    private PathfindingGrid<PathNode> Grid => _prototype.Grid;
 
     private bool isInit;
 
@@ -31,7 +30,6 @@ public class InspectGrid : MonoBehaviour
 
     private void UpdateUI()
     {
-        gridSize = Grid.Size;
         foreach (var node in nodeVisuals)
         {
             node.UpdateData(Grid.GetNodeAt(node.LocationData));

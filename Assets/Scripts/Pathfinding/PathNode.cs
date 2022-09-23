@@ -1,14 +1,13 @@
 using UnityEngine;
-using Unity.Mathematics;
-
 
 namespace Pathfinding
 {
     [System.Serializable]
-    public class PathNode
+    public class PathNode : IPathNode
     {
         [SerializeField] private GridPosition location;
         [SerializeField] private bool blocked;
+        [SerializeField] private PathNode cameFrom;
 
         public int gCost;
         public int hCost;
@@ -17,15 +16,15 @@ namespace Pathfinding
         public PathNode CameFrom;
 
         public GridPosition Location { get => location;}
+        GridPosition IPathNode.Position { get => location; set => location = value; }
         public string LocString => $"[{location.X},{location.Y}]";
 
         public bool HighLight { get; set; }
         public bool Blocked => blocked;
 
-        public PathNode(GridPosition location)
+        public PathNode()
         {
-            this.location = location;
-            this.blocked = false;
+            blocked = false;
         }
 
         public void CalculateFCost()

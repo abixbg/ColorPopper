@@ -10,12 +10,12 @@ public class Pathfinder
     private const int COST_STRAIGHT = 10;
     private const int COST_DIAGONAL = 14;
 
-    private PathfindingGrid grid;
+    private PathfindingGrid<PathNode> grid;
 
     private List<PathNode> openList;
     private List<PathNode> closedList;
 
-    public Pathfinder(PathfindingGrid grid)
+    public Pathfinder(PathfindingGrid<PathNode> grid)
     {
         this.grid = grid;
     }

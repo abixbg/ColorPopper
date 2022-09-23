@@ -4,41 +4,39 @@ using UnityEngine;
 
 namespace Pathfinding
 {
-    public class PathfindingGrid
+    public class PathfindingGrid<TNode> where TNode : IPathNode, new()
     {
         private readonly int2 _size;
-        private readonly List<PathNode> nodes;
-
-        public List<PathNode> Nodes => nodes;
-        public int2 Size => _size;
+        private readonly List<TNode> nodes;
+        public List<TNode> Nodes => nodes;
 
         public PathfindingGrid(int2 size)
         {
             _size = size;
-
             int[,] locArray = new int[size.x, size.y];
 
-            nodes = new List<PathNode>();
+            nodes = new List<TNode>();
 
             for (int x = 0; x < locArray.GetLength(0); x++)
             {
                 for (int y = 0; y < locArray.GetLength(1); y++)
                 {
-                    var node = new PathNode(new GridPosition(x,y));
+                    var node = new TNode();
+                    node.Position = new GridPosition(x, y);
                     nodes.Add(node);
                 }
             }
-            Debug.Log($"Size =({_size.x}, {_size.y}) | coutn = {nodes.Count}");
+            Debug.Log($"Size =({size.x}, {size.y}) | coutn = {nodes.Count}");
         }
 
-        public PathNode GetNodeAt(GridPosition location)
+        public TNode GetNodeAt(GridPosition location)
         {
-            return nodes.Find(n => GridPosition.Equals(n.Location, location));
+            return nodes.Find(n => GridPosition.Equals(n.Position, location));
         }
 
-        public List<PathNode> GetAllNeighbours(PathNode currentNode)
+        public List<TNode> GetAllNeighbours(PathNode currentNode)
         {
-            var neighbours = new List<PathNode>();
+            var neighbours = new List<TNode>();
 
             Debug.LogError($"GRID --> {_size}");
 

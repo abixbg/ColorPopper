@@ -59,12 +59,12 @@ public class Pathfinder
             openList.Remove(currentNode);
             closedList.Add(currentNode);
 
-            foreach (var neughbour in GetAllNeighbours(currentNode))
+            foreach (var neughbour in grid.GetAllNeighbours(currentNode))
             {
                 if (closedList.Contains(neughbour))
                     continue;
 
-                if (!neughbour.Walkable)                  
+                if (neughbour.Blocked)                  
                 {
                     closedList.Add(neughbour);
                     continue;
@@ -90,50 +90,6 @@ public class Pathfinder
         //Out of nodes
         Debug.LogError("No path");
         return null;
-    }
-
-    private List<PathNode> GetAllNeighbours(PathNode currentNode)
-    {
-        var neighbours = new List<PathNode>();
-
-        Debug.LogError($"GRID --> {grid.Size}");
-
-        if (currentNode.Location.X - 1 >= 0)
-        {
-            //SW
-            if (currentNode.Location.Y - 1 >= 0)
-                neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X - 1, currentNode.Location.Y - 1)));
-
-            //W
-            neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X - 1, currentNode.Location.Y)));
-
-            //NW
-            if (currentNode.Location.Y + 1 >= 0)
-                neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X - 1, currentNode.Location.Y + 1)));
-        }
-
-        //S
-        if (currentNode.Location.Y - 1 >= 0)
-            neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X, currentNode.Location.Y - 1)));
-
-        //N
-        if (currentNode.Location.Y + 1 >= 0)
-            neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X, currentNode.Location.Y + 1)));
-
-        if (currentNode.Location.X + 1 < grid.Size.x)
-        {
-            //SE
-            if (currentNode.Location.Y - 1 >= 0)
-                neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X + 1, currentNode.Location.Y - 1)));
-
-            //E
-            neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X + 1, currentNode.Location.Y)));
-
-            //NE
-            if (currentNode.Location.Y + 1 < grid.Size.y)
-                neighbours.Add(grid.GetNodeAt(new GridPosition(currentNode.Location.X + 1, currentNode.Location.Y + 1)));
-        }
-        return neighbours;
     }
 
     private List<PathNode> CalculatePath(PathNode endnode)

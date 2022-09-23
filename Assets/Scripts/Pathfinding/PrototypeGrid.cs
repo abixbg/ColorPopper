@@ -28,12 +28,12 @@ public class PrototypeGrid : MonoBehaviour
 
     private void MakeUnwalkable()
     {
-        grid.GetNodeAt(new GridPosition(0, 3)).SetUnwalkable();
-        grid.GetNodeAt(new GridPosition(1, 3)).SetUnwalkable();
-        grid.GetNodeAt(new GridPosition(2, 3)).SetUnwalkable();
-        grid.GetNodeAt(new GridPosition(3, 3)).SetUnwalkable();
-        grid.GetNodeAt(new GridPosition(5, 3)).SetUnwalkable();
-        grid.GetNodeAt(new GridPosition(6, 3)).SetUnwalkable();
-        grid.GetNodeAt(new GridPosition(7, 3)).SetUnwalkable();
+        grid.GetNodeAt(new GridPosition(0, 3)).SetBlocked();
+        grid.GetNodeAt(new GridPosition(1, 3)).SetBlocked();
+        grid.GetNodeAt(new GridPosition(2, 3)).SetBlocked();
+        grid.GetNodeAt(new GridPosition(3, 3)).SetBlocked();
+        grid.GetNodeAt(new GridPosition(5, 3)).SetBlocked();
+        grid.GetNodeAt(new GridPosition(6, 3)).SetBlocked();
+        grid.GetNodeAt(new GridPosition(7, 3)).SetBlocked();
     }
 }

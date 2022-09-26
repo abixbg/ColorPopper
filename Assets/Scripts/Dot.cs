@@ -9,7 +9,7 @@ public class Dot : MonoBehaviour, ISlotKey<ColorSlotKey>
 
     public Color Color => dotColor;
 
-    public bool Match(ColorSlotKey other)
+    public bool IsMatch(ColorSlotKey other)
     {
         return other.Color == dotColor;
     }

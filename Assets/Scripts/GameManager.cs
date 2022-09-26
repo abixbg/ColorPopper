@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
         soundManager.Construct(events);
         uiManager.Construct(this, levelController, scoreController);
 
+
         currentGrid.Construct(levelController);
 
         levelController.SetPhaseInitialize(currentGrid);

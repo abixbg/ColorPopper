@@ -62,28 +62,14 @@ public class LevelController :
         _events.Broadcast<IAcceptedColorChanged>(s => s.OnAcceptedColorChange(_acceptedColor));
     }
 
-    public bool IsAcceptableColor(Color col)
-    {
-        bool foo = false;
-        if (col == _acceptedColor) foo = true;
-        return foo;
-    }
-
     void ISlotClicked.OnSlotClicked(Slot slot)
     {
-        if (Accepted(slot))
+        var key = new ColorSlotKey(_acceptedColor);
+
+        if (slot.Keyhole.Match(key))
             slot.OpenSlot();
         else
             slot.BreakSlot();
-    }
-
-    public bool Accepted(Slot slot)
-    {
-        if (GameManager.current.Level.IsAcceptableColor(slot.Keyhole.Color) == true)
-        {
-            return true;
-        }
-        else return false;
     }
 
     void ISlotStateChanged.OnSlotOpen(Slot slot)

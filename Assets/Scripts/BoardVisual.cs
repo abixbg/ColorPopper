@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using System;
 using AGK.GameGrids;
+using Popper;
 
 public class BoardVisual : MonoBehaviour
 {
@@ -31,6 +32,8 @@ public class BoardVisual : MonoBehaviour
     [SerializeField] private GameGrid2D<Slot> _grid;
 
     [SerializeField] private List<Color> dotColors;
+
+    [SerializeField] private List<ISlotKey<ColorSlotKey>> _colorKeys;
     public List<Color> DotColors => dotColors;
 
     public Action OnBoardChanged;
@@ -80,7 +83,7 @@ public class BoardVisual : MonoBehaviour
             gridSlots[i].Keyhole.transform.parent = gridSlots[i].transform;
 
             //assigning colors from the palette
-            gridSlots[i].Keyhole.SetColor(bubblePool.GetRandomColor());
+            gridSlots[i].Keyhole.SetColor(bubblePool.GetRandomColor().Color);
         }
     }
 

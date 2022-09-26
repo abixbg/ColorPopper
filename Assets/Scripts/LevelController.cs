@@ -20,7 +20,7 @@ public class LevelController :
     public float TimeRemaining => _countdown.TimeRemaining;
 
     private IEventBus _events;
-    private Board _board;
+    private BoardVisual _board;
 
     public LevelController(LevelConfigData levelData, EventBus levelEvents, GameClock clock)
     {
@@ -34,7 +34,7 @@ public class LevelController :
         _events.Subscribe<ISlotStateChanged>(this);
     }
 
-    public void SetPhaseInitialize(Board board)
+    public void SetPhaseInitialize(BoardVisual board)
     {
         _board = board;
         _board.OnLevelPhaseInitialize();

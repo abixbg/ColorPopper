@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using System;
+using AGK.GameGrids;
 
-public class Board : MonoBehaviour
+public class BoardVisual : MonoBehaviour
 {
     public SpriteRenderer BoardBackground;
 
@@ -27,6 +28,8 @@ public class Board : MonoBehaviour
     public float2 BoardRect { get => _boardRect; }
 
     public List<Slot> gridSlots;
+    [SerializeField] private GameGrid2D<Slot> _grid;
+
     [SerializeField] private List<Color> dotColors;
     public List<Color> DotColors => dotColors;
 
@@ -44,7 +47,7 @@ public class Board : MonoBehaviour
         {
             if (dotColors.Contains(gridSlots[i].Keyhole.color) == false)
             {
-                if (gridSlots[i].isActive == true)
+                if (gridSlots[i].IsActive == true)
                 {
                     dotColors.Add(gridSlots[i].Keyhole.color);
                 }               
@@ -105,12 +108,10 @@ public class Board : MonoBehaviour
 
     private void GenerateCells()
     {
-
-
         float halfcell = _cellRectSize * 0.5f;
 
         generator.Construct(LevelController.Config, _cellRectSize, slotPrefab, gameObject.transform);
-        generator.GenerateCells();
+        _grid = new GameGrid2D<Slot>(LevelController.Config.BoardSize, generator.GenerateCells());
         gridSlots = generator.Slots;
 
         _boardRect = new float2(LevelController.Config.BoardSize.x * _cellRectSize + halfcell, LevelController.Config.BoardSize.y * _cellRectSize + halfcell);

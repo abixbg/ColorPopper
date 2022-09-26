@@ -79,7 +79,7 @@ public class LevelController :
 
     public bool Accepted(Slot slot)
     {
-        if (GameManager.current.Level.IsAcceptableColor(slot.Keyhole.color) == true)
+        if (GameManager.current.Level.IsAcceptableColor(slot.Keyhole.Color) == true)
         {
             return true;
         }

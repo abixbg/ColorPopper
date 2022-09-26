@@ -45,11 +45,11 @@ public class BoardVisual : MonoBehaviour
         dotColors.Clear();
         for (int i = 0; i < LevelController.Config.BoardSize.x * LevelController.Config.BoardSize.y; i++)
         {
-            if (dotColors.Contains(gridSlots[i].Keyhole.color) == false)
+            if (dotColors.Contains(gridSlots[i].Keyhole.Color) == false)
             {
                 if (gridSlots[i].IsActive == true)
                 {
-                    dotColors.Add(gridSlots[i].Keyhole.color);
+                    dotColors.Add(gridSlots[i].Keyhole.Color);
                 }               
             }
         }

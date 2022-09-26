@@ -15,10 +15,10 @@ public class GameManager : MonoBehaviour
     private EventBus events;
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private UIManager uiManager;
-    [SerializeField] private Board currentGrid;
+    [SerializeField] private BoardVisual currentGrid;
     [SerializeField] private GameClock clock;
 
-    public Board Board => currentGrid;
+    public BoardVisual Board => currentGrid;
     public LevelController Level => levelController;
     public EventBus Events => events;
     public UIManager UiManager => uiManager;

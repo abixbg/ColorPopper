@@ -5,7 +5,7 @@ using Unity.Mathematics;
 
 public class CameraScreenFit : MonoBehaviour
 {
-    public Board board;
+    public BoardVisual board;
 
     public float unitsPerPixel;
     public Transform quad;

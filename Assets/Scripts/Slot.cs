@@ -1,31 +1,34 @@
 ﻿using Popper.Events;
 using UnityEngine;
+using AGK.GameGrids;
 
 [System.Serializable]
-public class Slot : MonoBehaviour
+public class Slot : MonoBehaviour, IGridCell
 {
     public Dot Keyhole { get; set; }
 
     [SerializeField] private Loot loot;
     public Loot Loot { get => loot; set => loot = value; }
 
-    public int index;
-
     public SpriteRenderer border;
 
-    public bool isLocked;
-    public bool isActive;
+    public bool IsLocked => data.IsLocked;
+    public bool IsActive => data.IsActive;
+
+    [SerializeField] private CellData data;
 
     private EventBus Events => GameManager.current.Events;
 
-    void Awake()
+    GridPosition IGridCell.Position { get => data.Position; set => data.Position = value; }
+
+    public void Construct(CellData data)
     {
-        isActive = true;
+        this.data = data;
     }
 
     public void CmdClicked()
     {
-        if (isActive == true)
+        if (IsActive == true)
         {
             Events.Broadcast<ISlotClicked>(s => s.OnSlotClicked(this));
         }
@@ -33,11 +36,8 @@ public class Slot : MonoBehaviour
 
     public void OpenSlot()
     {
-        isActive = false;
-        isLocked = false;
-
-        // update slot graphics to unlocked state
-        border.enabled = false;
+        data.IsActive = false;
+        data.IsLocked = false;
 
         // activate slot contents
         if (loot != null)
@@ -46,16 +46,13 @@ public class Slot : MonoBehaviour
         }
 
         Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpen(this));
-        HideSlot();
+        UpdateVisual();
     }
 
     public void BreakSlot()
     {
-        isActive = false;
-        isLocked = true;
-
-        //update graphics to broken state
-        border.color = new Color32(140, 30, 30, 255);
+        data.IsActive = false;
+        data.IsLocked = true;
 
         //disable slot contents
         if (loot != null)
@@ -64,12 +61,24 @@ public class Slot : MonoBehaviour
         }
 
         Events.Broadcast<ISlotStateChanged>(s => s.OnSlotBreak(this));
-        HideSlot();
+        UpdateVisual();
     }
 
-    private void HideSlot()
+    private void UpdateVisual()
     {
-        //disable dot
-        Keyhole.gameObject.SetActive(false);
+        if (!data.IsActive)
+        {
+            if (data.IsLocked)
+            {
+                border.color = new Color32(140, 30, 30, 255);
+            }
+            else
+            {
+                border.enabled = false;
+            }
+        }
+        else
+            border.enabled = true;
+        Keyhole.gameObject.SetActive(data.IsActive);
     }
 }

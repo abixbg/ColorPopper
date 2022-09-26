@@ -1,15 +1,14 @@
-using System.Collections;
+using AGK.GameGrids;
 using System.Collections.Generic;
-using UnityEngine;
 using Unity.Mathematics;
+using UnityEngine;
 
 /// <summary>
 /// CellRootGenerator
 /// </summary>
 public class BoardCellGenerator : MonoBehaviour
 {
-    [SerializeField] private List<float3> cellRootCoordiantes;
-    [SerializeField] private List<CellData> cellCoordinatesData;
+    [SerializeField] private List<CellData> cellsData;
 
     private int2 boardSize;
     private float cellSize;
@@ -27,15 +26,11 @@ public class BoardCellGenerator : MonoBehaviour
         this.slotPrefab = slotPrefab;
         this.origin = new float3(origin.position.x, origin.position.y, origin.position.z);
         parent = origin;
-
         _gridSlots = new List<Slot>();
     }
 
-    public void GenerateCells()
+    public List<Slot> GenerateCells()
     {
-        int count = boardSize.x * boardSize.y;
-        cellRootCoordiantes = new List<float3>(count);
-
         int index = 0;
 
         for (int i = 0; i < boardSize.x; i++)
@@ -50,20 +45,25 @@ public class BoardCellGenerator : MonoBehaviour
                 float verticalOffset = j * cellSize;
                 verticalOffset = verticalOffset - (boardSize.y * 0.5f) + (cellSize * 0.5f);
 
-                float3 coord = new float3(origin.x + horizontalOffset,  origin.y + verticalOffset, origin.z);
+                float3 vPos = new float3(origin.x + horizontalOffset, origin.y + verticalOffset, origin.z);
 
-                cellRootCoordiantes.Add(coord);
+                GridPosition gPos = new GridPosition(i, j);
+
+                cellsData.Add(new CellData(gPos, vPos));
 
                 index++;
             }
         }
 
-        foreach (var coord in cellRootCoordiantes)
+        foreach (var data in cellsData)
         {
-            var root = Instantiate(slotPrefab, coord, quaternion.identity);
-            root.transform.parent = parent;
+            var slot = Instantiate(slotPrefab, data.VisualPosition, quaternion.identity);
+            slot.transform.parent = parent;
+            slot.Construct(data);
 
-            _gridSlots.Add(root);
+            _gridSlots.Add(slot);
         }
+
+        return _gridSlots;
     }
 }

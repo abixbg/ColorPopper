@@ -1,15 +1,25 @@
+using AGK.GameGrids;
 using Unity.Mathematics;
 using UnityEngine;
 
 [System.Serializable]
-public struct CellData
+public struct CellData : IGridCell
 {
-    [SerializeField] private float2 coordinates;
+    [SerializeField] private GridPosition gridPos;
+    [SerializeField] private float3 visualPos;
+    [SerializeField] private bool isLocked;
+    [SerializeField] private bool isActive;
 
-    public float2 Coordiantes { get => coordinates; }
+    public GridPosition Position { get => gridPos; set => gridPos = value; }
+    public float3 VisualPosition { get => visualPos; set => visualPos = value; }
+    public bool IsLocked { get => isLocked; set => isLocked = value; }
+    public bool IsActive { get => isActive; set => isActive = value; }
 
-    public CellData(float2 coordinates)
+    public CellData(GridPosition gridPos, float3 visualPos)
     {
-        this.coordinates = coordinates;
+        this.gridPos = gridPos;
+        this.visualPos = visualPos;
+        isLocked = false;
+        isActive = true;
     }
 }

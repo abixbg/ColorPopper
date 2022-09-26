@@ -1,3 +1,4 @@
+using AGK.GameGrids;
 using AGK.GameGrids.Pathfinding;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class InspectGrid : MonoBehaviour
     [SerializeField] private float cellSize;
     [SerializeField] private NodeVisual nodePrefab;
 
-    private PathfindingGrid<PathNode> Grid => _prototype.Grid;
+    private GameGrid2D<PathNode> Grid => _prototype.Grid;
 
     private bool isInit;
 

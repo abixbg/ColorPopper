@@ -27,6 +27,7 @@ public class BoardVisual : MonoBehaviour
 
     public List<Slot> gridSlots;
     [SerializeField] private GameGrid2D<Slot> _grid;
+    public GameGrid2D<Slot> Grid => _grid;
 
     public int RemainingSlots { 
         get

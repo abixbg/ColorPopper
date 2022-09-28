@@ -1,6 +1,8 @@
+using AGK.GameGrids;
 using EventBroadcast;
 using Popper.Events;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class LevelController :
     ISlotClicked,
@@ -73,7 +75,20 @@ public class LevelController :
         var key = new ColorSlotKey(_acceptedColor);
 
         if (slot.Keyhole.IsMatch(key))
+        {
             slot.OpenSlot();
+
+            if (slot.Loot != null)
+            {
+                foreach (var pos in _board.Grid.GetAllNeighbours(((IGridCell)slot).Position))
+                {
+                    var nSlot = _board.Grid.GetNodeAt(pos);
+
+                    nSlot.OpenSlot();
+                } 
+            }
+
+        }
         else
             slot.BreakSlot();
     }

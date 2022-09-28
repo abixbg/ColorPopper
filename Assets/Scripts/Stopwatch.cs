@@ -6,6 +6,8 @@ public class Stopwatch
     private float _multiplier;
     public float TimeSec => _time;
 
+    private bool isActive;
+
     public event Action ValueUpdated;
     public Stopwatch(GameClock clock)
     {
@@ -15,8 +17,16 @@ public class Stopwatch
 
     public void AddDelta(float deltaTime)
     {
-        _time += deltaTime;
-        ValueUpdated?.Invoke();
+        if (isActive)
+        {
+            _time += deltaTime;
+            ValueUpdated?.Invoke();
+        }
+    }
+
+    public void SetActive(bool state)
+    {
+        isActive = state;
     }
 
     public void Reset()

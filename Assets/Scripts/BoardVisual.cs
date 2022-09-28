@@ -1,9 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using AGK.GameGrids;
+using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
-using System;
-using AGK.GameGrids;
+using UnityEngine;
 
 public class BoardVisual : MonoBehaviour
 {
@@ -13,13 +12,12 @@ public class BoardVisual : MonoBehaviour
     public Slot slotPrefab;
     public Dot dotPrefab;
     public Loot lootPrefab;
-    [SerializeField] private ColorPalette colorPalette;
 
     [Header("Services")]
     public BoardCellGenerator generator;
     public CameraScreenFit gameView;
+    private ISlotKeyPool<ColorSlotKey> _colorPool;
 
-    public int RemainingColors { get => dotColors.Count; }
     private readonly float _cellRectSize = 1f;
     private LevelController _levelController;
     private LevelController LevelController => _levelController;
@@ -29,48 +27,41 @@ public class BoardVisual : MonoBehaviour
 
     public List<Slot> gridSlots;
     [SerializeField] private GameGrid2D<Slot> _grid;
+    public GameGrid2D<Slot> Grid => _grid;
 
-    [SerializeField] private List<Color> dotColors;
-    public List<Color> DotColors => dotColors;
+    public int RemainingSlots { 
+        get
+        {
+            return _grid.Nodes.FindAll(s => s.IsActive == true).Count;
+        } 
+    }
 
     public Action OnBoardChanged;
 
     public void Construct(LevelController levelController)
     {
         _levelController = levelController;
+        _colorPool = _levelController.KeyPool;
     }
 
-    public void UpdateColorList()
+    public bool HaveKeyHoleOnBoard(ColorSlotKey key)
     {
-        dotColors.Clear();
-        for (int i = 0; i < LevelController.Config.BoardSize.x * LevelController.Config.BoardSize.y; i++)
+        foreach (var slot in _grid.Nodes)
         {
-            if (dotColors.Contains(gridSlots[i].Keyhole.color) == false)
+            if (slot.Keyhole.Color == key.Color && slot.IsActive)
             {
-                if (gridSlots[i].IsActive == true)
-                {
-                    dotColors.Add(gridSlots[i].Keyhole.color);
-                }               
+                //Debug.LogError($"Found: ", slot.gameObject);
+                return true;
             }
+                
         }
-    }
 
-    public Color GetRandomColor()
-    {
-        if (dotColors.Count > 0 )
-        {
-            int index = UnityEngine.Random.Range(0, dotColors.Count);
-            ///Debug.Log(dotColors.Count);
-            return dotColors[index];
-        }
-        return new Color();
+        return false;
     }
 
     // fills the grid with dot gameobjects
-    public void LockWithDots(ColorPalette palette)
+    public void LockWithDots()
     {
-        var bubblePool = new BubblePoolColors(palette);
-
         for (int i = 0; i < gridSlots.Count; i++)
         {
             //instantiating dots in grid
@@ -80,14 +71,14 @@ public class BoardVisual : MonoBehaviour
             gridSlots[i].Keyhole.transform.parent = gridSlots[i].transform;
 
             //assigning colors from the palette
-            gridSlots[i].Keyhole.SetColor(bubblePool.GetRandomColor());
+            gridSlots[i].Keyhole.SetColor(_colorPool.GetRandom().Color);
         }
     }
 
 
     public void FillWithLoot()
     {
-        int addedLoot = 0; 
+        int addedLoot = 0;
 
         for (int i = 0; i < gridSlots.Count; i++)
         {
@@ -121,10 +112,8 @@ public class BoardVisual : MonoBehaviour
     public void OnLevelPhaseInitialize()
     {
         GenerateCells();
-
-        LockWithDots(colorPalette);
+        LockWithDots();
         FillWithLoot();
-        UpdateColorList();
 
         BoardBackground.size = new Vector2(BoardRect.x, BoardRect.y);
         OnBoardChanged?.Invoke();

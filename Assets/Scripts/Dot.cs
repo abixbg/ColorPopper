@@ -1,34 +1,22 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Popper;
+using UnityEngine;
 
 [System.Serializable]
-public class Dot : MonoBehaviour
+public class Dot : MonoBehaviour, ISlotKey<ColorSlotKey>
 {
-    // the color of the dot
-    [SerializeField]
-    Color dotColor;
+    [SerializeField] private Color dotColor;
+    [SerializeField] private SpriteRenderer colorSprite;
 
-    public Color color
+    public Color Color => dotColor;
+
+    public bool IsMatch(ColorSlotKey other)
     {
-        get { return dotColor; }
+        return other.Color == dotColor;
     }
 
-
-    //public int gridIndex;
-    //public bool isInGrid;
-
-    // the color of the sprite representing dot color 
-    [SerializeField]
-    SpriteRenderer colorSprite;
-
-
-    // sets color of the dot
     public void SetColor(Color col)
     {
         dotColor = col;
         colorSprite.color = dotColor;
     }
-
-
-
 }

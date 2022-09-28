@@ -1,18 +1,54 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Data;
+using UnityEngine;
 
-public class BubblePoolColors
+public class BubblePoolColors : ISlotKeyPool<ColorSlotKey>
 {
-    private readonly ColorPalette _palette;
+    private readonly List<ColorSlotKey> colorKeys;
+
+    public int Remaining => colorKeys.Count;
 
     public BubblePoolColors(ColorPalette palette)
     {
-        _palette = palette;
+        colorKeys = new List<ColorSlotKey>();
+
+        foreach (var col in palette.Colors)
+        {
+            colorKeys.Add(new ColorSlotKey(col));
+        }
     }
 
-    public Color GetRandomColor()
-    {
-        int index = Random.Range(0, _palette.Colors.Count - 1);
+    public List<ColorSlotKey> Pool => colorKeys;
 
-        return _palette.Colors[index];
+    public ColorSlotKey GetRandom()
+    {
+            int index = Random.Range(0, colorKeys.Count);
+        return colorKeys[index];
+    }
+
+    public void Replace(List<ColorSlotKey> keys)
+    {
+        colorKeys.Clear();
+        foreach (var key in keys)
+        {
+            colorKeys.Add(key);
+        }
+    }
+
+    public bool Remove(ColorSlotKey key)
+    {
+        int found = colorKeys.RemoveAll(k=> k.Color == key.Color);
+        return found > 0;
+    }
+
+    public bool Contains(ColorSlotKey key)
+    {
+        foreach (var k in colorKeys)
+        {
+            if (k.Color == key.Color)
+                return true;
+        }
+
+        return false;
     }
 }

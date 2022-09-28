@@ -8,6 +8,9 @@ public class InspectLevel : MonoBehaviour
     public Color acceptedColor;
     public float time;
 
+    public List<ColorSlotKey> AllColors;
+    public int RemainingSlots;
+
     private GameManager _gameManager;
     private void Awake()
     {
@@ -19,6 +22,9 @@ public class InspectLevel : MonoBehaviour
         {
             acceptedColor = _gameManager.Level.AcceptedColor;
             time = _gameManager.Level.TimeRemaining;
+
+            AllColors = _gameManager.Level.KeyPool.Pool;
+            RemainingSlots = _gameManager.Level.BoardCellremaining;
         }
     }
 }

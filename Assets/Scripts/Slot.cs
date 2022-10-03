@@ -34,12 +34,6 @@ public class Slot : MonoBehaviour, IGridCell, ICellContentMatch
         }
     }
 
-    public void OnNeighbourDestrooyed()
-    {
-        Debug.LogError("Destroyed by neighbour!");
-        OpenSlot();
-    }
-
     public void OpenSlot()
     {
         data.IsActive = false;

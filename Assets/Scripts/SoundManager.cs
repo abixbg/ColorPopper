@@ -39,7 +39,7 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
         _player.PlaySound(eventLibrary.GetEventData(key), out _);
     }
 
-    void ILootPicked.OnLootPicked()
+    void ILootPicked.OnLootPicked(Loot _)
     {
 
     }

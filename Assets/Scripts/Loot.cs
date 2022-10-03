@@ -26,7 +26,7 @@ public class Loot : MonoBehaviour
         if (!isActivated)
         {
             //broadcast event
-            _events.Broadcast<ILootPicked>(sub => sub.OnLootPicked());
+            _events.Broadcast<ILootPicked>(sub => sub.OnLootPicked(this));
             await MoveToCollectorAsync();
             _events.Broadcast<ILootConsumed>(sub => sub.OnLootConsumed(this));
 

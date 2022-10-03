@@ -139,7 +139,7 @@ public class BoardVisual : MonoBehaviour
 
             for (int i = 1; i < island.Cells.Count; i++)
             {
-                connected.Add(_grid.GetNodeAt(island.Cells[0].Position));
+                connected.Add(_grid.GetNodeAt(island.Cells[i].Position));
             }
 
             AddIslandDestructLoot(slot, connected);

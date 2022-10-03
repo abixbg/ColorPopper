@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 public class LevelController :
     ISlotClicked,
     ISlotStateChanged,
+    ILootPicked,
     ILootConsumed
 {
     private LevelConfigData _levelData;
@@ -37,6 +38,7 @@ public class LevelController :
         _stopwatch.SetActive(true);
         _keyPool = new BubblePoolColors(levelData.Pallete);
 
+        _events.Subscribe<ILootPicked>(this);
         _events.Subscribe<ILootConsumed>(this);
         _events.Subscribe<ISlotClicked>(this);
         _events.Subscribe<ISlotStateChanged>(this);
@@ -74,21 +76,8 @@ public class LevelController :
     {
         var key = new ColorSlotKey(_acceptedColor);
 
-        if (slot.Keyhole.IsMatch(key))
-        {
-            slot.OpenSlot();
-
-            if (slot.Loot != null)
-            {
-                foreach (var pos in _board.Grid.GetAllNeighbours(((IGridCell)slot).Position))
-                {
-                    var nSlot = _board.Grid.GetNodeAt(pos);
-
-                    nSlot.OpenSlot();
-                } 
-            }
-
-        }
+        if (slot.Keyhole.IsMatch(key))       
+            slot.OpenSlot();        
         else
             slot.BreakSlot();
     }
@@ -142,11 +131,18 @@ public class LevelController :
         return valid;
     }
 
-    void ILootConsumed.OnLootConsumed()
+    void ILootPicked.OnLootPicked(Loot loot)
+    {
+        foreach (var slot in loot.ConnectedSlots)
+        {
+            slot.Loot = null;
+            slot.OpenSlot();
+        }
+    }
+
+    void ILootConsumed.OnLootConsumed(Loot loot)
     {
         Debug.Log("[Level] AddTime!");
         _countdown.AddTime(3);
     }
-
-
 }

@@ -4,6 +4,6 @@ namespace Popper.Events
 {
     public interface ILootPicked : IEventSubscriber
     {
-        void OnLootPicked();
+        void OnLootPicked(Loot loot);
     }
 }

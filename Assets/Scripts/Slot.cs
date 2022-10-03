@@ -3,7 +3,7 @@ using UnityEngine;
 using AGK.GameGrids;
 
 [System.Serializable]
-public class Slot : MonoBehaviour, IGridCell
+public class Slot : MonoBehaviour, IGridCell, ICellContentMatch
 {
     public Dot Keyhole { get; set; }
 
@@ -39,13 +39,15 @@ public class Slot : MonoBehaviour, IGridCell
         data.IsActive = false;
         data.IsLocked = false;
 
+
+        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpen(this));
+
         // activate slot contents
         if (loot != null)
         {
             loot.Activate();
         }
 
-        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpen(this));
         UpdateVisual();
     }
 
@@ -80,5 +82,10 @@ public class Slot : MonoBehaviour, IGridCell
         else
             border.enabled = true;
         Keyhole.gameObject.SetActive(data.IsActive);
+    }
+
+    bool ICellContentMatch.IsMatch(ICellContentMatch other)
+    {
+        return ((Slot)other).Keyhole.Color == Keyhole.Color;
     }
 }

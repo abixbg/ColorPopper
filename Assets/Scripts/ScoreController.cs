@@ -24,7 +24,7 @@ public class ScoreController : ILootConsumed
         ScoreChanged?.Invoke();
     }
 
-    public void OnLootConsumed()
+    public void OnLootConsumed(Loot _)
     {
         Debug.Log($"[Score] added score={10}");
         AddPointsLevel(10);

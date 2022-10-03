@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using AGK.GameGrids;
 using AGK.GameGrids.Pathfinding;
-using Unity.Mathematics;
-using UnityEngine.UIElements;
+using UnityEngine;
 
 public class NodeVisual : MonoBehaviour
 {
@@ -17,7 +13,7 @@ public class NodeVisual : MonoBehaviour
 
     private GridPosition locationData;
     public GridPosition LocationData => locationData;
- 
+
     public void Cosntruct(GridPosition location)
     {
         locationData = location;
@@ -31,7 +27,7 @@ public class NodeVisual : MonoBehaviour
             fText.text = "inf";
         else
             fText.text = node.fCost.ToString();
-        
+
         hText.text = node.hCost.ToString();
 
         coordinates.text = $"({node.Location.X},{node.Location.Y} )";

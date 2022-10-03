@@ -1,5 +1,6 @@
 ﻿using Popper.Events;
 using Popper.UI;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -7,19 +8,30 @@ public class Loot : MonoBehaviour
 {
     private EventBus _events;
     private UIManager _ui;
+    private List<Slot> connectedSlots;
 
-    public void Construct(EventBus events, UIManager uiManager)
+    public List<Slot> ConnectedSlots => connectedSlots;
+
+    private bool isActivated;
+
+    public void Construct(EventBus events, UIManager uiManager, List<Slot> connectedSlots)
     {
         _events = events;
         _ui = uiManager;
+        this.connectedSlots = connectedSlots;
     }
 
     public async void Activate()
     {
-        //broadcast event
-        _events.Broadcast<ILootPicked>(sub => sub.OnLootPicked());
-        await MoveToCollectorAsync();
-        _events.Broadcast<ILootConsumed>(sub => sub.OnLootConsumed());
+        if (!isActivated)
+        {
+            //broadcast event
+            _events.Broadcast<ILootPicked>(sub => sub.OnLootPicked());
+            await MoveToCollectorAsync();
+            _events.Broadcast<ILootConsumed>(sub => sub.OnLootConsumed(this));
+
+            isActivated = true;
+        }
     }
 
     // destroys loot

@@ -74,21 +74,8 @@ public class LevelController :
     {
         var key = new ColorSlotKey(_acceptedColor);
 
-        if (slot.Keyhole.IsMatch(key))
-        {
-            slot.OpenSlot();
-
-            if (slot.Loot != null)
-            {
-                foreach (var pos in _board.Grid.GetAllNeighbours(((IGridCell)slot).Position))
-                {
-                    var nSlot = _board.Grid.GetNodeAt(pos);
-
-                    nSlot.OpenSlot();
-                } 
-            }
-
-        }
+        if (slot.Keyhole.IsMatch(key))       
+            slot.OpenSlot();        
         else
             slot.BreakSlot();
     }
@@ -142,11 +129,15 @@ public class LevelController :
         return valid;
     }
 
-    void ILootConsumed.OnLootConsumed()
+    void ILootConsumed.OnLootConsumed(Loot loot)
     {
         Debug.Log("[Level] AddTime!");
         _countdown.AddTime(3);
+
+        foreach (var slot in loot.ConnectedSlots)
+        {
+            slot.Loot = null;
+            slot.OnNeighbourDestrooyed();
+        }
     }
-
-
 }

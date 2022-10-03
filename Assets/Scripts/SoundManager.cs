@@ -44,7 +44,7 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
 
     }
 
-    void ILootConsumed.OnLootConsumed()
+    void ILootConsumed.OnLootConsumed(Loot _)
     {
         PlaySFX("sfx-star_activated");
     }

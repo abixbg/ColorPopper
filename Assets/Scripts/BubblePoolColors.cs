@@ -26,6 +26,16 @@ public class BubblePoolColors : ISlotKeyPool<ColorSlotKey>
         return colorKeys[index];
     }
 
+    public ColorSlotKey GetRandomNew(ColorSlotKey current)
+    {
+        var newKey = GetRandom();
+
+        while (newKey.Color == current.Color && Remaining > 1)
+            newKey = GetRandom();
+
+        return newKey;
+    }
+
     public void Replace(List<ColorSlotKey> keys)
     {
         colorKeys.Clear();

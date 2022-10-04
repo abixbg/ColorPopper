@@ -2,7 +2,6 @@ using Popper;
 using System.Collections.Generic;
 
 public interface ISlotKeyPool<TKey>
-    where TKey : ISlotKeyData
 {
     List<TKey> Pool { get; }
 

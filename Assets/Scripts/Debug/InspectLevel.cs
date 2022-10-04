@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(GameManager))]
 public class InspectLevel : MonoBehaviour
 {
-    public Color acceptedColor;
+    public ColorSlotKey acceptedColor;
     public float time;
 
     public List<ColorSlotKey> AllColors;
@@ -20,7 +20,7 @@ public class InspectLevel : MonoBehaviour
     {
         if (_gameManager.Level != null)
         {
-            acceptedColor = _gameManager.Level.AcceptedColor;
+            acceptedColor = _gameManager.Level.AcceptedContent.Current;
             time = _gameManager.Level.TimeRemaining;
 
             AllColors = _gameManager.Level.KeyPool.Pool;

@@ -1,5 +1,6 @@
 using AGK.GameGrids;
 using EventBroadcast;
+using Popper;
 using Popper.Events;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -11,12 +12,10 @@ public class LevelController :
     ILootConsumed
 {
     private LevelConfigData _levelData;
-    private Color _acceptedColor;
     private readonly Countdown _countdown;
     private readonly Stopwatch _stopwatch;
     public readonly BubblePoolColors _keyPool;
-
-    public Color AcceptedColor { get => _acceptedColor; }
+    public CellMatchExact<ColorSlotKey> AcceptedContent { get; private set; }
     public LevelConfigData Config => _levelData;
     public Countdown Countdown => _countdown;
     public Stopwatch Stopwatch => _stopwatch;   
@@ -37,6 +36,7 @@ public class LevelController :
         _stopwatch = new Stopwatch(clock);
         _stopwatch.SetActive(true);
         _keyPool = new BubblePoolColors(levelData.Pallete);
+        AcceptedContent = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandom());
 
         _events.Subscribe<ILootPicked>(this);
         _events.Subscribe<ILootConsumed>(this);
@@ -54,29 +54,22 @@ public class LevelController :
     public void StartLevel()
     {
         Debug.Log("[Level] Start!");
-        SwitchAcceptedColor();
+        SwitchAcceptedContent();
     }
 
-    private void SwitchAcceptedColor()
+    private void SwitchAcceptedContent()
     {
-        var current = _acceptedColor;
-
-        //get random color from the remaining in the grid
-        _acceptedColor = _keyPool.GetRandom().Color;
-
-        //Make sure it's really changed
-        while (_acceptedColor == current && GameManager.current.Level.KeyPool.Remaining > 1)
-            _acceptedColor = _keyPool.GetRandom().Color;
-
-        //only rise event when the 
-        _events.Broadcast<IAcceptedColorChanged>(s => s.OnAcceptedColorChange(_acceptedColor));
+        AcceptedContent = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandomNew(AcceptedContent.Current));
+        _events.Broadcast<IAcceptedColorChanged>(s => s.OnAcceptedColorChange(AcceptedContent.Current.Color));
     }
 
     void ISlotClicked.OnSlotClicked(Slot slot)
     {
-        var key = new ColorSlotKey(_acceptedColor);
+        var asf = (IMatchKey<ColorSlotKey>)slot.Keyhole;
 
-        if (slot.Keyhole.IsMatch(key))       
+        bool accepted = AcceptedContent.IsAccepted(asf);
+
+        if (accepted)       
             slot.OpenSlot();        
         else
             slot.BreakSlot();
@@ -97,13 +90,13 @@ public class LevelController :
 
         if (BoardCellremaining <1)
         {
-            Debug.LogAssertion($"LevelCompleted!");
+            Debug.Log($"[Level] Completed!");
             _stopwatch.SetActive(false);
             return;
         }
 
         if (!validBoard || randomSwitch || hasLoot)
-            SwitchAcceptedColor();
+            SwitchAcceptedContent();
     }
 
     void ISlotStateChanged.OnSlotBreak(Slot slot)
@@ -122,12 +115,12 @@ public class LevelController :
             return;
         }
 
-        SwitchAcceptedColor();
+        SwitchAcceptedContent();
     }
 
     private bool ValidBoard()
     {
-        bool valid = GameManager.current.Board.HaveKeyHoleOnBoard(new ColorSlotKey(_acceptedColor));
+        bool valid = GameManager.current.Board.HaveKeyHoleOnBoard(AcceptedContent.Current);
         return valid;
     }
 

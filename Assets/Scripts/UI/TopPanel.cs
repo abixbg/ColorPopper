@@ -19,7 +19,7 @@ namespace Popper.UI.Panels
             btnReset.onClick.AddListener(delegate {gameManager.CmdRestartScene(); });
 
             acceptedColorPanel.Construct();
-            acceptedColorPanel.SetInitialState(level.AcceptedColor);
+            acceptedColorPanel.SetInitialState(level.AcceptedContent.Current.Color);
 
             scorePanel.Construct(score);
             scorePanel.SetInitialState();

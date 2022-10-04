@@ -2,14 +2,13 @@
 using UnityEngine;
 
 [System.Serializable]
-public class Dot : MonoBehaviour, ISlotKey<ColorSlotKey>
+public class Dot : MonoBehaviour, IMatchKey<ColorSlotKey>
 {
     [SerializeField] private Color dotColor;
     [SerializeField] private SpriteRenderer colorSprite;
-
     public Color Color => dotColor;
 
-    public bool IsMatch(ColorSlotKey other)
+    bool IMatchKey<ColorSlotKey>.IsMatch(ColorSlotKey other)
     {
         return other.Color == dotColor;
     }

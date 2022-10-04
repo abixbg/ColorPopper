@@ -8,7 +8,7 @@ using UnityEngine;
 /// </summary>
 public class BoardCellGenerator : MonoBehaviour
 {
-    [SerializeField] private List<CellData> cellsData;
+    [SerializeField] public List<CellData> cellsData;
 
     private int2 boardSize;
     private float cellSize;
@@ -17,7 +17,7 @@ public class BoardCellGenerator : MonoBehaviour
     private List<Slot> _gridSlots;
     private Transform parent;
 
-    public List<Slot> Slots { get => _gridSlots; }
+
 
     public void Construct(LevelConfigData levelData, float cellSize, Slot slotPrefab, Transform origin)
     {

@@ -370,7 +370,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 803949102}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &222804518
 SpriteRenderer:
@@ -500,11 +500,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 726762469}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.53, y: 8.97, z: 0}
+  m_LocalPosition: {x: 4.6918426, y: 8.227771, z: -3.1484375}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 803949102}
+  m_Father: {fileID: 1053201648}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &781896857
@@ -604,7 +604,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 726762471}
   - {fileID: 222804517}
   m_Father: {fileID: 381593745}
   m_RootOrder: 2
@@ -625,14 +624,11 @@ MonoBehaviour:
   slotPrefab: {fileID: 11461682, guid: 008d314dd6194f7478a84fba5c1e4169, type: 3}
   dotPrefab: {fileID: 11499190, guid: 4b8651116098bb749b72e3b142aacd31, type: 3}
   lootPrefab: {fileID: 11451340, guid: 98d22bb7e964a6c4faee5fc0423b4271, type: 3}
-  colorPalette: {fileID: 11400000, guid: ddb0ed78ddc89824ba7b346b5dd8c19e, type: 2}
-  generator: {fileID: 726762470}
   gameView: {fileID: 6883168}
   _boardRect:
     x: 0
     y: 0
   gridSlots: []
-  dotColors: []
 --- !u!1 &843048396
 GameObject:
   m_ObjectHideFlags: 0
@@ -758,8 +754,9 @@ MonoBehaviour:
   levelAsset: {fileID: 11400000, guid: 39b3f695ea589104c9553928e72ac403, type: 2}
   soundManager: {fileID: 843048398}
   uiManager: {fileID: 1023830115}
-  currentGrid: {fileID: 803949103}
+  _boardVisual: {fileID: 803949103}
   clock: {fileID: 1997311645}
+  boardGenerator: {fileID: 726762470}
 --- !u!4 &1053201648
 Transform:
   m_ObjectHideFlags: 0
@@ -771,7 +768,8 @@ Transform:
   m_LocalPosition: {x: -0.16184227, y: -0.25777045, z: 2.1484375}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 726762471}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -787,8 +785,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 611155eed8cd8c84fbc296ec5e0cc584, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceptedColor: {r: 0, g: 0, b: 0, a: 0}
+  acceptedColor:
+    color: {r: 0, g: 0, b: 0, a: 0}
   time: 0
+  AllColors: []
+  RemainingSlots: 0
+  Slots: []
 --- !u!1 &1168108645
 GameObject:
   m_ObjectHideFlags: 0

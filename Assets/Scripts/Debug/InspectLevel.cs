@@ -11,6 +11,8 @@ public class InspectLevel : MonoBehaviour
     public List<ColorSlotKey> AllColors;
     public int RemainingSlots;
 
+    public List<SlotData> Slots;
+
     private GameManager _gameManager;
     private void Awake()
     {
@@ -25,6 +27,8 @@ public class InspectLevel : MonoBehaviour
 
             AllColors = _gameManager.Level.KeyPool.Pool;
             RemainingSlots = _gameManager.Level.BoardCellremaining;
+
+            Slots = _gameManager.Level.Grid.Nodes;
         }
     }
 }

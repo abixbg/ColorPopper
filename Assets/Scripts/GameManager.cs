@@ -3,6 +3,7 @@ using Popper.Events;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using AGK.GameGrids;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,10 +16,11 @@ public class GameManager : MonoBehaviour
     private EventBus events;
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private UIManager uiManager;
-    [SerializeField] private BoardVisual currentGrid;
+    [SerializeField] private BoardVisual _boardVisual;
     [SerializeField] private GameClock clock;
+    [SerializeField] private BoardCellGenerator boardGenerator;
 
-    public BoardVisual Board => currentGrid;
+    public BoardVisual Board => _boardVisual;
     public LevelController Level => levelController;
     public EventBus Events => events;
     public UIManager UiManager => uiManager;
@@ -43,10 +45,11 @@ public class GameManager : MonoBehaviour
         soundManager.Construct(events);
         uiManager.Construct(this, levelController, scoreController);
 
+        Debug.Log("[Level] Initialilze!");
 
-        currentGrid.Construct(levelController);
-
-        levelController.SetPhaseInitialize(currentGrid);
+        _boardVisual.Construct(levelController.Grid, levelController);
+        _boardVisual.GenerateCells();
+        _boardVisual.OnLevelPhaseInitialize();
         levelController.StartLevel();
     }
 
@@ -59,4 +62,5 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(0, LoadSceneMode.Single);
     }
+
 }

@@ -71,7 +71,7 @@ public class LevelController :
     {
         var key = new ColorSlotKey(slot.Keyhole.Color);
 
-        if (!GameManager.current.Board.HaveKeyHoleOnBoard(key))
+        if (!HaveKeyHoleOnBoard(key))
         {
             GameManager.current.Level.KeyPool.Remove(key);
         }
@@ -95,7 +95,7 @@ public class LevelController :
     {
         var key = new ColorSlotKey(slot.Keyhole.Color);
 
-        if (!GameManager.current.Board.HaveKeyHoleOnBoard(key))
+        if (!HaveKeyHoleOnBoard(key))
         {
             GameManager.current.Level.KeyPool.Remove(key);
         }
@@ -145,7 +145,22 @@ public class LevelController :
 
     private bool ValidBoard()
     {
-        bool valid = GameManager.current.Board.HaveKeyHoleOnBoard(AcceptedContent.Current);
+        bool valid = HaveKeyHoleOnBoard(AcceptedContent.Current);
         return valid;
+    }
+
+    public bool HaveKeyHoleOnBoard(ColorSlotKey key)
+    {
+        foreach (var slot in _grid.Nodes)
+        {
+            if (slot.SlotVisual.Keyhole.Color == key.Color && slot.IsActive)
+            {
+                Debug.LogError($"Found: {slot.SlotVisual}", slot.SlotVisual.gameObject);
+                return true;
+            }
+
+        }
+
+        return false;
     }
 }

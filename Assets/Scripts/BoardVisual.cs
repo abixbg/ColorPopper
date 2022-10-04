@@ -37,36 +37,36 @@ public class BoardVisual : MonoBehaviour
         _colorPool = _levelController.KeyPool;
     }
 
-    public bool HaveKeyHoleOnBoard(ColorSlotKey key)
-    {
-        foreach (var slot in _grid.Nodes)
-        {
-            if (slot.SlotVisual.Keyhole.Color == key.Color && slot.IsActive)
-            {
-                //Debug.LogError($"Found: ", slot.gameObject);
-                return true;
-            }
+    //public bool HaveKeyHoleOnBoard(ColorSlotKey key)
+    //{
+    //    foreach (var slot in _grid.Nodes)
+    //    {
+    //        if (slot.SlotVisual.Keyhole.Color == key.Color && slot.IsActive)
+    //        {
+    //            //Debug.LogError($"Found: ", slot.gameObject);
+    //            return true;
+    //        }
 
-        }
+    //    }
 
-        return false;
-    }
+    //    return false;
+    //}
 
-    // fills the grid with dot gameobjects
-    public void LockWithDots()
-    {
-        for (int i = 0; i < gridSlots.Count; i++)
-        {
-            //instantiating dots in grid
-            gridSlots[i].Keyhole = Instantiate(dotPrefab, gridSlots[i].transform.position, Quaternion.identity) as Dot;
+    //// fills the grid with dot gameobjects
+    //public void LockWithDots()
+    //{
+    //    for (int i = 0; i < gridSlots.Count; i++)
+    //    {
+    //        //instantiating dots in grid
+    //        gridSlots[i].Keyhole = Instantiate(dotPrefab, gridSlots[i].transform.position, Quaternion.identity) as Dot;
 
-            //make dot gameobjects parent of slot
-            gridSlots[i].Keyhole.transform.parent = gridSlots[i].transform;
+    //        //make dot gameobjects parent of slot
+    //        gridSlots[i].Keyhole.transform.parent = gridSlots[i].transform;
 
-            //assigning colors from the palette
-            gridSlots[i].Keyhole.SetColor(_colorPool.GetRandom().Color);
-        }
-    }
+    //        //assigning colors from the palette
+    //        gridSlots[i].Keyhole.SetColor(_colorPool.GetRandom().Color);
+    //    }
+    //}
 
 
     public void FillWithLoot()
@@ -110,7 +110,7 @@ public class BoardVisual : MonoBehaviour
     public void OnLevelPhaseInitialize()
     {
         //GenerateCells();
-        LockWithDots();
+        //LockWithDots();
         CheckIslands();
 
         //FillWithLoot();

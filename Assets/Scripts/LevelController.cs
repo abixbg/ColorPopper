@@ -1,9 +1,7 @@
-using AGK.GameGrids;
 using EventBroadcast;
 using Popper;
 using Popper.Events;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class LevelController :
     ISlotClicked,
@@ -11,26 +9,25 @@ public class LevelController :
     ILootPicked,
     ILootConsumed
 {
-    private LevelConfigData _levelData;
+    private readonly LevelConfigData _config;
     private readonly Countdown _countdown;
     private readonly Stopwatch _stopwatch;
-    public readonly BubblePoolColors _keyPool;
-    public CellMatchExact<ColorSlotKey> AcceptedContent { get; private set; }
-    public LevelConfigData Config => _levelData;
-    public Countdown Countdown => _countdown;
-    public Stopwatch Stopwatch => _stopwatch;   
-    public BubblePoolColors KeyPool => _keyPool;
+    private readonly BubblePoolColors _keyPool;
+    private readonly IEventBus _events;
 
-    public float TimeRemaining => _countdown.TimeRemaining;
-
-    public int BoardCellremaining => _board.RemainingSlots;
-
-    private IEventBus _events;
     private BoardVisual _board;
+
+    public LevelConfigData Config => _config;
+    public CellMatchExact<ColorSlotKey> AcceptedContent { get; private set; }   
+    public Countdown Countdown => _countdown;
+    public Stopwatch Stopwatch => _stopwatch;
+    public BubblePoolColors KeyPool => _keyPool;
+    public float TimeRemaining => _countdown.TimeRemaining;
+    public int BoardCellremaining => _board.RemainingSlots;
 
     public LevelController(LevelConfigData levelData, EventBus levelEvents, GameClock clock)
     {
-        _levelData = levelData;
+        _config = levelData;
         _events = levelEvents;
         _countdown = new Countdown(levelData.TimeSec);
         _stopwatch = new Stopwatch(clock);
@@ -44,37 +41,19 @@ public class LevelController :
         _events.Subscribe<ISlotStateChanged>(this);
     }
 
-    public void SetPhaseInitialize(BoardVisual board)
-    {
-        _board = board;
-        _board.OnLevelPhaseInitialize();
-        Debug.Log("[Level] Initialilze!");
-    }
-
-    public void StartLevel()
-    {
-        Debug.Log("[Level] Start!");
-        SwitchAcceptedContent();
-    }
-
-    private void SwitchAcceptedContent()
-    {
-        AcceptedContent = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandomNew(AcceptedContent.Current));
-        _events.Broadcast<IAcceptedColorChanged>(s => s.OnAcceptedColorChange(AcceptedContent.Current.Color));
-    }
-
+    #region ISlotClicked
     void ISlotClicked.OnSlotClicked(Slot slot)
     {
-        var asf = (IMatchKey<ColorSlotKey>)slot.Keyhole;
+        bool accepted = AcceptedContent.IsAccepted(slot.Keyhole);
 
-        bool accepted = AcceptedContent.IsAccepted(asf);
-
-        if (accepted)       
-            slot.OpenSlot();        
+        if (accepted)
+            slot.OpenSlot();
         else
             slot.BreakSlot();
     }
+    #endregion
 
+    #region ISlotStateChanged
     void ISlotStateChanged.OnSlotOpen(Slot slot)
     {
         var key = new ColorSlotKey(slot.Keyhole.Color);
@@ -83,12 +62,12 @@ public class LevelController :
         {
             GameManager.current.Level.KeyPool.Remove(key);
         }
-        
+
         bool validBoard = ValidBoard();
         bool randomSwitch = UnityEngine.Random.value <= 0.05f;
         bool hasLoot = slot.Loot != null;
 
-        if (BoardCellremaining <1)
+        if (BoardCellremaining < 1)
         {
             Debug.Log($"[Level] Completed!");
             _stopwatch.SetActive(false);
@@ -117,13 +96,9 @@ public class LevelController :
 
         SwitchAcceptedContent();
     }
+    #endregion
 
-    private bool ValidBoard()
-    {
-        bool valid = GameManager.current.Board.HaveKeyHoleOnBoard(AcceptedContent.Current);
-        return valid;
-    }
-
+    #region ILootPicked
     void ILootPicked.OnLootPicked(Loot loot)
     {
         foreach (var slot in loot.ConnectedSlots)
@@ -132,10 +107,38 @@ public class LevelController :
             slot.OpenSlot();
         }
     }
+    #endregion
 
+    #region ILootConsumed
     void ILootConsumed.OnLootConsumed(Loot loot)
     {
         Debug.Log("[Level] AddTime!");
         _countdown.AddTime(3);
+    }
+    #endregion
+
+    public void SetPhaseInitialize(BoardVisual board)
+    {
+        _board = board;
+        _board.OnLevelPhaseInitialize();
+        Debug.Log("[Level] Initialilze!");
+    }
+
+    public void StartLevel()
+    {
+        Debug.Log("[Level] Start!");
+        SwitchAcceptedContent();
+    }
+
+    private void SwitchAcceptedContent()
+    {
+        AcceptedContent = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandomNew(AcceptedContent.Current));
+        _events.Broadcast<IAcceptedColorChanged>(s => s.OnAcceptedColorChange(AcceptedContent.Current.Color));
+    }
+
+    private bool ValidBoard()
+    {
+        bool valid = GameManager.current.Board.HaveKeyHoleOnBoard(AcceptedContent.Current);
+        return valid;
     }
 }

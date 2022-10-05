@@ -10,29 +10,46 @@ public class LevelController :
     ILootConsumed
 {
     private readonly LevelConfigData _config;
+    private readonly LevelGrid _grid;
     private readonly Countdown _countdown;
     private readonly Stopwatch _stopwatch;
-    private readonly BubblePoolColors _keyPool;
+    private readonly BubblePoolColors _keyPool;  
     private readonly IEventBus _events;
 
-    private BoardVisual _board;
-
     public LevelConfigData Config => _config;
+    public LevelGrid Grid => _grid;
     public CellMatchExact<ColorSlotKey> AcceptedContent { get; private set; }   
     public Countdown Countdown => _countdown;
     public Stopwatch Stopwatch => _stopwatch;
     public BubblePoolColors KeyPool => _keyPool;
     public float TimeRemaining => _countdown.TimeRemaining;
-    public int BoardCellremaining => _board.RemainingSlots;
 
-    public LevelController(LevelConfigData levelData, EventBus levelEvents, GameClock clock)
+    public int BoardCellremaining
     {
-        _config = levelData;
+        get
+        {
+            return _grid.Nodes.FindAll(s => s.IsActive == true).Count;
+        }
+    }
+
+    public LevelController(LevelConfigData levelConfig, EventBus levelEvents, GameClock clock)
+    {
+        _config = levelConfig;
         _events = levelEvents;
-        _countdown = new Countdown(levelData.TimeSec);
+        _countdown = new Countdown(levelConfig.TimeSec);
         _stopwatch = new Stopwatch(clock);
         _stopwatch.SetActive(true);
-        _keyPool = new BubblePoolColors(levelData.Pallete);
+        _keyPool = new BubblePoolColors(levelConfig.Pallete);
+
+        //Generate CellData
+        _grid = new LevelGrid(levelConfig.BoardSize, LevelGrid.Generate(levelConfig.BoardSize));
+
+        foreach (var cell in _grid.Nodes)
+        {
+            cell.SetAdditionalData(false, true);
+        }
+
+        
         AcceptedContent = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandom());
 
         _events.Subscribe<ILootPicked>(this);
@@ -58,7 +75,7 @@ public class LevelController :
     {
         var key = new ColorSlotKey(slot.Keyhole.Color);
 
-        if (!GameManager.current.Board.HaveKeyHoleOnBoard(key))
+        if (!HaveKeyHoleOnBoard(key))
         {
             GameManager.current.Level.KeyPool.Remove(key);
         }
@@ -82,7 +99,7 @@ public class LevelController :
     {
         var key = new ColorSlotKey(slot.Keyhole.Color);
 
-        if (!GameManager.current.Board.HaveKeyHoleOnBoard(key))
+        if (!HaveKeyHoleOnBoard(key))
         {
             GameManager.current.Level.KeyPool.Remove(key);
         }
@@ -117,12 +134,6 @@ public class LevelController :
     }
     #endregion
 
-    public void SetPhaseInitialize(BoardVisual board)
-    {
-        _board = board;
-        _board.OnLevelPhaseInitialize();
-        Debug.Log("[Level] Initialilze!");
-    }
 
     public void StartLevel()
     {
@@ -138,7 +149,22 @@ public class LevelController :
 
     private bool ValidBoard()
     {
-        bool valid = GameManager.current.Board.HaveKeyHoleOnBoard(AcceptedContent.Current);
+        bool valid = HaveKeyHoleOnBoard(AcceptedContent.Current);
         return valid;
+    }
+
+    public bool HaveKeyHoleOnBoard(ColorSlotKey key)
+    {
+        foreach (var slot in _grid.Nodes)
+        {
+            if (slot.SlotVisual.Keyhole.Color == key.Color && slot.IsActive)
+            {
+                Debug.LogError($"Found: {slot.SlotVisual}", slot.SlotVisual.gameObject);
+                return true;
+            }
+
+        }
+
+        return false;
     }
 }

@@ -3,32 +3,32 @@ using UnityEngine;
 using AGK.GameGrids;
 
 [System.Serializable]
-public class Slot : MonoBehaviour, IGridCell, ICellContentMatch
-{
+public class Slot : MonoBehaviour
+{  
     public Dot Keyhole { get; set; }
 
     [SerializeField] private Loot loot;
     public Loot Loot { get => loot; set => loot = value; }
 
-    public SpriteRenderer border;
+    [SerializeField] private SpriteRenderer border;
 
-    public bool IsLocked => data.IsLocked;
-    public bool IsActive => data.IsActive;
+    [SerializeField] private SlotData Data => grid.GetNodeAt(gridPos);
 
-    [SerializeField] private CellData data;
+    private GameGrid2D<SlotData> grid;
+    private GridPosition gridPos;
 
     private EventBus Events => GameManager.current.Events;
 
-    GridPosition IGridCell.Position { get => data.Position; set => data.Position = value; }
-
-    public void Construct(CellData data)
+    public void Construct(GameGrid2D<SlotData> grid, GridPosition gridPos)
     {
-        this.data = data;
+        this.grid = grid;
+        this.gridPos = gridPos;
     }
 
     public void CmdClicked()
     {
-        if (IsActive == true)
+        Debug.LogError($"Clicked! active={Data.IsActive}", gameObject);
+        if (Data.IsActive == true)
         {
             Events.Broadcast<ISlotClicked>(s => s.OnSlotClicked(this));
         }
@@ -36,8 +36,8 @@ public class Slot : MonoBehaviour, IGridCell, ICellContentMatch
 
     public void OpenSlot()
     {
-        data.IsActive = false;
-        data.IsLocked = false;
+        Data.IsActive = false;
+        Data.IsLocked = false;
 
 
         Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpen(this));
@@ -53,8 +53,8 @@ public class Slot : MonoBehaviour, IGridCell, ICellContentMatch
 
     public void BreakSlot()
     {
-        data.IsActive = false;
-        data.IsLocked = true;
+        Data.IsActive = false;
+        Data.IsLocked = true;
 
         //disable slot contents
         if (loot != null)
@@ -68,9 +68,9 @@ public class Slot : MonoBehaviour, IGridCell, ICellContentMatch
 
     private void UpdateVisual()
     {
-        if (!data.IsActive)
+        if (!Data.IsActive)
         {
-            if (data.IsLocked)
+            if (Data.IsLocked)
             {
                 border.color = new Color32(140, 30, 30, 255);
             }
@@ -81,11 +81,11 @@ public class Slot : MonoBehaviour, IGridCell, ICellContentMatch
         }
         else
             border.enabled = true;
-        Keyhole.gameObject.SetActive(data.IsActive);
+        Keyhole.gameObject.SetActive(Data.IsActive);
     }
 
-    bool ICellContentMatch.IsMatch(ICellContentMatch other)
-    {
-        return ((Slot)other).Keyhole.Color == Keyhole.Color;
-    }
+    //bool ICellContentMatch.IsMatch(ICellContentMatch other)
+    //{
+    //    return ((Slot)other).Keyhole.Color == Keyhole.Color;
+    //}
 }

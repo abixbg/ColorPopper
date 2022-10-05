@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class BoardVisual : MonoBehaviour
 {
+    private const float CELL_SIZE = 1f;
+
     public SpriteRenderer BoardBackground;
 
     [Header("Resources")]
@@ -15,110 +17,41 @@ public class BoardVisual : MonoBehaviour
     public Loot lootPrefab;
 
     [Header("Services")]
-    public BoardCellGenerator generator;
     public CameraScreenFit gameView;
     private ISlotKeyPool<ColorSlotKey> _colorPool;
 
-    private readonly float _cellRectSize = 1f;
+    
+    private GameGrid2D<SlotData> _grid;
     private LevelController _levelController;
-    private LevelController LevelController => _levelController;
+    private float2 _boardRect;   
 
-    [SerializeField] private float2 _boardRect;
-    public float2 BoardRect { get => _boardRect; }
-
-    public List<Slot> gridSlots;
-    private GameGrid2D<Slot> _grid;
-    public GameGrid2D<Slot> Grid => _grid;
-
-    public int RemainingSlots
-    {
-        get
-        {
-            return _grid.Nodes.FindAll(s => s.IsActive == true).Count;
-        }
-    }
+    private LevelController LevelController => _levelController;    
+    public float2 BoardRect { get => _boardRect; }   
 
     public Action OnBoardChanged;
 
-    public void Construct(LevelController levelController)
+    public void Construct(LevelGrid grid, LevelController levelController)
     {
         _levelController = levelController;
+        _grid = grid;
         _colorPool = _levelController.KeyPool;
     }
 
-    public bool HaveKeyHoleOnBoard(ColorSlotKey key)
+    public void SpawnCells()
     {
-        foreach (var slot in _grid.Nodes)
-        {
-            if (slot.Keyhole.Color == key.Color && slot.IsActive)
-            {
-                //Debug.LogError($"Found: ", slot.gameObject);
-                return true;
-            }
+        float halfcell = CELL_SIZE * 0.5f;
+        
+        int2 gridSize = _levelController.Config.BoardSize; //TODO: (AGK) get this from grid
+        var cellSpawner = new BoardCellSpawner(_grid, gridSize, 1f, slotPrefab, dotPrefab, _colorPool, gameObject.transform);
+        cellSpawner.GenerateCells();
 
-        }
-
-        return false;
-    }
-
-    // fills the grid with dot gameobjects
-    public void LockWithDots()
-    {
-        for (int i = 0; i < gridSlots.Count; i++)
-        {
-            //instantiating dots in grid
-            gridSlots[i].Keyhole = Instantiate(dotPrefab, gridSlots[i].transform.position, Quaternion.identity) as Dot;
-
-            //make dot gameobjects parent of slot
-            gridSlots[i].Keyhole.transform.parent = gridSlots[i].transform;
-
-            //assigning colors from the palette
-            gridSlots[i].Keyhole.SetColor(_colorPool.GetRandom().Color);
-        }
-    }
-
-
-    public void FillWithLoot()
-    {
-        int addedLoot = 0;
-
-        for (int i = 0; i < gridSlots.Count; i++)
-        {
-            bool hasLoot = UnityEngine.Random.value >= 0.6f;
-
-            if (hasLoot && addedLoot < 5)
-            {
-                //instantiating dots in grid
-                gridSlots[i].Loot = Instantiate(lootPrefab, gridSlots[i].transform.position, Quaternion.identity) as Loot;
-                gridSlots[i].Loot.Construct(GameManager.current.Events, GameManager.current.UiManager, new List<Slot>());
-
-                //make dot gameobjects parent of slot
-                gridSlots[i].Loot.transform.parent = gridSlots[i].transform;
-                addedLoot++;
-            }
-        }
-    }
-
-    private void GenerateCells()
-    {
-        float halfcell = _cellRectSize * 0.5f;
-
-        generator.Construct(LevelController.Config, _cellRectSize, slotPrefab, gameObject.transform);
-        _grid = new GameGrid2D<Slot>(LevelController.Config.BoardSize, generator.GenerateCells());
-
-        gridSlots = generator.Slots;
-
-        _boardRect = new float2(LevelController.Config.BoardSize.x * _cellRectSize + halfcell, LevelController.Config.BoardSize.y * _cellRectSize + halfcell);
+        _boardRect = new float2(LevelController.Config.BoardSize.x * CELL_SIZE + halfcell, LevelController.Config.BoardSize.y * CELL_SIZE + halfcell);
     }
 
 
     public void OnLevelPhaseInitialize()
     {
-        GenerateCells();
-        LockWithDots();
         CheckIslands();
-
-        //FillWithLoot();
 
         BoardBackground.size = new Vector2(BoardRect.x, BoardRect.y);
         OnBoardChanged?.Invoke();
@@ -126,7 +59,9 @@ public class BoardVisual : MonoBehaviour
 
     private void CheckIslands()
     {
-        var islandFinder = new Islandfinder<GameGrid2D<Slot>, Slot>(_grid);
+        Debug.LogError($"Grid: {_grid == null} | {_grid.Nodes[0].SlotVisual.gameObject}");
+
+        var islandFinder = new Islandfinder<GameGrid2D<SlotData>, SlotData>(_grid);
         islandFinder.RecalculateIslands();
         var islands = islandFinder.GetIslands(3);
 
@@ -139,10 +74,10 @@ public class BoardVisual : MonoBehaviour
 
             for (int i = 1; i < island.Cells.Count; i++)
             {
-                connected.Add(_grid.GetNodeAt(island.Cells[i].Position));
+                connected.Add(_grid.GetNodeAt(island.Cells[i].Position).SlotVisual);
             }
 
-            AddIslandDestructLoot(slot, connected);
+            AddIslandDestructLoot(slot.SlotVisual, connected);
             Debug.Log($"[BoardVisual] {island.ToString()} --> {island.Cells[0].Position} ");
         }
     }

@@ -1,6 +1,5 @@
-﻿using Popper.UI;
-using Popper.Events;
-using Unity.Mathematics;
+﻿using Popper.Events;
+using Popper.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,10 +14,9 @@ public class GameManager : MonoBehaviour
     private EventBus events;
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private UIManager uiManager;
-    [SerializeField] private BoardVisual currentGrid;
+    [SerializeField] private BoardVisual _boardVisual;
     [SerializeField] private GameClock clock;
 
-    public BoardVisual Board => currentGrid;
     public LevelController Level => levelController;
     public EventBus Events => events;
     public UIManager UiManager => uiManager;
@@ -29,8 +27,6 @@ public class GameManager : MonoBehaviour
             current = this;
         else if (current != this)
             Destroy(gameObject);
-
-        //DontDestroyOnLoad(gameObject);
 
         events = new EventBus();
     }
@@ -43,10 +39,11 @@ public class GameManager : MonoBehaviour
         soundManager.Construct(events);
         uiManager.Construct(this, levelController, scoreController);
 
+        Debug.Log("[Level] Initialilze!");
 
-        currentGrid.Construct(levelController);
-
-        levelController.SetPhaseInitialize(currentGrid);
+        _boardVisual.Construct(levelController.Grid, levelController);
+        _boardVisual.SpawnCells();
+        _boardVisual.OnLevelPhaseInitialize();
         levelController.StartLevel();
     }
 
@@ -59,4 +56,5 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(0, LoadSceneMode.Single);
     }
+
 }

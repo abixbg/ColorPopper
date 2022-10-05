@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,10 +8,10 @@ public class LootStar : SlotLoot
         ConnectedSlots = connectedSlots;
     }
 
-    public List<SlotData> ConnectedSlots { get; set; }
+    public List<SlotData> ConnectedSlots { get; }
 
     public override void Activate()
     {
-        Debug.LogError("Star Activated");
+        Debug.LogAssertion("[LootStar] NOT IMPLEMENTED!: Activate"); //slot.SlotVisual.OpenSlot();
     }
 }

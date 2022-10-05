@@ -43,20 +43,17 @@ public class SlotVisual : MonoBehaviour
         SlotData.IsActive = false;
         SlotData.IsLocked = false;
 
-
         Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpen(SlotData, this));
+        UpdateVisual();
 
         // activate slot contents
         if (SlotData.Loot != null)
         {    
             //broadcast event
             Events.Broadcast<ILootPicked>(sub => sub.OnLootPicked(SlotData.Loot));
-            SlotData.Loot.Activate();
             await loot.Activate();
             Events.Broadcast<ILootConsumed>(sub => sub.OnLootConsumed(SlotData.Loot));
         }
-
-        UpdateVisual();
     }
 
     public void BreakSlot()
@@ -64,14 +61,14 @@ public class SlotVisual : MonoBehaviour
         SlotData.IsActive = false;
         SlotData.IsLocked = true;
 
+        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotBreak(SlotData, this));
+        UpdateVisual();
+
         //disable slot contents
         if (SlotData.Loot != null)
         {
             loot.Break();
-        }
-
-        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotBreak(SlotData, this));
-        UpdateVisual();
+        }      
     }
 
     private void UpdateVisual()

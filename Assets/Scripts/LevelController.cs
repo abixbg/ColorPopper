@@ -116,12 +116,7 @@ public class LevelController :
         //TODO: Implement loot Resolver or split to interfaces
 
         var star = (LootStar)loot;
-
-        foreach (var slot in star.ConnectedSlots)
-        {
-            slot.Loot = null;
-            Debug.LogAssertion("NOT IMPLEMENTED!: open connected slots"); //slot.SlotVisual.OpenSlot();
-        }
+        star.Activate();
     }
     #endregion
 

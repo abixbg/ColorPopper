@@ -10,7 +10,7 @@ public class Slot : MonoBehaviour
     [SerializeField] private Loot loot;
     public Loot Loot { get => loot; set => loot = value; }
 
-    public SpriteRenderer border;
+    [SerializeField] private SpriteRenderer border;
 
     [SerializeField] private SlotData Data => grid.GetNodeAt(gridPos);
 
@@ -19,12 +19,10 @@ public class Slot : MonoBehaviour
 
     private EventBus Events => GameManager.current.Events;
 
-    //GridPosition IGridCell.Position { get => data.Position; set => data.Position = value; }
-
-    public void Construct(GameGrid2D<SlotData> grid, CellData posData)
+    public void Construct(GameGrid2D<SlotData> grid, GridPosition gridPos)
     {
         this.grid = grid;
-        this.gridPos = posData.Position;
+        this.gridPos = gridPos;
     }
 
     public void CmdClicked()

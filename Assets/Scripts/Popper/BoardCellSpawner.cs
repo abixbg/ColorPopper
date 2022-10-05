@@ -33,7 +33,7 @@ public class BoardCellSpawner
     {
         int index = 0;
         List<Slot> gridSlots = new List<Slot>();
-        List<CellData> cellsData = new List<CellData>();
+        List<PositionData> posData = new List<PositionData>();
 
         for (int i = 0; i < boardSize.x; i++)
         {
@@ -50,26 +50,20 @@ public class BoardCellSpawner
                 float3 vPos = new float3(origin.x + horizontalOffset, origin.y + verticalOffset, origin.z);
                 GridPosition gPos = new GridPosition(i, j);
 
-                var data = new CellData(gPos, vPos);
+                var data = new PositionData(gPos, vPos);
 
-                cellsData.Add(data);
+                posData.Add(data);
 
                 index++;
             }
         }
 
-        foreach (var posData in cellsData)
+        foreach (var pos in posData)
         {
-            var slotVisual = Object.Instantiate(slotPrefab, posData.VisualPosition, quaternion.identity);
+            var slotVisual = Object.Instantiate(slotPrefab, pos.VisualPosition, quaternion.identity);
             slotVisual.transform.parent = parent;
-
-            var data = new SlotData();
-            data.SetData(posData);
-
-            slotVisual.Construct(grid, posData);
+            slotVisual.Construct(grid, pos.Position);
             LockWithDot(slotVisual);
-
-            //Debug.LogError($"SpawnCell --> GR:{data.Position} | Visual: {data.VisualPosition}", slot.gameObject);
 
             gridSlots.Add(slotVisual);
         }
@@ -92,5 +86,20 @@ public class BoardCellSpawner
 
         //assigning colors from the palette
         slot.Keyhole.SetColor(keyPool.GetRandom().Color);
+    }
+
+    private struct PositionData
+    {
+        [SerializeField] private GridPosition gridPos;
+        [SerializeField] private float3 visualPos;
+
+        public GridPosition Position { get => gridPos; set => gridPos = value; }
+        public float3 VisualPosition { get => visualPos; set => visualPos = value; }
+
+        public PositionData(GridPosition gridPos, float3 visualPos)
+        {
+            this.gridPos = gridPos;
+            this.visualPos = visualPos;
+        }
     }
 }

@@ -1,9 +1,7 @@
-﻿using Popper.UI;
-using Popper.Events;
-using Unity.Mathematics;
+﻿using Popper.Events;
+using Popper.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using AGK.GameGrids;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,7 +17,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private BoardVisual _boardVisual;
     [SerializeField] private GameClock clock;
 
-    public BoardVisual Board => _boardVisual;
     public LevelController Level => levelController;
     public EventBus Events => events;
     public UIManager UiManager => uiManager;
@@ -30,8 +27,6 @@ public class GameManager : MonoBehaviour
             current = this;
         else if (current != this)
             Destroy(gameObject);
-
-        //DontDestroyOnLoad(gameObject);
 
         events = new EventBus();
     }

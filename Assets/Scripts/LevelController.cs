@@ -1,4 +1,3 @@
-using AGK.GameGrids;
 using EventBroadcast;
 using Popper;
 using Popper.Events;
@@ -16,8 +15,6 @@ public class LevelController :
     private readonly Stopwatch _stopwatch;
     private readonly BubblePoolColors _keyPool;  
     private readonly IEventBus _events;
-
-    private BoardVisual _board;
 
     public LevelConfigData Config => _config;
     public LevelGrid Grid => _grid;

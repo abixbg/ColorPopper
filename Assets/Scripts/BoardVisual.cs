@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class BoardVisual : MonoBehaviour
 {
+    private const float CELL_SIZE = 1f;
+
     public SpriteRenderer BoardBackground;
 
     [Header("Resources")]
@@ -18,15 +20,13 @@ public class BoardVisual : MonoBehaviour
     public CameraScreenFit gameView;
     private ISlotKeyPool<ColorSlotKey> _colorPool;
 
-    private readonly float _cellRectSize = 1f;
-    private LevelController _levelController;
-    private LevelController LevelController => _levelController;
-
-    [SerializeField] private float2 _boardRect;
-    public float2 BoardRect { get => _boardRect; }
-
-    public List<Slot> gridSlots;
+    
     private GameGrid2D<SlotData> _grid;
+    private LevelController _levelController;
+    private float2 _boardRect;   
+
+    private LevelController LevelController => _levelController;    
+    public float2 BoardRect { get => _boardRect; }   
 
     public Action OnBoardChanged;
 
@@ -39,23 +39,19 @@ public class BoardVisual : MonoBehaviour
 
     public void SpawnCells()
     {
-        float halfcell = _cellRectSize * 0.5f;
+        float halfcell = CELL_SIZE * 0.5f;
         
         int2 gridSize = _levelController.Config.BoardSize; //TODO: (AGK) get this from grid
         var cellSpawner = new BoardCellSpawner(_grid, gridSize, 1f, slotPrefab, dotPrefab, _colorPool, gameObject.transform);
         cellSpawner.GenerateCells();
 
-        _boardRect = new float2(LevelController.Config.BoardSize.x * _cellRectSize + halfcell, LevelController.Config.BoardSize.y * _cellRectSize + halfcell);
+        _boardRect = new float2(LevelController.Config.BoardSize.x * CELL_SIZE + halfcell, LevelController.Config.BoardSize.y * CELL_SIZE + halfcell);
     }
 
 
     public void OnLevelPhaseInitialize()
     {
-        //GenerateCells();
-        //LockWithDots();
         CheckIslands();
-
-        //FillWithLoot();
 
         BoardBackground.size = new Vector2(BoardRect.x, BoardRect.y);
         OnBoardChanged?.Invoke();

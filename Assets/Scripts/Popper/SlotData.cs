@@ -6,7 +6,6 @@ using UnityEngine;
 [System.Serializable]
 public class SlotData : IGridCell, ICellContentMatch
 {
-    [SerializeField] private CellData data;
     [SerializeField] private bool isActive;
     [SerializeField] private bool isLocked;
     [SerializeField] private GridPosition _gridPosition;
@@ -24,11 +23,6 @@ public class SlotData : IGridCell, ICellContentMatch
     bool ICellContentMatch.IsMatch(ICellContentMatch other)
     {
         return ((SlotData)other).SlotVisual.Keyhole.Color == SlotVisual.Keyhole.Color;
-    }
-
-    public void SetData(CellData data)
-    {
-        this.data = data;
     }
 
     public void SetAdditionalData(bool isLocked, bool isActive)

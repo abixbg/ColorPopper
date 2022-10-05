@@ -34,11 +34,13 @@ public class BoardVisual : MonoBehaviour
     }
 
     public void GenerateBoard()
-    {
+    {       
+        var contentGenerator = new GeneratorContentColor(_grid, _colorPool);
+        contentGenerator.AddContent();
+
         var cellSpawner = new BoardCellSpawner(_grid, CELL_SIZE, slotPrefab, dotPrefab, _colorPool, gameObject.transform);
         cellSpawner.GenerateCells();
-        cellSpawner.AddContent();
-
+              
         _boardRect = cellSpawner.CellsBoundingBox;
         BoardBackground.size = new Vector2(BoardRect.x, BoardRect.y);
     }
@@ -56,6 +58,8 @@ public class BoardVisual : MonoBehaviour
         islandFinder.RecalculateIslands();
         var islands = islandFinder.GetIslands(3);
 
+        Debug.LogError($"Islands: {islands.Count}");
+
         foreach (var island in islands)
         {
             var slot = _grid.GetNodeAt(island.Cells[0].Position);
@@ -69,7 +73,7 @@ public class BoardVisual : MonoBehaviour
             }
 
             AddIslandDestructLoot(slot, connected);
-            Debug.Log($"[BoardVisual] {island.ToString()} --> {island.Cells[0].Position} ");
+            Debug.LogWarning($"[BoardVisual] {island.ToString()} --> {island.Cells[0].Position} ");
         }
     }
 

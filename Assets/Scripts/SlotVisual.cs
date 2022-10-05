@@ -4,15 +4,17 @@ using AGK.GameGrids;
 
 [System.Serializable]
 public class SlotVisual : MonoBehaviour
-{  
-    public Dot Keyhole { get; set; }
-
+{
+    [SerializeField] private Dot keyhole;
     [SerializeField] private Loot loot;
-    public Loot Loot { get => loot; set => loot = value; }
-
     [SerializeField] private SpriteRenderer border;
 
-    [SerializeField] private SlotData Data => grid.GetNodeAt(gridPos);
+    public Dot Content { get => keyhole; set => keyhole = value; }
+
+    public Loot Loot { get => loot; set => loot = value; }
+
+
+    public SlotData Data => grid.GetNodeAt(gridPos);
 
     private GameGrid2D<SlotData> grid;
     private GridPosition gridPos;
@@ -28,7 +30,7 @@ public class SlotVisual : MonoBehaviour
 
     public void CmdClicked()
     {
-        Debug.LogError($"Clicked! active={Data.IsActive}", gameObject);
+        Debug.Log($"Clicked! active={Data.IsActive}", gameObject);
         if (Data.IsActive == true)
         {
             Events.Broadcast<ISlotClicked>(s => s.OnSlotClicked(this));
@@ -82,7 +84,7 @@ public class SlotVisual : MonoBehaviour
         }
         else
             border.enabled = true;
-        Keyhole.gameObject.SetActive(Data.IsActive);
+        Content.gameObject.SetActive(Data.IsActive);
     }
 
     //bool ICellContentMatch.IsMatch(ICellContentMatch other)

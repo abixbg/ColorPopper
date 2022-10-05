@@ -68,33 +68,52 @@ public class BoardCellSpawner
             slotVisual.Construct(grid, pos.Position, parent);
             slotVisuals.Add(slotVisual);
         }
+
+        SpawnContentVisuals();
     }
 
-
-    public void AddContent()
+    private void SpawnContentVisuals()
     {
         for (int i = 0; i < grid.Nodes.Count; i++)
         {
-            var node = grid.Nodes[i];
-            AddLockColorDot(slotVisuals[i], node);
+            var data = grid.Nodes[i];
+            var slotVisual = slotVisuals[i];
+
+            //Fill with Color Dots
+            Color col = ((ColorSlotKey)data.Content).Color;
+            Dot dot = Object.Instantiate(dotPrefab, slotVisual.transform.position, Quaternion.identity) as Dot;
+            dot.SetColor(col);
+            dot.transform.parent = slotVisual.transform;
+
+            slotVisual.Content = dot;
         }
     }
 
-    // fills the grid with dot gameobjects
-    private void AddLockColorDot(SlotVisual slotVisual, SlotData slot)
-    {
-        //instantiating dots in grid
-        slotVisual.Keyhole = Object.Instantiate(dotPrefab, slotVisual.transform.position, Quaternion.identity) as Dot;
 
-        //make dot gameobjects parent of slot
-        slotVisual.Keyhole.transform.parent = slotVisual.transform;
+    //public void AddContent()
+    //{
+    //    for (int i = 0; i < grid.Nodes.Count; i++)
+    //    {
+    //        var node = grid.Nodes[i];
+    //        AddLockColorDot(slotVisuals[i], node);
+    //    }
+    //}
 
-        Color color = keyPool.GetRandom().Color;
+    //// fills the grid with dot gameobjects
+    //private void AddLockColorDot(SlotVisual slotVisual, SlotData slot)
+    //{
+    //    //instantiating dots in grid
+    //    slotVisual.Keyhole = Object.Instantiate(dotPrefab, slotVisual.transform.position, Quaternion.identity) as Dot;
 
-        //assigning colors from the palette
-        slotVisual.Keyhole.SetColor(color);
-        slot.Content = new ColorSlotKey(color);
-    }
+    //    //make dot gameobjects parent of slot
+    //    slotVisual.Keyhole.transform.parent = slotVisual.transform;
+
+    //    Color color = keyPool.GetRandom().Color;
+
+    //    //assigning colors from the palette
+    //    slotVisual.Keyhole.SetColor(color);
+    //    slot.Content = new ColorSlotKey(color);
+    //}
 
     private struct PositionData
     {

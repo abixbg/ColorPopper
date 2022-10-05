@@ -14,7 +14,7 @@ namespace Popper
             accepted = data;
         }
 
-        public bool IsAccepted(IMatchKey<TData> data)
+        public bool IsAccepted(ICellContentMatch data)
         {
             return data.IsMatch(accepted);
         }

@@ -16,11 +16,17 @@ public class ColorSlotKey : SlotContent
 
     public override bool IsMatch(ICellContentMatch other)
     {
-        if (other is ColorSlotKey)
+        Debug.LogWarning($"[ColorSlotKey] other : {other.GetType().Name}");
+
+        if (other is SlotData)
         {
-            return color == ((ColorSlotKey)other).Color;
+            var oth = ((SlotData)other).Content as ColorSlotKey;
+
+            return IsMatch(oth);
         }
         else
+        {
             return false;
+        }            
     }
 }

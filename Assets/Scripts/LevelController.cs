@@ -56,7 +56,7 @@ public class LevelController :
     #region ISlotClicked
     void ISlotClicked.OnSlotClicked(SlotVisual slot)
     {
-        bool accepted = AcceptedContent.IsAccepted(slot.Keyhole);
+        bool accepted = AcceptedContent.IsAccepted(slot.Data.Content);
 
         if (accepted)
             slot.OpenSlot();
@@ -68,7 +68,7 @@ public class LevelController :
     #region ISlotStateChanged
     void ISlotStateChanged.OnSlotOpen(SlotVisual slot)
     {
-        var key = new ColorSlotKey(slot.Keyhole.Color);
+        var key = (ColorSlotKey)slot.Data.Content;
 
         if (!HaveKeyHoleOnBoard(key))
         {
@@ -92,7 +92,7 @@ public class LevelController :
 
     void ISlotStateChanged.OnSlotBreak(SlotVisual slot)
     {
-        var key = new ColorSlotKey(slot.Keyhole.Color);
+        var key = new ColorSlotKey(slot.Content.Color);
 
         if (!HaveKeyHoleOnBoard(key))
         {

@@ -14,17 +14,16 @@ public class SlotData : IGridCell, ICellContentMatch
     public bool IsLocked { get => isLocked; set => isLocked = value; }
     public bool IsActive { get => isActive; set => isActive = value; }
 
-    [SerializeField] private SlotVisual slotVisual;
-    public SlotVisual SlotVisual => slotVisual;
     GridPosition IGridCell.Position { get => _gridPosition; set => _gridPosition = value; }
 
     bool ICellContentMatch.IsMatch(ICellContentMatch other)
     {
+        //TODO: this needs improvement
         var otherSlot = ((SlotData)other).Content as ColorSlotKey;
         var thisSlot = Content as ColorSlotKey;
 
         bool match = otherSlot.Color == thisSlot.Color;
-        Debug.LogWarning($"[SlotData] other : {otherSlot.GetType().Name} --> {match}");
+        //Debug.LogWarning($"[SlotData] other : {otherSlot.GetType().Name} --> {match}");
 
         return match;
     }

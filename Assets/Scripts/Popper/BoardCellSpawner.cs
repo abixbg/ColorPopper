@@ -103,6 +103,8 @@ public class BoardCellSpawner
             {
                 Loot lootVisual = Object.Instantiate(lootPrefab, slotVisual.transform.position, Quaternion.identity);
                 slotVisual.Loot = lootVisual;
+
+                lootVisual.transform.parent = slotVisual.transform;
             }
         }
     }

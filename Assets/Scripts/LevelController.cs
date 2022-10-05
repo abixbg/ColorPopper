@@ -56,7 +56,7 @@ public class LevelController :
     #region ISlotClicked
     void ISlotClicked.OnSlotClicked(SlotVisual slot)
     {
-        bool accepted = AcceptedContent.IsAccepted(slot.Data.Content);
+        bool accepted = AcceptedContent.IsAccepted(slot.SlotData.Content);
 
         if (accepted)
             slot.OpenSlot();
@@ -66,9 +66,9 @@ public class LevelController :
     #endregion
 
     #region ISlotStateChanged
-    void ISlotStateChanged.OnSlotOpen(SlotVisual slot)
+    void ISlotStateChanged.OnSlotOpen(SlotData slot, SlotVisual visual)
     {
-        var key = (ColorSlotKey)slot.Data.Content;
+        var key = (ColorSlotKey)visual.SlotData.Content;
 
         if (!HaveKeyHoleOnBoard(key))
         {
@@ -90,9 +90,9 @@ public class LevelController :
             SwitchAcceptedContent();
     }
 
-    void ISlotStateChanged.OnSlotBreak(SlotVisual slot)
+    void ISlotStateChanged.OnSlotBreak(SlotData slot, SlotVisual visual)
     {
-        var key = new ColorSlotKey(slot.Content.Color);
+        var key = new ColorSlotKey(visual.Content.Color);
 
         if (!HaveKeyHoleOnBoard(key))
         {
@@ -111,18 +111,22 @@ public class LevelController :
     #endregion
 
     #region ILootPicked
-    void ILootPicked.OnLootPicked(Loot loot)
+    void ILootPicked.OnLootPicked(SlotLoot loot)
     {
-        foreach (var slot in loot.ConnectedSlots)
+        //TODO: Implement loot Resolver or split to interfaces
+
+        var star = (LootStar)loot;
+
+        foreach (var slot in star.ConnectedSlots)
         {
             slot.Loot = null;
-            slot.OpenSlot();
+            Debug.LogAssertion("NOT IMPLEMENTED!: open connected slots"); //slot.SlotVisual.OpenSlot();
         }
     }
     #endregion
 
     #region ILootConsumed
-    void ILootConsumed.OnLootConsumed(Loot loot)
+    void ILootConsumed.OnLootConsumed(SlotLoot _)
     {
         Debug.Log("[Level] AddTime!");
         _countdown.AddTime(3);

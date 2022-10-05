@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Data:
     boardSize:
-      x: 4
-      y: 4
+      x: 5
+      y: 5
     timeSec: 47
     palette: {fileID: 11400000, guid: 440e6d5a5f404294eb4ba5cb5c498953, type: 2}

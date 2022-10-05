@@ -1,6 +1,7 @@
 ﻿using Popper.Events;
 using UnityEngine;
 using AGK.GameGrids;
+using UnityEditor.PackageManager;
 
 [System.Serializable]
 public class SlotVisual : MonoBehaviour
@@ -14,7 +15,7 @@ public class SlotVisual : MonoBehaviour
     public Loot Loot { get => loot; set => loot = value; }
 
 
-    public SlotData Data => grid.GetNodeAt(gridPos);
+    public SlotData SlotData => grid.GetNodeAt(gridPos);
 
     private GameGrid2D<SlotData> grid;
     private GridPosition gridPos;
@@ -30,25 +31,29 @@ public class SlotVisual : MonoBehaviour
 
     public void CmdClicked()
     {
-        Debug.Log($"Clicked! active={Data.IsActive}", gameObject);
-        if (Data.IsActive == true)
+        //Debug.Log($"Clicked! active={SlotData.IsActive}", gameObject);
+        if (SlotData.IsActive == true)
         {
             Events.Broadcast<ISlotClicked>(s => s.OnSlotClicked(this));
         }
     }
 
-    public void OpenSlot()
+    public async void OpenSlot()
     {
-        Data.IsActive = false;
-        Data.IsLocked = false;
+        SlotData.IsActive = false;
+        SlotData.IsLocked = false;
 
 
-        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpen(this));
+        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpen(SlotData, this));
 
         // activate slot contents
-        if (loot != null)
-        {
-            loot.Activate();
+        if (SlotData.Loot != null)
+        {    
+            //broadcast event
+            Events.Broadcast<ILootPicked>(sub => sub.OnLootPicked(SlotData.Loot));
+            SlotData.Loot.Activate();
+            await loot.Activate();
+            Events.Broadcast<ILootConsumed>(sub => sub.OnLootConsumed(SlotData.Loot));
         }
 
         UpdateVisual();
@@ -56,24 +61,24 @@ public class SlotVisual : MonoBehaviour
 
     public void BreakSlot()
     {
-        Data.IsActive = false;
-        Data.IsLocked = true;
+        SlotData.IsActive = false;
+        SlotData.IsLocked = true;
 
         //disable slot contents
-        if (loot != null)
+        if (SlotData.Loot != null)
         {
             loot.Break();
         }
 
-        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotBreak(this));
+        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotBreak(SlotData, this));
         UpdateVisual();
     }
 
     private void UpdateVisual()
     {
-        if (!Data.IsActive)
+        if (!SlotData.IsActive)
         {
-            if (Data.IsLocked)
+            if (SlotData.IsLocked)
             {
                 border.color = new Color32(140, 30, 30, 255);
             }
@@ -84,7 +89,7 @@ public class SlotVisual : MonoBehaviour
         }
         else
             border.enabled = true;
-        Content.gameObject.SetActive(Data.IsActive);
+        Content.gameObject.SetActive(SlotData.IsActive);
     }
 
     //bool ICellContentMatch.IsMatch(ICellContentMatch other)

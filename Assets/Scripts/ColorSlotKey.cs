@@ -18,11 +18,9 @@ public class ColorSlotKey : SlotContent
     {
         Debug.LogWarning($"[ColorSlotKey] other : {other.GetType().Name}");
 
-        if (other is SlotData)
+        if (other is ColorSlotKey)
         {
-            var oth = ((SlotData)other).Content as ColorSlotKey;
-
-            return IsMatch(oth);
+            return ((ColorSlotKey)other).Color == Color;
         }
         else
         {

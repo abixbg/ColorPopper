@@ -12,6 +12,7 @@ public class BoardCellSpawner
     private readonly float cellWorldSize;
     private readonly SlotVisual slotPrefab;
     private readonly Dot dotPrefab;
+    private readonly Loot lootPrefab;
     public readonly float3 origin;
     private readonly Transform parent;
     private ISlotKeyPool<ColorSlotKey> keyPool;
@@ -19,20 +20,21 @@ public class BoardCellSpawner
     public float2 CellsBoundingBox => dimentions;
     private readonly List<SlotVisual> slotVisuals = new List<SlotVisual>();
 
-    public BoardCellSpawner(GameGrid2D<SlotData> grid, float cellWorldSize, SlotVisual slotPrefab, Dot dotPrefab, ISlotKeyPool<ColorSlotKey> keyPool, Transform origin)
+    public BoardCellSpawner(GameGrid2D<SlotData> grid, float cellWorldSize, SlotVisual slotPrefab, Dot dotPrefab, Loot lootPrefab, ISlotKeyPool<ColorSlotKey> keyPool, Transform origin)
     {
         this.grid = grid;
         dimentions = new float2(grid.Size.x * cellWorldSize + cellWorldSize * 0.5f, grid.Size.y * cellWorldSize + cellWorldSize * 0.5f);
         this.cellWorldSize = cellWorldSize;
         this.slotPrefab = slotPrefab;
         this.dotPrefab = dotPrefab;
+        this.lootPrefab = lootPrefab;
         this.origin = new float3(origin.position.x, origin.position.y, origin.position.z);
         this.keyPool = keyPool;
 
         parent = origin;
     }
 
-    public void GenerateCells()
+    public void SpawnCells()
     {
         int index = 0;
         List<PositionData> posData = new List<PositionData>();
@@ -70,6 +72,7 @@ public class BoardCellSpawner
         }
 
         SpawnContentVisuals();
+        SpawnLootVisuals();
     }
 
     private void SpawnContentVisuals()
@@ -86,6 +89,21 @@ public class BoardCellSpawner
             dot.transform.parent = slotVisual.transform;
 
             slotVisual.Content = dot;
+        }
+    }
+
+    private void SpawnLootVisuals()
+    {
+        for (int i = 0; i < grid.Nodes.Count; i++)
+        {
+            var slot = grid.Nodes[i];
+            var slotVisual = slotVisuals[i];
+
+            if (slot.Loot != null)
+            {
+                Loot lootVisual = Object.Instantiate(lootPrefab, slotVisual.transform.position, Quaternion.identity);
+                slotVisual.Loot = lootVisual;
+            }
         }
     }
 

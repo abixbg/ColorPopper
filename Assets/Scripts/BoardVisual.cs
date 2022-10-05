@@ -36,10 +36,13 @@ public class BoardVisual : MonoBehaviour
     public void GenerateBoard()
     {       
         var contentGenerator = new GeneratorContentColor(_grid, _colorPool);
+        var lootGenerator = new GeneratorLoot(_grid);
+        
         contentGenerator.AddContent();
+        lootGenerator.GenerateLoot();
 
-        var cellSpawner = new BoardCellSpawner(_grid, CELL_SIZE, slotPrefab, dotPrefab, _colorPool, gameObject.transform);
-        cellSpawner.GenerateCells();
+        var cellSpawner = new BoardCellSpawner(_grid, CELL_SIZE, slotPrefab, dotPrefab, lootPrefab, _colorPool, gameObject.transform);
+        cellSpawner.SpawnCells();
               
         _boardRect = cellSpawner.CellsBoundingBox;
         BoardBackground.size = new Vector2(BoardRect.x, BoardRect.y);
@@ -48,47 +51,47 @@ public class BoardVisual : MonoBehaviour
 
     public void OnLevelPhaseInitialize()
     {
-        AddLoot();
+        //AddLoot();
         OnBoardChanged?.Invoke();
     }
 
-    private void AddLoot()
-    {
-        var islandFinder = new Islandfinder<GameGrid2D<SlotData>, SlotData>(_grid);
-        islandFinder.RecalculateIslands();
-        var islands = islandFinder.GetIslands(3);
+    //private void AddLoot()
+    //{
+    //    var islandFinder = new Islandfinder<GameGrid2D<SlotData>, SlotData>(_grid);
+    //    islandFinder.RecalculateIslands();
+    //    var islands = islandFinder.GetIslands(3);
 
-        Debug.LogError($"Islands: {islands.Count}");
+    //    Debug.LogError($"Islands: {islands.Count}");
 
-        foreach (var island in islands)
-        {
-            var slot = _grid.GetNodeAt(island.Cells[0].Position);
+    //    foreach (var island in islands)
+    //    {
+    //        var slot = _grid.GetNodeAt(island.Cells[0].Position);
             
-            //connected slots
-            List<SlotVisual> connected = new List<SlotVisual>();
+    //        //connected slots
+    //        List<SlotVisual> connected = new List<SlotVisual>();
 
-            for (int i = 1; i < island.Cells.Count; i++)
-            {
-                connected.Add(_grid.GetNodeAt(island.Cells[i].Position).SlotVisual);
-            }
+    //        for (int i = 1; i < island.Cells.Count; i++)
+    //        {
+    //            connected.Add(_grid.GetNodeAt(island.Cells[i].Position).SlotVisual);
+    //        }
 
-            AddIslandDestructLoot(slot, connected);
-            Debug.LogWarning($"[BoardVisual] {island.ToString()} --> {island.Cells[0].Position} ");
-        }
-    }
+    //        AddIslandDestructLoot(slot, connected);
+    //        Debug.LogWarning($"[BoardVisual] {island.ToString()} --> {island.Cells[0].Position} ");
+    //    }
+    //}
 
-    private void AddIslandDestructLoot(SlotData slot, List<SlotVisual> connected)
-    {
-        bool confirmed = UnityEngine.Random.value >= 0.6f;
+    //private void AddIslandDestructLoot(SlotData slot, List<SlotVisual> connected)
+    //{
+    //    bool confirmed = UnityEngine.Random.value >= 0.6f;
 
-        if (true)
-        {
-            //instantiating dots in grid
-            slot.SlotVisual.Loot = Instantiate(lootPrefab, slot.SlotVisual.transform.position, Quaternion.identity) as Loot;
-            slot.SlotVisual.Loot.Construct(GameManager.current.Events, GameManager.current.UiManager, connected);
+    //    if (true)
+    //    {
+    //        //instantiating dots in grid
+    //        slot.SlotVisual.Loot = Instantiate(lootPrefab, slot.SlotVisual.transform.position, Quaternion.identity) as Loot;
+    //        slot.SlotVisual.Loot.Construct(GameManager.current.Events, GameManager.current.UiManager, connected);
 
-            //make dot gameobjects parent of slot
-            slot.SlotVisual.Loot.transform.parent = slot.SlotVisual.transform;
-        }
-    }
+    //        //make dot gameobjects parent of slot
+    //        slot.SlotVisual.Loot.transform.parent = slot.SlotVisual.transform;
+    //    }
+    //}
 }

@@ -152,7 +152,7 @@ public class LevelController :
     {
         foreach (var slot in _grid.Nodes)
         {
-            if (((ICellContentMatch)slot).IsMatch(key) && slot.IsActive)
+            if (slot.Content.IsMatch(key) && slot.IsActive)
             {
                 //Debug.LogError($"Found: {slot.SlotVisual}", slot.SlotVisual.gameObject);
                 return true;

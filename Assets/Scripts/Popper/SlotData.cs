@@ -10,6 +10,7 @@ public class SlotData : IGridCell, ICellContentMatch
     [SerializeField] private GridPosition _gridPosition;
 
     public SlotContent Content { get; set; }
+    public SlotLoot Loot { get; set; }
     public bool IsLocked { get => isLocked; set => isLocked = value; }
     public bool IsActive { get => isActive; set => isActive = value; }
 

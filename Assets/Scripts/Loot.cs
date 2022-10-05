@@ -8,13 +8,13 @@ public class Loot : MonoBehaviour
 {
     private EventBus _events;
     private UIManager _ui;
-    private List<Slot> connectedSlots;
+    private List<SlotVisual> connectedSlots;
 
-    public List<Slot> ConnectedSlots => connectedSlots;
+    public List<SlotVisual> ConnectedSlots => connectedSlots;
 
     private bool isActivated;
 
-    public void Construct(EventBus events, UIManager uiManager, List<Slot> connectedSlots)
+    public void Construct(EventBus events, UIManager uiManager, List<SlotVisual> connectedSlots)
     {
         _events = events;
         _ui = uiManager;

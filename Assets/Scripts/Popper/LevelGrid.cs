@@ -8,6 +8,9 @@ public class LevelGrid : GameGrid2D<SlotData>
 {
     public LevelGrid(int2 size, List<SlotData> nodes) : base(size, nodes)
     {
-
+        foreach (var cell in nodes)
+        {
+            cell.Init(false, true);
+        }
     }
 }

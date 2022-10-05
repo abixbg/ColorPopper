@@ -3,7 +3,7 @@ using UnityEngine;
 using AGK.GameGrids;
 
 [System.Serializable]
-public class Slot : MonoBehaviour
+public class SlotVisual : MonoBehaviour
 {  
     public Dot Keyhole { get; set; }
 
@@ -19,10 +19,11 @@ public class Slot : MonoBehaviour
 
     private EventBus Events => GameManager.current.Events;
 
-    public void Construct(GameGrid2D<SlotData> grid, GridPosition gridPos)
+    public void Construct(GameGrid2D<SlotData> grid, GridPosition gridPos, Transform parent)
     {
         this.grid = grid;
         this.gridPos = gridPos;
+        transform.parent = parent;
     }
 
     public void CmdClicked()

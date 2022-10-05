@@ -1,7 +1,9 @@
+using AGK.GameGrids;
+
 namespace Popper
 {
     public class CellMatchExact<TData>
-        where TData : IMatchKey<TData>
+        where TData : ICellContentMatch
     {
         protected TData accepted;
 

@@ -1,3 +1,4 @@
+using AGK.GameGrids;
 using EventBroadcast;
 using Popper;
 using Popper.Events;
@@ -13,12 +14,12 @@ public class LevelController :
     private readonly LevelGrid _grid;
     private readonly Countdown _countdown;
     private readonly Stopwatch _stopwatch;
-    private readonly BubblePoolColors _keyPool;  
+    private readonly BubblePoolColors _keyPool;
     private readonly IEventBus _events;
 
     public LevelConfigData Config => _config;
     public LevelGrid Grid => _grid;
-    public CellMatchExact<ColorSlotKey> AcceptedContent { get; private set; }   
+    public CellMatchExact<ColorSlotKey> AcceptedContent { get; private set; }
     public Countdown Countdown => _countdown;
     public Stopwatch Stopwatch => _stopwatch;
     public BubblePoolColors KeyPool => _keyPool;
@@ -44,12 +45,6 @@ public class LevelController :
         //Generate CellData
         _grid = new LevelGrid(levelConfig.BoardSize, LevelGrid.Generate(levelConfig.BoardSize));
 
-        foreach (var cell in _grid.Nodes)
-        {
-            cell.SetAdditionalData(false, true);
-        }
-
-        
         AcceptedContent = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandom());
 
         _events.Subscribe<ILootPicked>(this);
@@ -59,7 +54,7 @@ public class LevelController :
     }
 
     #region ISlotClicked
-    void ISlotClicked.OnSlotClicked(Slot slot)
+    void ISlotClicked.OnSlotClicked(SlotVisual slot)
     {
         bool accepted = AcceptedContent.IsAccepted(slot.Keyhole);
 
@@ -71,7 +66,7 @@ public class LevelController :
     #endregion
 
     #region ISlotStateChanged
-    void ISlotStateChanged.OnSlotOpen(Slot slot)
+    void ISlotStateChanged.OnSlotOpen(SlotVisual slot)
     {
         var key = new ColorSlotKey(slot.Keyhole.Color);
 
@@ -95,7 +90,7 @@ public class LevelController :
             SwitchAcceptedContent();
     }
 
-    void ISlotStateChanged.OnSlotBreak(Slot slot)
+    void ISlotStateChanged.OnSlotBreak(SlotVisual slot)
     {
         var key = new ColorSlotKey(slot.Keyhole.Color);
 
@@ -157,9 +152,9 @@ public class LevelController :
     {
         foreach (var slot in _grid.Nodes)
         {
-            if (slot.SlotVisual.Keyhole.Color == key.Color && slot.IsActive)
+            if (((ICellContentMatch)slot).IsMatch(key) && slot.IsActive)
             {
-                Debug.LogError($"Found: {slot.SlotVisual}", slot.SlotVisual.gameObject);
+                //Debug.LogError($"Found: {slot.SlotVisual}", slot.SlotVisual.gameObject);
                 return true;
             }
 

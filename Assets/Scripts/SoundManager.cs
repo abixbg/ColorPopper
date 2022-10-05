@@ -58,14 +58,14 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
         //Handheld.Vibrate();
     }
 
-    void ISlotStateChanged.OnSlotOpen(Slot slot)
+    void ISlotStateChanged.OnSlotOpen(SlotVisual slot)
     {
         //only play 
         if (slot.Loot == null)
             PlaySFX("sfx-cell_open");
     }
 
-    void ISlotStateChanged.OnSlotBreak(Slot slot)
+    void ISlotStateChanged.OnSlotBreak(SlotVisual slot)
     {
         PlaySFX("sfx-break_slot");
     }

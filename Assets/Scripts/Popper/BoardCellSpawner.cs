@@ -8,44 +8,48 @@ public class BoardCellSpawner
 {
     private GameGrid2D<SlotData> grid;
 
-    private readonly int2 boardSize;
+    private readonly float2 dimentions;
     private readonly float cellWorldSize;
-    private readonly Slot slotPrefab;
+    private readonly SlotVisual slotPrefab;
     private readonly Dot dotPrefab;
     public readonly float3 origin;
     private readonly Transform parent;
     private ISlotKeyPool<ColorSlotKey> keyPool;
 
-    public BoardCellSpawner(GameGrid2D<SlotData> grid, int2 boardSize, float cellWorldSize, Slot slotPrefab, Dot dotPrefab, ISlotKeyPool<ColorSlotKey> keyPool, Transform origin)
+    public float2 CellsBoundingBox => dimentions;
+    private readonly List<SlotVisual> slotVisuals = new List<SlotVisual>();
+
+    public BoardCellSpawner(GameGrid2D<SlotData> grid, float cellWorldSize, SlotVisual slotPrefab, Dot dotPrefab, ISlotKeyPool<ColorSlotKey> keyPool, Transform origin)
     {
         this.grid = grid;
-        this.boardSize = boardSize;
+        dimentions = new float2(grid.Size.x * cellWorldSize + cellWorldSize * 0.5f, grid.Size.y * cellWorldSize + cellWorldSize * 0.5f);
         this.cellWorldSize = cellWorldSize;
         this.slotPrefab = slotPrefab;
         this.dotPrefab = dotPrefab;
         this.origin = new float3(origin.position.x, origin.position.y, origin.position.z);
         this.keyPool = keyPool;
-        
+
         parent = origin;
     }
 
     public void GenerateCells()
     {
         int index = 0;
-        List<Slot> gridSlots = new List<Slot>();
         List<PositionData> posData = new List<PositionData>();
 
-        for (int i = 0; i < boardSize.x; i++)
+        slotVisuals.Clear();
+
+        for (int i = 0; i < grid.Size.x; i++)
         {
             float horizontalOffset = i * cellWorldSize;
 
-            horizontalOffset = horizontalOffset - (boardSize.x * 0.5f) + (cellWorldSize * 0.5f);
+            horizontalOffset = horizontalOffset - (grid.Size.x * 0.5f) + (cellWorldSize * 0.5f);
 
 
-            for (int j = 0; j < boardSize.y; j++)
+            for (int j = 0; j < grid.Size.y; j++)
             {
                 float verticalOffset = j * cellWorldSize;
-                verticalOffset = verticalOffset - (boardSize.y * 0.5f) + (cellWorldSize * 0.5f);
+                verticalOffset = verticalOffset - (grid.Size.y * 0.5f) + (cellWorldSize * 0.5f);
 
                 float3 vPos = new float3(origin.x + horizontalOffset, origin.y + verticalOffset, origin.z);
                 GridPosition gPos = new GridPosition(i, j);
@@ -61,31 +65,35 @@ public class BoardCellSpawner
         foreach (var pos in posData)
         {
             var slotVisual = Object.Instantiate(slotPrefab, pos.VisualPosition, quaternion.identity);
-            slotVisual.transform.parent = parent;
-            slotVisual.Construct(grid, pos.Position);
-            LockWithDot(slotVisual);
-
-            gridSlots.Add(slotVisual);
+            slotVisual.Construct(grid, pos.Position, parent);
+            slotVisuals.Add(slotVisual);
         }
+    }
 
+
+    public void AddContent()
+    {
         for (int i = 0; i < grid.Nodes.Count; i++)
         {
             var node = grid.Nodes[i];
-            node.SetVisual(gridSlots[i]);
+            AddLockColorDot(slotVisuals[i], node);
         }
     }
 
     // fills the grid with dot gameobjects
-    public void LockWithDot(Slot slot)
+    private void AddLockColorDot(SlotVisual slotVisual, SlotData slot)
     {
         //instantiating dots in grid
-        slot.Keyhole = Object.Instantiate(dotPrefab, slot.transform.position, Quaternion.identity) as Dot;
+        slotVisual.Keyhole = Object.Instantiate(dotPrefab, slotVisual.transform.position, Quaternion.identity) as Dot;
 
         //make dot gameobjects parent of slot
-        slot.Keyhole.transform.parent = slot.transform;
+        slotVisual.Keyhole.transform.parent = slotVisual.transform;
+
+        Color color = keyPool.GetRandom().Color;
 
         //assigning colors from the palette
-        slot.Keyhole.SetColor(keyPool.GetRandom().Color);
+        slotVisual.Keyhole.SetColor(color);
+        slot.Content = new ColorSlotKey(color);
     }
 
     private struct PositionData

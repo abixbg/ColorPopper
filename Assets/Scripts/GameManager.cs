@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("[Level] Initialilze!");
 
         _boardVisual.Construct(levelController.Grid, levelController);
-        _boardVisual.SpawnCells();
+        _boardVisual.GenerateBoard();
         _boardVisual.OnLevelPhaseInitialize();
         levelController.StartLevel();
     }

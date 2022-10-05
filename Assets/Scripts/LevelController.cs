@@ -44,7 +44,14 @@ public class LevelController :
         _stopwatch.SetActive(true);
         _keyPool = new BubblePoolColors(levelConfig.Pallete);
 
+        //Generate CellData
         _grid = new LevelGrid(levelConfig.BoardSize, LevelGrid.Generate(levelConfig.BoardSize));
+
+        foreach (var cell in _grid.Nodes)
+        {
+            cell.SetAdditionalData(false, true);
+        }
+
         
         AcceptedContent = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandom());
 

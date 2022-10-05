@@ -37,71 +37,13 @@ public class BoardVisual : MonoBehaviour
         _colorPool = _levelController.KeyPool;
     }
 
-    //public bool HaveKeyHoleOnBoard(ColorSlotKey key)
-    //{
-    //    foreach (var slot in _grid.Nodes)
-    //    {
-    //        if (slot.SlotVisual.Keyhole.Color == key.Color && slot.IsActive)
-    //        {
-    //            //Debug.LogError($"Found: ", slot.gameObject);
-    //            return true;
-    //        }
-
-    //    }
-
-    //    return false;
-    //}
-
-    //// fills the grid with dot gameobjects
-    //public void LockWithDots()
-    //{
-    //    for (int i = 0; i < gridSlots.Count; i++)
-    //    {
-    //        //instantiating dots in grid
-    //        gridSlots[i].Keyhole = Instantiate(dotPrefab, gridSlots[i].transform.position, Quaternion.identity) as Dot;
-
-    //        //make dot gameobjects parent of slot
-    //        gridSlots[i].Keyhole.transform.parent = gridSlots[i].transform;
-
-    //        //assigning colors from the palette
-    //        gridSlots[i].Keyhole.SetColor(_colorPool.GetRandom().Color);
-    //    }
-    //}
-
-
-    public void FillWithLoot()
-    {
-        int addedLoot = 0;
-
-        for (int i = 0; i < gridSlots.Count; i++)
-        {
-            bool hasLoot = UnityEngine.Random.value >= 0.6f;
-
-            if (hasLoot && addedLoot < 5)
-            {
-                //instantiating dots in grid
-                gridSlots[i].Loot = Instantiate(lootPrefab, gridSlots[i].transform.position, Quaternion.identity) as Loot;
-                gridSlots[i].Loot.Construct(GameManager.current.Events, GameManager.current.UiManager, new List<Slot>());
-
-                //make dot gameobjects parent of slot
-                gridSlots[i].Loot.transform.parent = gridSlots[i].transform;
-                addedLoot++;
-            }
-        }
-    }
-
-    public void GenerateCells()
+    public void SpawnCells()
     {
         float halfcell = _cellRectSize * 0.5f;
         
         int2 gridSize = _levelController.Config.BoardSize; //TODO: (AGK) get this from grid
         var cellSpawner = new BoardCellSpawner(_grid, gridSize, 1f, slotPrefab, dotPrefab, _colorPool, gameObject.transform);
         cellSpawner.GenerateCells();
-
-        //generator.Construct(LevelController.Config, _cellRectSize, slotPrefab, gameObject.transform);
-
-        //gridSlots = generator.GenerateCells();
-
 
         _boardRect = new float2(LevelController.Config.BoardSize.x * _cellRectSize + halfcell, LevelController.Config.BoardSize.y * _cellRectSize + halfcell);
     }

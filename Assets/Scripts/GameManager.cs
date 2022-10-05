@@ -18,7 +18,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UIManager uiManager;
     [SerializeField] private BoardVisual _boardVisual;
     [SerializeField] private GameClock clock;
-    [SerializeField] private BoardCellGenerator boardGenerator;
 
     public BoardVisual Board => _boardVisual;
     public LevelController Level => levelController;
@@ -48,7 +47,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("[Level] Initialilze!");
 
         _boardVisual.Construct(levelController.Grid, levelController);
-        _boardVisual.GenerateCells();
+        _boardVisual.SpawnCells();
         _boardVisual.OnLevelPhaseInitialize();
         levelController.StartLevel();
     }

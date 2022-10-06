@@ -14,7 +14,7 @@ public class BoardVisual : MonoBehaviour
     [Header("Resources")]
     public SlotVisual slotPrefab;
     public Dot dotPrefab;
-    public Loot lootPrefab;
+    public LootVisual lootPrefab;
 
     [Header("Services")]
     public CameraScreenFit gameView;

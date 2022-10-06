@@ -5,12 +5,12 @@ namespace Popper.Events
 {
     public interface ISlotClicked : IEventSubscriber
     {
-        void OnSlotClicked(SlotVisual slot);
+        void OnSlotClicked(SlotData slot);
     }
 
     public interface ISlotStateChanged : IEventSubscriber
     {
-        void OnSlotOpen(SlotData data, SlotVisual visual);
-        void OnSlotBreak(SlotData data, SlotVisual visual);
+        void OnSlotOpen(SlotData data);
+        void OnSlotBreak(SlotData data);
     }
 }

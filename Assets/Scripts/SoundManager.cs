@@ -1,9 +1,8 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using AGK.Audio;
 using Popper.Events;
-using AGK.Audio;
+using UnityEngine;
 
-public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAcceptedColorChanged, ISlotStateChanged
+public class SoundManager : MonoBehaviour, ILootConsumed, IAcceptedColorChanged, ISlotStateChanged
 {
 
     public EventBus _sfxEvents;
@@ -28,7 +27,6 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
     public void Construct(EventBus events)
     {
         _sfxEvents = events;
-        _sfxEvents.Subscribe<ILootPicked>(this);
         _sfxEvents.Subscribe<ILootConsumed>(this);
         _sfxEvents.Subscribe<IAcceptedColorChanged>(this);
         _sfxEvents.Subscribe<ISlotStateChanged>(this);
@@ -37,11 +35,6 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
     public void PlaySFX(string key)
     {
         _player.PlaySound(eventLibrary.GetEventData(key), out _);
-    }
-
-    void ILootPicked.OnLootPicked(SlotLoot _)
-    {
-
     }
 
     void ILootConsumed.OnLootConsumed(SlotLoot _)
@@ -58,14 +51,14 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
         //Handheld.Vibrate();
     }
 
-    void ISlotStateChanged.OnSlotOpen(SlotData slot, SlotVisual visual)
+    void ISlotStateChanged.OnSlotOpen(SlotData slot)
     {
         //only play 
         if (slot.Loot == null)
             PlaySFX("sfx-cell_open");
     }
 
-    void ISlotStateChanged.OnSlotBreak(SlotData data, SlotVisual visual)
+    void ISlotStateChanged.OnSlotBreak(SlotData _)
     {
         PlaySFX("sfx-break_slot");
     }

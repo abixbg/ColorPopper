@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class LootStar : SlotLoot
@@ -10,8 +11,9 @@ public class LootStar : SlotLoot
 
     public List<SlotData> ConnectedSlots { get; }
 
-    public override void Activate()
+    public override Task ActivateEffect()
     {
-        Debug.LogAssertion("[LootStar] NOT IMPLEMENTED!: Activate"); //slot.SlotVisual.OpenSlot();
+        Debug.LogAssertion("[LootStar] NOT IMPLEMENTED!: Activate!"); //slot.SlotVisual.OpenSlot();
+        return Task.CompletedTask;
     }
 }

@@ -2,7 +2,9 @@ using AGK.GameGrids;
 using EventBroadcast;
 using Popper;
 using Popper.Events;
+using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelController :
     ISlotClicked,
@@ -54,9 +56,9 @@ public class LevelController :
     }
 
     #region ISlotClicked
-    void ISlotClicked.OnSlotClicked(SlotVisual slot)
+    void ISlotClicked.OnSlotClicked(SlotData slot)
     {
-        bool accepted = AcceptedContent.IsAccepted(slot.SlotData.Content);
+        bool accepted = AcceptedContent.IsAccepted(slot.Content);
 
         if (accepted)
             slot.OpenSlot();
@@ -66,9 +68,9 @@ public class LevelController :
     #endregion
 
     #region ISlotStateChanged
-    void ISlotStateChanged.OnSlotOpen(SlotData slot, SlotVisual visual)
+    void ISlotStateChanged.OnSlotOpen(SlotData slot)
     {
-        var key = (ColorSlotKey)visual.SlotData.Content;
+        var key = (ColorSlotKey)slot.Content;
 
         if (!HaveKeyHoleOnBoard(key))
         {
@@ -90,9 +92,9 @@ public class LevelController :
             SwitchAcceptedContent();
     }
 
-    void ISlotStateChanged.OnSlotBreak(SlotData slot, SlotVisual visual)
+    void ISlotStateChanged.OnSlotBreak(SlotData slot)
     {
-        var key = new ColorSlotKey(visual.Content.Color);
+        var key = (ColorSlotKey)slot.Content;
 
         if (!HaveKeyHoleOnBoard(key))
         {
@@ -111,13 +113,16 @@ public class LevelController :
     #endregion
 
     #region ILootPicked
-    void ILootPicked.OnLootPicked(SlotLoot loot)
+    async void ILootPicked.OnLootActivate(SlotLoot loot)
     {
         //TODO: Implement loot Resolver or split to interfaces
-
-        var star = (LootStar)loot;
-        star.Activate();
+            await loot.ActivateEffect();
     }
+    void ILootPicked.OnLootDiscard(SlotLoot _)
+    {
+
+    }
+
     #endregion
 
     #region ILootConsumed

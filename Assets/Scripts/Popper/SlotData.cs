@@ -1,5 +1,7 @@
 using AGK.GameGrids;
+using Popper.Events;
 using System.Drawing;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 [System.Serializable]
@@ -13,6 +15,7 @@ public class SlotData : IGridCell, ICellContentMatch
     public SlotLoot Loot { get; set; }
     public bool IsLocked { get => isLocked; set => isLocked = value; }
     public bool IsActive { get => isActive; set => isActive = value; }
+    private EventBus Events => GameManager.current.Events;
 
     GridPosition IGridCell.Position { get => _gridPosition; set => _gridPosition = value; }
 
@@ -32,5 +35,34 @@ public class SlotData : IGridCell, ICellContentMatch
     {
         this.isLocked = isLocked;
         this.isActive = isActive;
+    }
+
+    public async void OpenSlot()
+    {
+        IsActive = false;
+        IsLocked = false;
+
+        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpen(this));
+
+        // activate slot contents
+        if (Loot != null)
+        {
+            //broadcast event
+            Events.Broadcast<ILootPicked>(sub => sub.OnLootActivate(Loot));
+        }
+    }
+
+    public void BreakSlot()
+    {
+        IsActive = false;
+        IsLocked = true;       
+
+        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotBreak(this));
+
+        //disable slot contents
+        if (Loot != null)
+        {
+            Events.Broadcast<ILootPicked>(sub => sub.OnLootDiscard(Loot));
+        }
     }
 }

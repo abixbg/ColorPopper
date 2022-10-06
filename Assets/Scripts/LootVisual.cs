@@ -1,14 +1,21 @@
 ﻿using Popper.Events;
 using Popper.UI;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class Loot : MonoBehaviour
+public class LootVisual : MonoBehaviour, ILootPicked
 {
     private bool isActivated;
 
     private UIManager UI => GameManager.current.UiManager;
+    private EventBus Events => GameManager.current.Events;
+
+    public SlotLoot LootData { get; set; }
+
+    private void Start()
+    {
+        Events.Subscribe<ILootPicked>(this);
+    }
 
     public async Task Activate()
     {
@@ -39,6 +46,24 @@ public class Loot : MonoBehaviour
     private bool ReachedDestination()
     {
         var dist = Vector2.Distance(gameObject.transform.position, UI.LootDestinationWorldPos);
-        return dist > 0.2f;
+        return dist > 0.1f;
+    }
+
+    async void ILootPicked.OnLootActivate(SlotLoot loot)
+    {
+        if (loot != LootData)
+            return;
+
+        await loot.ActivateEffect();
+        await MoveToCollectorAsync();
+        Events.Broadcast<ILootConsumed>(sub => sub.OnLootConsumed(loot));
+
+    }
+
+    void ILootPicked.OnLootDiscard(SlotLoot loot)
+    {
+        if (loot != LootData)
+            return;
+        Break();
     }
 }

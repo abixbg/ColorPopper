@@ -12,14 +12,14 @@ public class Stopwatch
     public Stopwatch(GameClock clock)
     {
         clock.TimeElapsedSec += AddDelta;
-        _multiplier = 0.5f;
+        _multiplier = 1f;
     }
 
     public void AddDelta(float deltaTime)
     {
         if (isActive)
         {
-            _time += deltaTime;
+            _time += deltaTime * _multiplier;
             ValueUpdated?.Invoke();
         }
     }

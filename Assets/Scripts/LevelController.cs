@@ -1,3 +1,4 @@
+using AGK.GameGrids;
 using EventBroadcast;
 using Popper;
 using Popper.Events;
@@ -13,12 +14,12 @@ public class LevelController :
     private readonly LevelGrid _grid;
     private readonly Countdown _countdown;
     private readonly Stopwatch _stopwatch;
-    private readonly BubblePoolColors _keyPool;  
+    private readonly BubblePoolColors _keyPool;
     private readonly IEventBus _events;
 
     public LevelConfigData Config => _config;
     public LevelGrid Grid => _grid;
-    public CellMatchExact<ColorSlotKey> AcceptedContent { get; private set; }   
+    public CellMatchExact<ColorSlotKey> AcceptedContent { get; private set; }
     public Countdown Countdown => _countdown;
     public Stopwatch Stopwatch => _stopwatch;
     public BubblePoolColors KeyPool => _keyPool;
@@ -44,12 +45,6 @@ public class LevelController :
         //Generate CellData
         _grid = new LevelGrid(levelConfig.BoardSize, LevelGrid.Generate(levelConfig.BoardSize));
 
-        foreach (var cell in _grid.Nodes)
-        {
-            cell.SetAdditionalData(false, true);
-        }
-
-        
         AcceptedContent = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandom());
 
         _events.Subscribe<ILootPicked>(this);
@@ -59,9 +54,9 @@ public class LevelController :
     }
 
     #region ISlotClicked
-    void ISlotClicked.OnSlotClicked(Slot slot)
+    void ISlotClicked.OnSlotClicked(SlotVisual slot)
     {
-        bool accepted = AcceptedContent.IsAccepted(slot.Keyhole);
+        bool accepted = AcceptedContent.IsAccepted(slot.SlotData.Content);
 
         if (accepted)
             slot.OpenSlot();
@@ -71,9 +66,9 @@ public class LevelController :
     #endregion
 
     #region ISlotStateChanged
-    void ISlotStateChanged.OnSlotOpen(Slot slot)
+    void ISlotStateChanged.OnSlotOpen(SlotData slot, SlotVisual visual)
     {
-        var key = new ColorSlotKey(slot.Keyhole.Color);
+        var key = (ColorSlotKey)visual.SlotData.Content;
 
         if (!HaveKeyHoleOnBoard(key))
         {
@@ -95,9 +90,9 @@ public class LevelController :
             SwitchAcceptedContent();
     }
 
-    void ISlotStateChanged.OnSlotBreak(Slot slot)
+    void ISlotStateChanged.OnSlotBreak(SlotData slot, SlotVisual visual)
     {
-        var key = new ColorSlotKey(slot.Keyhole.Color);
+        var key = new ColorSlotKey(visual.Content.Color);
 
         if (!HaveKeyHoleOnBoard(key))
         {
@@ -116,18 +111,17 @@ public class LevelController :
     #endregion
 
     #region ILootPicked
-    void ILootPicked.OnLootPicked(Loot loot)
+    void ILootPicked.OnLootPicked(SlotLoot loot)
     {
-        foreach (var slot in loot.ConnectedSlots)
-        {
-            slot.Loot = null;
-            slot.OpenSlot();
-        }
+        //TODO: Implement loot Resolver or split to interfaces
+
+        var star = (LootStar)loot;
+        star.Activate();
     }
     #endregion
 
     #region ILootConsumed
-    void ILootConsumed.OnLootConsumed(Loot loot)
+    void ILootConsumed.OnLootConsumed(SlotLoot _)
     {
         Debug.Log("[Level] AddTime!");
         _countdown.AddTime(3);
@@ -157,9 +151,9 @@ public class LevelController :
     {
         foreach (var slot in _grid.Nodes)
         {
-            if (slot.SlotVisual.Keyhole.Color == key.Color && slot.IsActive)
+            if (slot.Content.IsMatch(key) && slot.IsActive)
             {
-                Debug.LogError($"Found: {slot.SlotVisual}", slot.SlotVisual.gameObject);
+                //Debug.LogError($"Found: {slot.SlotVisual}", slot.SlotVisual.gameObject);
                 return true;
             }
 

@@ -1,8 +1,9 @@
+using AGK.GameGrids;
 using Popper;
 using UnityEngine;
 
 [System.Serializable]
-public struct ColorSlotKey : IMatchKey<ColorSlotKey>
+public class ColorSlotKey : SlotContent
 {
     [SerializeField] private Color color;
 
@@ -13,8 +14,16 @@ public struct ColorSlotKey : IMatchKey<ColorSlotKey>
         this.color = color;
     }
 
-    bool IMatchKey<ColorSlotKey>.IsMatch(ColorSlotKey other)
+    public override bool IsMatch(ICellContentMatch other)
     {
-        return color == other.Color;
+        if (other is ColorSlotKey)
+        {
+            return ((ColorSlotKey)other).Color == Color;
+        }
+        else
+        {
+            Debug.LogAssertion("Wrong Cast!");
+            return false;
+        }            
     }
 }

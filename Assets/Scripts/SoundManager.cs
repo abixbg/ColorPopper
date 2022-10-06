@@ -39,12 +39,12 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
         _player.PlaySound(eventLibrary.GetEventData(key), out _);
     }
 
-    void ILootPicked.OnLootPicked(Loot _)
+    void ILootPicked.OnLootPicked(SlotLoot _)
     {
 
     }
 
-    void ILootConsumed.OnLootConsumed(Loot _)
+    void ILootConsumed.OnLootConsumed(SlotLoot _)
     {
         PlaySFX("sfx-star_activated");
     }
@@ -58,14 +58,14 @@ public class SoundManager : MonoBehaviour, ILootPicked, ILootConsumed, IAccepted
         //Handheld.Vibrate();
     }
 
-    void ISlotStateChanged.OnSlotOpen(Slot slot)
+    void ISlotStateChanged.OnSlotOpen(SlotData slot, SlotVisual visual)
     {
         //only play 
         if (slot.Loot == null)
             PlaySFX("sfx-cell_open");
     }
 
-    void ISlotStateChanged.OnSlotBreak(Slot slot)
+    void ISlotStateChanged.OnSlotBreak(SlotData data, SlotVisual visual)
     {
         PlaySFX("sfx-break_slot");
     }

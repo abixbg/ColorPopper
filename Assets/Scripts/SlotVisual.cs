@@ -34,7 +34,7 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
         //Debug.Log($"Clicked! active={SlotData.IsActive}", gameObject);
         if (SlotData.IsActive == true)
         {
-            Events.Broadcast<ISlotClicked>(s => s.OnSlotClicked(SlotData));
+            Events.Broadcast<ISlotInput>(s => s.OnClicked(SlotData));
         }
     }
 
@@ -42,7 +42,7 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
     {
         if (!SlotData.IsActive)
         {
-            if (SlotData.IsLocked)
+            if (SlotData.IsBroken)
             {
                 border.color = new Color32(140, 30, 30, 255);
             }
@@ -56,12 +56,12 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
         Content.gameObject.SetActive(SlotData.IsActive);
     }
 
-    void ISlotStateChanged.OnSlotOpenClick(SlotData slot)
+    void ISlotStateChanged.OnSlotOpen(SlotData slot)
     {
         if (SlotData != slot)
             return;
 
-        Events.Broadcast<ISlotVisualStateChanged>(e => e.OnDeactivated(SlotData));
+        Events.Broadcast<ISlotVisualStateChanged>(e => e.OnOpenSuccess(SlotData));
         UpdateVisual();
     }
 
@@ -79,8 +79,11 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
         if (SlotData != slot)
             return;
 
+        if (slot.IsBroken)
+            return;
+        
         await AnimateShrink();
-        Events.Broadcast<ISlotVisualStateChanged>(e => e.OnDeactivated(SlotData));
+        Events.Broadcast<ISlotVisualStateChanged>(e => e.OnOpenSuccess(SlotData));
         UpdateVisual();
     }
 

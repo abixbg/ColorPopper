@@ -1,13 +1,10 @@
-using AGK.GameGrids;
 using EventBroadcast;
 using Popper;
 using Popper.Events;
-using UnityEditor.PackageManager;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class LevelController :
-    ISlotClicked,
+    ISlotInput,
     ISlotStateChanged,
     ILootPicked,
     ILootConsumed
@@ -51,24 +48,27 @@ public class LevelController :
 
         _events.Subscribe<ILootPicked>(this);
         _events.Subscribe<ILootConsumed>(this);
-        _events.Subscribe<ISlotClicked>(this);
+        _events.Subscribe<ISlotInput>(this);
         _events.Subscribe<ISlotStateChanged>(this);
     }
 
     #region ISlotClicked
-    void ISlotClicked.OnSlotClicked(SlotData slot)
+    void ISlotInput.OnClicked(SlotData slot)
     {
         bool accepted = AcceptedContent.IsAccepted(slot.Content);
 
-        if (accepted)
-            slot.OpenSlot();
-        else
-            slot.BreakSlot();
+        if (slot.IsActive)
+        {
+            if (accepted)
+                slot.OpenSlot();
+            else
+                slot.BreakSlot();
+        }
     }
     #endregion
 
     #region ISlotStateChanged
-    void ISlotStateChanged.OnSlotOpenClick(SlotData slot)
+    void ISlotStateChanged.OnSlotOpen(SlotData slot)
     {
         var key = (ColorSlotKey)slot.Content;
 
@@ -121,7 +121,7 @@ public class LevelController :
     async void ILootPicked.OnLootActivate(SlotLoot loot)
     {
         //TODO: Implement loot Resolver or split to interfaces
-            await loot.ActivateEffect();
+        await loot.ActivateEffect();
     }
     void ILootPicked.OnLootDiscard(SlotLoot _)
     {

@@ -54,8 +54,11 @@ public class LootVisual : MonoBehaviour, ILootPicked
         if (loot != LootData)
             return;
 
-        await loot.ActivateEffect();
-        await MoveToCollectorAsync();
+        Task collect = MoveToCollectorAsync();
+        Task activate = loot.ActivateEffect();
+
+        await Task.WhenAll(collect, activate);
+
         Events.Broadcast<ILootConsumed>(sub => sub.OnLootConsumed(loot));
     }
 

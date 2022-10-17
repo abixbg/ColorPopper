@@ -13,7 +13,7 @@ public class SlotData : IGridCell, ICellContentMatch
 
     public SlotContent Content { get; set; }
     public SlotLoot Loot { get; set; }
-    public bool IsLocked { get => isLocked; set => isLocked = value; }
+    public bool IsBroken { get => isLocked; set => isLocked = value; }
     public bool IsActive { get => isActive; set => isActive = value; }
     private EventBus Events => GameManager.current.Events;
 
@@ -40,9 +40,7 @@ public class SlotData : IGridCell, ICellContentMatch
     public void OpenSlot()
     {
         IsActive = false;
-        IsLocked = false;
-
-        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpenClick(this));
+        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpen(this));
 
         // activate slot contents
         if (Loot != null)
@@ -55,15 +53,13 @@ public class SlotData : IGridCell, ICellContentMatch
     public void AutoOpenSlot()
     {
         IsActive = false;
-        IsLocked = false;
-
         Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpenAuto(this));
     }
 
     public void BreakSlot()
     {
         IsActive = false;
-        IsLocked = true;       
+        IsBroken = true;
 
         Events.Broadcast<ISlotStateChanged>(s => s.OnSlotBreak(this));
 

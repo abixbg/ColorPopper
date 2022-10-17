@@ -1,7 +1,5 @@
 using AGK.GameGrids;
 using Popper.Events;
-using System.Drawing;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 [System.Serializable]

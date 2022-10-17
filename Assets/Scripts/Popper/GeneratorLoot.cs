@@ -42,7 +42,7 @@ public class GeneratorLoot
 
             slot.Loot = new LootStar(connected);
 
-            Debug.LogWarning($"[GeneratorLoot] {island} --> {island.Cells[0].Position} ");
+            //Debug.LogWarning($"[GeneratorLoot] {island} --> {island.Cells[0].Position} ");
         }
     }
 }

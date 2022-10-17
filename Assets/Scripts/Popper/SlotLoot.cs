@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System.Threading.Tasks;
 
 public abstract class SlotLoot
 {
-    public abstract void Activate();
+    public abstract Task ActivateEffect();
 
     public SlotLoot()
     {

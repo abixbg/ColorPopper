@@ -1,5 +1,7 @@
 using AGK.GameGrids;
+using Popper.Events;
 using System.Drawing;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 [System.Serializable]
@@ -11,8 +13,9 @@ public class SlotData : IGridCell, ICellContentMatch
 
     public SlotContent Content { get; set; }
     public SlotLoot Loot { get; set; }
-    public bool IsLocked { get => isLocked; set => isLocked = value; }
+    public bool IsBroken { get => isLocked; set => isLocked = value; }
     public bool IsActive { get => isActive; set => isActive = value; }
+    private EventBus Events => GameManager.current.Events;
 
     GridPosition IGridCell.Position { get => _gridPosition; set => _gridPosition = value; }
 
@@ -32,5 +35,38 @@ public class SlotData : IGridCell, ICellContentMatch
     {
         this.isLocked = isLocked;
         this.isActive = isActive;
+    }
+
+    public void OpenSlot()
+    {
+        IsActive = false;
+        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpen(this));
+
+        // activate slot contents
+        if (Loot != null)
+        {
+            //broadcast event
+            Events.Broadcast<ILootPicked>(s => s.OnLootActivate(Loot));
+        }
+    }
+
+    public void AutoOpenSlot()
+    {
+        IsActive = false;
+        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpenAuto(this));
+    }
+
+    public void BreakSlot()
+    {
+        IsActive = false;
+        IsBroken = true;
+
+        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotBreak(this));
+
+        //disable slot contents
+        if (Loot != null)
+        {
+            Events.Broadcast<ILootPicked>(s => s.OnLootDiscard(Loot));
+        }
     }
 }

@@ -1,19 +1,17 @@
-﻿using Popper.Events;
+﻿using AGK.GameGrids;
+using Popper.Events;
+using System.Threading.Tasks;
 using UnityEngine;
-using AGK.GameGrids;
-using UnityEditor.PackageManager;
 
 [System.Serializable]
-public class SlotVisual : MonoBehaviour
+public class SlotVisual : MonoBehaviour, ISlotStateChanged
 {
     [SerializeField] private Dot keyhole;
-    [SerializeField] private Loot loot;
+    [SerializeField] private LootVisual loot;
     [SerializeField] private SpriteRenderer border;
+    [SerializeField] private AnimationCurve animCurve;
 
     public Dot Content { get => keyhole; set => keyhole = value; }
-
-    public Loot Loot { get => loot; set => loot = value; }
-
 
     public SlotData SlotData => grid.GetNodeAt(gridPos);
 
@@ -27,6 +25,8 @@ public class SlotVisual : MonoBehaviour
         this.grid = grid;
         this.gridPos = gridPos;
         transform.parent = parent;
+
+        Events.Subscribe<ISlotStateChanged>(this);
     }
 
     public void CmdClicked()
@@ -34,48 +34,15 @@ public class SlotVisual : MonoBehaviour
         //Debug.Log($"Clicked! active={SlotData.IsActive}", gameObject);
         if (SlotData.IsActive == true)
         {
-            Events.Broadcast<ISlotClicked>(s => s.OnSlotClicked(this));
+            Events.Broadcast<ISlotInput>(s => s.OnClicked(SlotData));
         }
-    }
-
-    public async void OpenSlot()
-    {
-        SlotData.IsActive = false;
-        SlotData.IsLocked = false;
-
-        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpen(SlotData, this));
-        UpdateVisual();
-
-        // activate slot contents
-        if (SlotData.Loot != null)
-        {    
-            //broadcast event
-            Events.Broadcast<ILootPicked>(sub => sub.OnLootPicked(SlotData.Loot));
-            await loot.Activate();
-            Events.Broadcast<ILootConsumed>(sub => sub.OnLootConsumed(SlotData.Loot));
-        }
-    }
-
-    public void BreakSlot()
-    {
-        SlotData.IsActive = false;
-        SlotData.IsLocked = true;
-
-        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotBreak(SlotData, this));
-        UpdateVisual();
-
-        //disable slot contents
-        if (SlotData.Loot != null)
-        {
-            loot.Break();
-        }      
     }
 
     private void UpdateVisual()
     {
         if (!SlotData.IsActive)
         {
-            if (SlotData.IsLocked)
+            if (SlotData.IsBroken)
             {
                 border.color = new Color32(140, 30, 30, 255);
             }
@@ -89,8 +56,54 @@ public class SlotVisual : MonoBehaviour
         Content.gameObject.SetActive(SlotData.IsActive);
     }
 
-    //bool ICellContentMatch.IsMatch(ICellContentMatch other)
-    //{
-    //    return ((Slot)other).Keyhole.Color == Keyhole.Color;
-    //}
+    void ISlotStateChanged.OnSlotOpen(SlotData slot)
+    {
+        if (SlotData != slot)
+            return;
+
+        Events.Broadcast<ISlotVisualStateChanged>(e => e.OnOpenSuccess(SlotData));
+        UpdateVisual();
+    }
+
+    void ISlotStateChanged.OnSlotBreak(SlotData slot)
+    {
+        if (SlotData != slot)
+            return;
+
+        Events.Broadcast<ISlotVisualStateChanged>(e => e.OnBreak(SlotData));
+        UpdateVisual();
+    }
+
+    async void ISlotStateChanged.OnSlotOpenAuto(SlotData slot)
+    {
+        if (SlotData != slot)
+            return;
+
+        if (slot.IsBroken)
+            return;
+        
+        await AnimateShrink();
+        Events.Broadcast<ISlotVisualStateChanged>(e => e.OnOpenSuccess(SlotData));
+        UpdateVisual();
+    }
+
+    private async Task AnimateShrink()
+    {
+        bool done = false;
+
+        float time = 0;
+        float speed = 6f;
+        Vector3 from = new Vector3(1, 1, 1);
+        Vector3 to = new Vector3(0.2f, 0.2f, 0.2f);
+
+        while (!done)
+        {
+            gameObject.transform.localScale = Vector3.Lerp(from, to, animCurve.Evaluate(time));
+            time += Time.deltaTime * speed;
+
+            if (time >= 1)
+                done = true;
+            await Task.Yield();
+        }
+    }
 }

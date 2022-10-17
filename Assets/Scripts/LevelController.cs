@@ -1,11 +1,10 @@
-using AGK.GameGrids;
 using EventBroadcast;
 using Popper;
 using Popper.Events;
 using UnityEngine;
 
 public class LevelController :
-    ISlotClicked,
+    ISlotInput,
     ISlotStateChanged,
     ILootPicked,
     ILootConsumed
@@ -49,26 +48,29 @@ public class LevelController :
 
         _events.Subscribe<ILootPicked>(this);
         _events.Subscribe<ILootConsumed>(this);
-        _events.Subscribe<ISlotClicked>(this);
+        _events.Subscribe<ISlotInput>(this);
         _events.Subscribe<ISlotStateChanged>(this);
     }
 
     #region ISlotClicked
-    void ISlotClicked.OnSlotClicked(SlotVisual slot)
+    void ISlotInput.OnClicked(SlotData slot)
     {
-        bool accepted = AcceptedContent.IsAccepted(slot.SlotData.Content);
+        bool accepted = AcceptedContent.IsAccepted(slot.Content);
 
-        if (accepted)
-            slot.OpenSlot();
-        else
-            slot.BreakSlot();
+        if (slot.IsActive)
+        {
+            if (accepted)
+                slot.OpenSlot();
+            else
+                slot.BreakSlot();
+        }
     }
     #endregion
 
     #region ISlotStateChanged
-    void ISlotStateChanged.OnSlotOpen(SlotData slot, SlotVisual visual)
+    void ISlotStateChanged.OnSlotOpen(SlotData slot)
     {
-        var key = (ColorSlotKey)visual.SlotData.Content;
+        var key = (ColorSlotKey)slot.Content;
 
         if (!HaveKeyHoleOnBoard(key))
         {
@@ -90,9 +92,9 @@ public class LevelController :
             SwitchAcceptedContent();
     }
 
-    void ISlotStateChanged.OnSlotBreak(SlotData slot, SlotVisual visual)
+    void ISlotStateChanged.OnSlotBreak(SlotData slot)
     {
-        var key = new ColorSlotKey(visual.Content.Color);
+        var key = (ColorSlotKey)slot.Content;
 
         if (!HaveKeyHoleOnBoard(key))
         {
@@ -108,16 +110,24 @@ public class LevelController :
 
         SwitchAcceptedContent();
     }
+
+    void ISlotStateChanged.OnSlotOpenAuto(SlotData _)
+    {
+
+    }
     #endregion
 
     #region ILootPicked
-    void ILootPicked.OnLootPicked(SlotLoot loot)
+    async void ILootPicked.OnLootActivate(SlotLoot loot)
     {
         //TODO: Implement loot Resolver or split to interfaces
-
-        var star = (LootStar)loot;
-        star.Activate();
+        await loot.ActivateEffect();
     }
+    void ILootPicked.OnLootDiscard(SlotLoot _)
+    {
+
+    }
+
     #endregion
 
     #region ILootConsumed

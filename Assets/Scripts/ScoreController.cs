@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Popper.Events;
 
-public class ScoreController : ILootPicked
+public class ScoreController : ISlotStateChanged
 {
     [SerializeField] private PlayerScoreData scoreData;
 
@@ -12,7 +12,7 @@ public class ScoreController : ILootPicked
     public ScoreController(EventBus events)
     {
         _events = events;
-        _events.Subscribe<ILootPicked>(this);
+        _events.Subscribe<ISlotStateChanged>(this);
     }
 
     public PlayerScoreData ScoreData => scoreData;
@@ -24,14 +24,20 @@ public class ScoreController : ILootPicked
         ScoreChanged?.Invoke();
     }
 
-    void ILootPicked.OnLootActivate(SlotLoot loot)
+    #region ISlotStateChanged
+    void ISlotStateChanged.OnSlotOpen(SlotData slot)
     {
-        Debug.Log($"[Score] added score={10}");
-        AddPointsLevel(10);
+        AddPointsLevel(3);
     }
 
-    void ILootPicked.OnLootDiscard(SlotLoot _)
+    void ISlotStateChanged.OnSlotOpenAuto(SlotData slot)
     {
-
+        AddPointsLevel(2);
     }
+
+    void ISlotStateChanged.OnSlotBreak(SlotData slot)
+    {
+        AddPointsLevel(-5);
+    }
+    #endregion
 }

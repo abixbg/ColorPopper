@@ -68,7 +68,7 @@ public class LevelController :
     #endregion
 
     #region ISlotStateChanged
-    void ISlotStateChanged.OnSlotOpen(SlotData slot)
+    void ISlotStateChanged.OnSlotOpenClick(SlotData slot)
     {
         var key = (ColorSlotKey)slot.Content;
 
@@ -109,6 +109,11 @@ public class LevelController :
         }
 
         SwitchAcceptedContent();
+    }
+
+    void ISlotStateChanged.OnSlotOpenAuto(SlotData _)
+    {
+
     }
     #endregion
 

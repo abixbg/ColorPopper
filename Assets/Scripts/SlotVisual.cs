@@ -1,5 +1,6 @@
 ﻿using AGK.GameGrids;
 using Popper.Events;
+using System.Threading.Tasks;
 using UnityEngine;
 
 [System.Serializable]
@@ -8,6 +9,7 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
     [SerializeField] private Dot keyhole;
     [SerializeField] private LootVisual loot;
     [SerializeField] private SpriteRenderer border;
+    [SerializeField] private AnimationCurve animCurve;
 
     public Dot Content { get => keyhole; set => keyhole = value; }
 
@@ -36,39 +38,6 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
         }
     }
 
-    //public async void OpenSlot()
-    //{
-    //    SlotData.IsActive = false;
-    //    SlotData.IsLocked = false;
-
-    //    Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpen(SlotData, this));
-    //    UpdateVisual();
-
-    //    // activate slot contents
-    //    if (SlotData.Loot != null)
-    //    {    
-    //        //broadcast event
-    //        Events.Broadcast<ILootPicked>(sub => sub.OnLootPicked(SlotData.Loot));
-    //        await loot.Activate();
-    //        Events.Broadcast<ILootConsumed>(sub => sub.OnLootConsumed(SlotData.Loot));
-    //    }
-    //}
-
-    //public void BreakSlot()
-    //{
-    //    SlotData.IsActive = false;
-    //    SlotData.IsLocked = true;
-
-    //    Events.Broadcast<ISlotStateChanged>(s => s.OnSlotBreak(SlotData, this));
-    //    UpdateVisual();
-
-    //    //disable slot contents
-    //    if (SlotData.Loot != null)
-    //    {
-    //        loot.Break();
-    //    }      
-    //}
-
     private void UpdateVisual()
     {
         if (!SlotData.IsActive)
@@ -87,19 +56,51 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
         Content.gameObject.SetActive(SlotData.IsActive);
     }
 
-    public void OnSlotOpen(SlotData data)
+    void ISlotStateChanged.OnSlotOpenClick(SlotData slot)
     {
-        if (data == SlotData)
-        {
-            UpdateVisual();
-        }
+        if (SlotData != slot)
+            return;
+
+        Events.Broadcast<ISlotVisualStateChanged>(e => e.OnDeactivated(SlotData));
+        UpdateVisual();
     }
 
-    public void OnSlotBreak(SlotData data)
+    void ISlotStateChanged.OnSlotBreak(SlotData slot)
     {
-        if (data == SlotData)
+        if (SlotData != slot)
+            return;
+
+        Events.Broadcast<ISlotVisualStateChanged>(e => e.OnBreak(SlotData));
+        UpdateVisual();
+    }
+
+    async void ISlotStateChanged.OnSlotOpenAuto(SlotData slot)
+    {
+        if (SlotData != slot)
+            return;
+
+        await AnimateShrink();
+        Events.Broadcast<ISlotVisualStateChanged>(e => e.OnDeactivated(SlotData));
+        UpdateVisual();
+    }
+
+    private async Task AnimateShrink()
+    {
+        bool done = false;
+
+        float time = 0;
+        float speed = 6f;
+        Vector3 from = new Vector3(1, 1, 1);
+        Vector3 to = new Vector3(0.2f, 0.2f, 0.2f);
+
+        while (!done)
         {
-            UpdateVisual();
+            gameObject.transform.localScale = Vector3.Lerp(from, to, animCurve.Evaluate(time));
+            time += Time.deltaTime * speed;
+
+            if (time >= 1)
+                done = true;
+            await Task.Yield();
         }
     }
 }

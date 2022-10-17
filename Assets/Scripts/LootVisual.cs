@@ -57,7 +57,6 @@ public class LootVisual : MonoBehaviour, ILootPicked
         await loot.ActivateEffect();
         await MoveToCollectorAsync();
         Events.Broadcast<ILootConsumed>(sub => sub.OnLootConsumed(loot));
-
     }
 
     void ILootPicked.OnLootDiscard(SlotLoot loot)

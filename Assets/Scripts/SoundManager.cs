@@ -2,7 +2,7 @@
 using Popper.Events;
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour, ILootConsumed, IAcceptedColorChanged, ISlotStateChanged
+public class SoundManager : MonoBehaviour, ILootConsumed, IAcceptedColorChanged, ISlotVisualStateChanged
 {
 
     public EventBus _sfxEvents;
@@ -29,7 +29,7 @@ public class SoundManager : MonoBehaviour, ILootConsumed, IAcceptedColorChanged,
         _sfxEvents = events;
         _sfxEvents.Subscribe<ILootConsumed>(this);
         _sfxEvents.Subscribe<IAcceptedColorChanged>(this);
-        _sfxEvents.Subscribe<ISlotStateChanged>(this);
+        _sfxEvents.Subscribe<ISlotVisualStateChanged>(this);
     }
 
     public void PlaySFX(string key)
@@ -51,14 +51,14 @@ public class SoundManager : MonoBehaviour, ILootConsumed, IAcceptedColorChanged,
         //Handheld.Vibrate();
     }
 
-    void ISlotStateChanged.OnSlotOpen(SlotData slot)
+    void ISlotVisualStateChanged.OnDeactivated(SlotData slot)
     {
-        //only play 
-        if (slot.Loot == null)
+        Debug.LogError($"[SOUND] play deactivate SFX");        //only play 
+        //if (slot.Loot == null)
             PlaySFX("sfx-cell_open");
     }
 
-    void ISlotStateChanged.OnSlotBreak(SlotData _)
+    void ISlotVisualStateChanged.OnBreak(SlotData slot)
     {
         PlaySFX("sfx-break_slot");
     }

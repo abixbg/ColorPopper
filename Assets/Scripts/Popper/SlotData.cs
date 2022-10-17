@@ -42,7 +42,7 @@ public class SlotData : IGridCell, ICellContentMatch
         IsActive = false;
         IsLocked = false;
 
-        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpen(this));
+        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpenClick(this));
 
         // activate slot contents
         if (Loot != null)
@@ -50,6 +50,14 @@ public class SlotData : IGridCell, ICellContentMatch
             //broadcast event
             Events.Broadcast<ILootPicked>(sub => sub.OnLootActivate(Loot));
         }
+    }
+
+    public async void AutoOpenSlot()
+    {
+        IsActive = false;
+        IsLocked = false;
+
+        Events.Broadcast<ISlotStateChanged>(s => s.OnSlotOpenAuto(this));
     }
 
     public void BreakSlot()

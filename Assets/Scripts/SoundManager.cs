@@ -2,25 +2,21 @@
 using Popper.Events;
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour, ILootConsumed, IAcceptedColorChanged, ISlotVisualStateChanged
+public class SoundManager : 
+    MonoBehaviour, 
+    ILootConsumed, 
+    IAcceptedColorChanged, 
+    ISlotVisualStateChanged
 {
-
     public EventBus _sfxEvents;
-
-    public static SoundManager current;
-
     private IAudioEventPlayer _player;
 
     [SerializeField] private AudioEventLib eventLibrary;
     [SerializeField] private AudioClipLib clipLibrary;
 
+
     void Awake()
     {
-        if (current == null)
-            current = this;
-        else if (current != this)
-            Destroy(gameObject);
-
         _player = new AudioPlayerMultiTrack(5, clipLibrary, transform);
     }
 

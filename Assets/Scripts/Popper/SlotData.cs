@@ -37,7 +37,7 @@ public class SlotData : IGridCell, ICellContentMatch
         this.isActive = isActive;
     }
 
-    public async void OpenSlot()
+    public void OpenSlot()
     {
         IsActive = false;
         IsLocked = false;
@@ -48,11 +48,11 @@ public class SlotData : IGridCell, ICellContentMatch
         if (Loot != null)
         {
             //broadcast event
-            Events.Broadcast<ILootPicked>(sub => sub.OnLootActivate(Loot));
+            Events.Broadcast<ILootPicked>(s => s.OnLootActivate(Loot));
         }
     }
 
-    public async void AutoOpenSlot()
+    public void AutoOpenSlot()
     {
         IsActive = false;
         IsLocked = false;
@@ -70,7 +70,7 @@ public class SlotData : IGridCell, ICellContentMatch
         //disable slot contents
         if (Loot != null)
         {
-            Events.Broadcast<ILootPicked>(sub => sub.OnLootDiscard(Loot));
+            Events.Broadcast<ILootPicked>(s => s.OnLootDiscard(Loot));
         }
     }
 }

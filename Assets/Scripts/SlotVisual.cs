@@ -7,7 +7,6 @@ using UnityEngine;
 public class SlotVisual : MonoBehaviour, ISlotStateChanged
 {
     [SerializeField] private Dot keyhole;
-    [SerializeField] private LootVisual loot;
     [SerializeField] private SpriteRenderer border;
     [SerializeField] private AnimationCurve animCurve;
 

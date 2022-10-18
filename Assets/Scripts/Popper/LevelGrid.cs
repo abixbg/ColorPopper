@@ -8,14 +8,24 @@ public class LevelGrid : GameGrid2D<SlotData>
 {
     public LevelGrid(int2 size, List<SlotData> nodes) : base(size, nodes)
     {
-        ResetCells();
+        ResetCellsState();
+        ResetCellsContent();
     }
 
-    public void ResetCells()
+    public void ResetCellsState()
     {
         foreach (var cell in Nodes)
         {
-            cell.Init(false, true);
+            cell.IsActive = true;
+            cell.IsBroken = false;
+        }
+    }
+    public void ResetCellsContent()
+    {
+        foreach (var cell in Nodes)
+        {
+            cell.Content = null;
+            cell.Loot = null;
         }
     }
 }

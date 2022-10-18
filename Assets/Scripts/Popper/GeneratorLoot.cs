@@ -5,24 +5,17 @@ using UnityEngine;
 
 public class GeneratorLoot
 {
-    private readonly GameGrid2D<SlotData> grid;
-
-    public GeneratorLoot(GameGrid2D<SlotData> grid)
-    {
-        this.grid = grid;
-    }
-
-    public void GenerateLoot()
+    public void AddLoot(GameGrid2D<SlotData> grid)
     {
         //for (int i = 0; i < grid.Nodes.Count; i++)
         //{
         //    var slot = grid.Nodes[i];
         //}
 
-        GenerateBombIslands();
+        GenerateBombIslands(grid);
     }
 
-    private void GenerateBombIslands()
+    private void GenerateBombIslands(GameGrid2D<SlotData> grid)
     {
         var islandFinder = new Islandfinder<GameGrid2D<SlotData>, SlotData>(grid);
         islandFinder.RecalculateIslands();

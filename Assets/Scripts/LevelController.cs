@@ -1,6 +1,7 @@
 using EventBroadcast;
 using Popper;
 using Popper.Events;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class LevelController :
@@ -15,15 +16,20 @@ public class LevelController :
     private readonly Stopwatch _stopwatch;
     private readonly BubblePoolColors _keyPool;
     private readonly IEventBus _events;
-    private BoardVisual _boardVisual;
+    private readonly BoardVisual _boardVisual;
+    private readonly GeneratorContentColor _generatorContent;
+    private readonly GeneratorLoot _generatorLoot;
 
     public LevelConfigData Config => _config;
     public LevelGrid Grid => _grid;
     public CellMatchExact<ColorSlotKey> AcceptedContent { get; private set; }
     public Countdown Countdown => _countdown;
     public Stopwatch Stopwatch => _stopwatch;
+    private GeneratorContentColor Content => _generatorContent;
+    private GeneratorLoot Loot => _generatorLoot;
     public BubblePoolColors KeyPool => _keyPool;
-    public float TimeRemaining => _countdown.TimeRemaining;
+    public float TimeRemaining => _countdown.TimeRemaining;   
+
 
     public int BoardCellremaining
     {
@@ -33,14 +39,16 @@ public class LevelController :
         }
     }
 
-    public LevelController(LevelConfigData levelConfig, EventBus levelEvents, GameClock clock)
+    public LevelController(LevelConfigData levelConfig, EventBus levelEvents, GameClock clock, BoardVisual boardVisual)
     {
         _config = levelConfig;
         _events = levelEvents;
+        _boardVisual = boardVisual;
         _countdown = new Countdown(levelConfig.TimeSec);
         _stopwatch = new Stopwatch(clock);
-        _stopwatch.SetActive(true);
         _keyPool = new BubblePoolColors(levelConfig.Pallete);
+        _generatorContent = new GeneratorContentColor(KeyPool);
+        _generatorLoot = new GeneratorLoot();
 
         //Generate CellData
         _grid = new LevelGrid(levelConfig.BoardSize, LevelGrid.Generate(levelConfig.BoardSize));
@@ -140,42 +148,58 @@ public class LevelController :
     #endregion
 
 
-    public void InitLevel(BoardVisual board)
+    private void InitialiizeLevelData(bool generateNewContent = true)
     {
-        _boardVisual = board;
         Debug.Log("[Level] Initialilze!");
 
-        //Generate content
-        var contentGenerator = new GeneratorContentColor(Grid, KeyPool);
-        contentGenerator.AddContent();
+        Grid.ResetCellsState();
 
-        //Generate Loot
-        var lootGenerator = new GeneratorLoot(Grid);
-        lootGenerator.GenerateLoot();
+        if (generateNewContent)
+        {
+            //Reset
+            Grid.ResetCellsContent();
+
+            //Generate new
+            Content.AddContent(Grid);
+            Loot.AddLoot(Grid);
+        }
 
         //Set Accepted color
         SwitchAcceptedContent();
 
         //Reset Time
+        Stopwatch.Reset();
+        Countdown.Reset(Config.TimeSec);
         //#TODO
     }
 
 
-    public async void StartLevel()
+    public void StartLevel()
     {
         Debug.Log("[Level] Start!");
 
-        await _boardVisual.SpawnAsync(Grid, this);
-
         //Start timers
-        //#TODO
+        _stopwatch.SetActive(true);
     }
 
-    public async void ResetLevel()
+    public async Task SetVisualReadyAsync()
     {
-        Debug.Log("[Level] Reset!");
-        Grid.ResetCells();
+        //Spawn Visual
         await _boardVisual.SpawnAsync(Grid, this);
+    }
+
+    public async void RestartLevel()
+    {
+        InitialiizeLevelData(false);
+        await SetVisualReadyAsync();    
+        StartLevel();
+    }
+
+    public async void QuickStartLevel()
+    {
+        InitialiizeLevelData();
+        await SetVisualReadyAsync();
+        StartLevel();
     }
 
     private void SwitchAcceptedContent()
@@ -190,7 +214,7 @@ public class LevelController :
         return valid;
     }
 
-    public bool HaveKeyHoleOnBoard(ColorSlotKey key)
+    private bool HaveKeyHoleOnBoard(ColorSlotKey key)
     {
         foreach (var slot in _grid.Nodes)
         {

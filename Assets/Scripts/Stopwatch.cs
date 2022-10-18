@@ -29,8 +29,8 @@ public class Stopwatch
         isActive = state;
     }
 
-    public void Reset()
+    public void Reset(float time = 0f)
     {
-        _time = 0f;
+        _time = time;
     }
 }

@@ -27,4 +27,9 @@ public class Countdown
     {
         _timeRemaining += time;
     }
+
+    public void Reset(float time = 0)
+    {
+        _timeRemaining = time;
+    }
 }

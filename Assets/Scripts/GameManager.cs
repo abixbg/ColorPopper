@@ -31,30 +31,30 @@ public class GameManager : MonoBehaviour
         events = new EventBus();
     }
 
-    void Start()
+    async void Start()
     {
-        levelController = new LevelController(levelAsset.Data, events, clock);
+        levelController = new LevelController(levelAsset.Data, events, clock, _boardVisual);
         scoreController = new ScoreController(events);
 
         soundManager.Construct(events);
         uiManager.Construct(this, levelController, scoreController);
 
-        levelController.InitLevel(_boardVisual);
+        levelController.QuickStartLevel();
     }
 
     private void Update()
     {
         levelController.Countdown.ConsumeTime(Time.deltaTime);
-        //levelController.StartLevel();
     }
 
     public void CmdRestartScene()
     {
-        SceneManager.LoadScene(0, LoadSceneMode.Single);
+        //SceneManager.LoadScene(0, LoadSceneMode.Single);
+        levelController.QuickStartLevel();
     }
 
     public void CmdEndLevel()
     {
-        levelController.ResetLevel();
+        levelController.RestartLevel();
     }
 }

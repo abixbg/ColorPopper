@@ -29,9 +29,22 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
         Events.Subscribe<ISlotStateChanged>(this);
     }
 
+    public async Task Spawn()
+    {
+        await AnimateScale(0.2f, 1f, 25f);
+    }
+
+    public async Task Despawn()
+    {
+        await AnimateScale(1, 0.2f, 25f);
+
+        Events.Unsubscribe<ISlotStateChanged>(this);
+        Destroy(gameObject);
+    }
+
     public void CmdClicked()
     {
-        //Debug.Log($"Clicked! active={SlotData.IsActive}", gameObject);
+        Debug.Log($"Clicked! active={SlotData.IsActive}", gameObject);
         if (SlotData.IsActive == true)
         {
             Events.Broadcast<ISlotInput>(s => s.OnClicked(SlotData));
@@ -55,6 +68,8 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
             border.enabled = true;
         Content.gameObject.SetActive(SlotData.IsActive);
     }
+
+
 
     void ISlotStateChanged.OnSlotOpen(SlotData slot)
     {
@@ -82,19 +97,18 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
         if (slot.IsBroken)
             return;
         
-        await AnimateShrink();
+        await AnimateScale(1, 0.2f, 6f);
         Events.Broadcast<ISlotVisualStateChanged>(e => e.OnOpenSuccess(SlotData));
         UpdateVisual();
     }
 
-    private async Task AnimateShrink()
+    private async Task AnimateScale(float fromScale, float toScale, float speed)
     {
         bool done = false;
 
         float time = 0;
-        float speed = 6f;
-        Vector3 from = new Vector3(1, 1, 1);
-        Vector3 to = new Vector3(0.2f, 0.2f, 0.2f);
+        Vector3 from = new Vector3(fromScale, fromScale, fromScale);
+        Vector3 to = new Vector3(toScale, toScale, toScale);
 
         while (!done)
         {

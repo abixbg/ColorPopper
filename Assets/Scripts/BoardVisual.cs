@@ -2,6 +2,7 @@
 using AGK.GameGrids.CellGroups;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -21,36 +22,42 @@ public class BoardVisual : MonoBehaviour
     private ISlotKeyPool<ColorSlotKey> _colorPool;
     
     private GameGrid2D<SlotData> _grid;
-    private float2 _boardRect;   
+    private float2 _boardRect;
+
+    private BoardCellSpawner _cellSpawner;
 
     public float2 BoardRect { get => _boardRect; }   
 
     public Action OnBoardChanged;
 
-    public void Construct(LevelGrid grid, LevelController levelController)
+    private void Construct(LevelGrid grid, LevelController levelController)
     {
         _grid = grid;
         _colorPool = levelController.KeyPool;
     }
 
-    public void GenerateBoard()
-    {       
-        var contentGenerator = new GeneratorContentColor(_grid, _colorPool);
-        var lootGenerator = new GeneratorLoot(_grid);
-        
-        contentGenerator.AddContent();
-        lootGenerator.GenerateLoot();
+    private async Task GenerateBoard()
+    {
+        if (_cellSpawner != null)
+            await _cellSpawner.DespawnCells();
 
-        var cellSpawner = new BoardCellSpawner(_grid, CELL_SIZE, slotPrefab, dotPrefab, lootPrefab, _colorPool, gameObject.transform);
-        cellSpawner.SpawnCells();
+        _cellSpawner = new BoardCellSpawner(_grid, CELL_SIZE, slotPrefab, dotPrefab, lootPrefab, _colorPool, gameObject.transform);
+        _cellSpawner.SpawnCells();
               
-        _boardRect = cellSpawner.CellsBoundingBox;
+        _boardRect = _cellSpawner.CellsBoundingBox;
         BoardBackground.size = new Vector2(BoardRect.x, BoardRect.y);
+
+        OnBoardChanged?.Invoke();
     }
 
-    public void OnLevelPhaseInitialize()
+    public async Task SpawnAsync(LevelGrid grid, LevelController levelController)
     {
-        //AddLoot();
-        OnBoardChanged?.Invoke();
+        Construct(grid, levelController);
+        await GenerateBoard();
+    }
+
+    public async Task DespawnAsync()
+    {
+
     }
 }

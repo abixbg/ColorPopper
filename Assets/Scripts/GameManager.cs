@@ -39,17 +39,13 @@ public class GameManager : MonoBehaviour
         soundManager.Construct(events);
         uiManager.Construct(this, levelController, scoreController);
 
-        Debug.Log("[Level] Initialilze!");
-
-        _boardVisual.Construct(levelController.Grid, levelController);
-        _boardVisual.GenerateBoard();
-        _boardVisual.OnLevelPhaseInitialize();
-        levelController.StartLevel();
+        levelController.InitLevel(_boardVisual);
     }
 
     private void Update()
     {
         levelController.Countdown.ConsumeTime(Time.deltaTime);
+        //levelController.StartLevel();
     }
 
     public void CmdRestartScene()
@@ -57,4 +53,8 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(0, LoadSceneMode.Single);
     }
 
+    public void CmdEndLevel()
+    {
+        levelController.ResetLevel();
+    }
 }

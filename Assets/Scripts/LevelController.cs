@@ -15,6 +15,7 @@ public class LevelController :
     private readonly Stopwatch _stopwatch;
     private readonly BubblePoolColors _keyPool;
     private readonly IEventBus _events;
+    private BoardVisual _boardVisual;
 
     public LevelConfigData Config => _config;
     public LevelGrid Grid => _grid;
@@ -139,10 +140,42 @@ public class LevelController :
     #endregion
 
 
-    public void StartLevel()
+    public void InitLevel(BoardVisual board)
+    {
+        _boardVisual = board;
+        Debug.Log("[Level] Initialilze!");
+
+        //Generate content
+        var contentGenerator = new GeneratorContentColor(Grid, KeyPool);
+        contentGenerator.AddContent();
+
+        //Generate Loot
+        var lootGenerator = new GeneratorLoot(Grid);
+        lootGenerator.GenerateLoot();
+
+        //Set Accepted color
+        SwitchAcceptedContent();
+
+        //Reset Time
+        //#TODO
+    }
+
+
+    public async void StartLevel()
     {
         Debug.Log("[Level] Start!");
-        SwitchAcceptedContent();
+
+        await _boardVisual.SpawnAsync(Grid, this);
+
+        //Start timers
+        //#TODO
+    }
+
+    public async void ResetLevel()
+    {
+        Debug.Log("[Level] Reset!");
+        Grid.ResetCells();
+        await _boardVisual.SpawnAsync(Grid, this);
     }
 
     private void SwitchAcceptedContent()

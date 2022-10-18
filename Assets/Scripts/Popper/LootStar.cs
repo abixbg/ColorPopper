@@ -1,3 +1,4 @@
+using AGK.GameGrids;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -19,10 +20,12 @@ public class LootStar : SlotLoot
             slot.IsActive = false;
         }
 
+        await Task.Delay(350);
+
         foreach (var slot in ConnectedSlots)
         {
+            await Task.Delay(150);
             slot.AutoOpenSlot();
-            await Task.Delay(200);
         }
     }
 }

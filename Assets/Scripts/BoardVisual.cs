@@ -41,13 +41,12 @@ public class BoardVisual : MonoBehaviour
         if (_cellSpawner != null)
             await _cellSpawner.DespawnCells();
 
-        _cellSpawner = new BoardCellSpawner(_grid, CELL_SIZE, slotPrefab, dotPrefab, lootPrefab, _colorPool, gameObject.transform);
-        _cellSpawner.SpawnCells();
-              
+        _cellSpawner = new BoardCellSpawner(_grid, CELL_SIZE, slotPrefab, dotPrefab, lootPrefab, _colorPool, gameObject.transform);            
         _boardRect = _cellSpawner.CellsBoundingBox;
         BoardBackground.size = new Vector2(BoardRect.x, BoardRect.y);
+        OnBoardChanged?.Invoke(); //TODO: this is only neded for safe space modification
 
-        OnBoardChanged?.Invoke();
+        await _cellSpawner.SpawnCellsAsync();
     }
 
     public async Task SpawnAsync(LevelGrid grid, LevelController levelController)

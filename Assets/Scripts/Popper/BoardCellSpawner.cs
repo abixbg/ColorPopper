@@ -35,7 +35,7 @@ public class BoardCellSpawner
         parent = origin;
     }
 
-    public async void SpawnCells()
+    public async Task SpawnCellsAsync()
     {
         int index = 0;
         List<PositionData> posData = new List<PositionData>();

@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
         events = new EventBus();
     }
 
-    async void Start()
+    void Start()
     {
         levelController = new LevelController(levelAsset.Data, events, clock, _boardVisual);
         scoreController = new ScoreController(events);

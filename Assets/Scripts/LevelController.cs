@@ -170,6 +170,7 @@ public class LevelController :
         //Reset Time
         Stopwatch.Reset();
         Countdown.Reset(Config.TimeSec);
+        Stopwatch.SetActive(false);
         //#TODO
     }
 
@@ -179,7 +180,7 @@ public class LevelController :
         Debug.Log("[Level] Start!");
 
         //Start timers
-        _stopwatch.SetActive(true);
+        Stopwatch.SetActive(true);
     }
 
     public async Task SetVisualReadyAsync()

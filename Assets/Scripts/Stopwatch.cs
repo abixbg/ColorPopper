@@ -29,8 +29,14 @@ public class Stopwatch
         isActive = state;
     }
 
+    /// <summary>
+    /// Reset to time and stop
+    /// </summary>
+    /// <param name="time"></param>
     public void Reset(float time = 0f)
     {
         _time = time;
+        isActive = false;
+        ValueUpdated?.Invoke();
     }
 }

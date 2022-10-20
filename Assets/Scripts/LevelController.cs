@@ -11,18 +11,17 @@ public class LevelController :
     ILootPicked,
     ILootConsumed
 {
-    private readonly LevelConfigData _config;
-    private readonly LevelGrid _grid;
     private readonly Stopwatch _stopwatch;
-    private readonly BubblePoolColors _keyPool;
     private readonly BoardVisual _boardVisual;
-    private readonly GeneratorContentColor _generatorContent;
     private readonly GeneratorLoot _generatorLoot;
 
+    private LevelConfigData _config;
+    private LevelGrid _grid;  
+    private BubblePoolColors _keyPool;
+    private GeneratorContentColor _generatorContent;
     private float bonusTime = 0f;
 
     private IEventBus Events => GameManager.current.Events;
-
     public LevelConfigData Config => _config;
     public LevelGrid Grid => _grid;
     public CellMatchExact<ColorSlotKey> AcceptRules { get; private set; }
@@ -41,22 +40,24 @@ public class LevelController :
         }
     }
 
-    public LevelController(LevelConfigData levelConfig, GameClock clock, BoardVisual boardVisual)
+    public LevelController(GameClock clock, BoardVisual boardVisual)
     {
-        _config = levelConfig;
+        //_config = levelConfig;
         _boardVisual = boardVisual;
 
         _stopwatch = new Stopwatch(clock);
         _stopwatch.ValueUpdated += OnStopwatchUpdate;
-
-        _keyPool = new BubblePoolColors(levelConfig.Pallete);
-        _generatorContent = new GeneratorContentColor(KeyPool);
+        
         _generatorLoot = new GeneratorLoot();
 
-        //Generate CellData
-        _grid = new LevelGrid(levelConfig.BoardSize, LevelGrid.Generate(levelConfig.BoardSize));
+        //_keyPool = new BubblePoolColors(_config.Pallete);
+        //_generatorContent = new GeneratorContentColor(KeyPool);
 
-        AcceptRules = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandom());
+
+        ////Generate CellData
+        //_grid = new LevelGrid(_config.BoardSize, LevelGrid.Generate(_config.BoardSize));
+
+
 
         Events.Subscribe<ILootPicked>(this);
         Events.Subscribe<ILootConsumed>(this);
@@ -157,21 +158,31 @@ public class LevelController :
         Events.Broadcast<ILevelStopwatchUpdate>(s => s.OnValueUpdate(data));
     }
 
-    private void InitialiizeLevelData(bool generateNewContent = true)
+    private void InitialiizeLevelData(LevelConfigData config, bool generateNewContent = true)
     {
         Debug.Log("[Level] Initialilze!");
 
-        Grid.ResetCellsState();
-        KeyPool.Reset();
-
         if (generateNewContent)
         {
+            _config = config;
+            _keyPool = new BubblePoolColors(_config.Pallete);
+            _generatorContent = new GeneratorContentColor(KeyPool);
+            //Generate CellData
+            _grid = new LevelGrid(_config.BoardSize, LevelGrid.Generate(_config.BoardSize));
+
+            AcceptRules = new CellMatchExact<ColorSlotKey>(KeyPool.GetRandom());
+
             //Reset
             Grid.ResetCellsContent();
 
             //Generate new
             Content.AddContent(Grid);
             Loot.AddLoot(Grid);
+        }
+        else
+        {
+            Grid.ResetCellsState();
+            KeyPool.Reset();
         }
 
         //Set Accepted color
@@ -200,14 +211,14 @@ public class LevelController :
 
     public async void RestartLevel()
     {
-        InitialiizeLevelData(false);
+        InitialiizeLevelData(_config, false);
         await SetVisualReadyAsync();
         StartLevel();
     }
 
-    public async void QuickStartLevel()
+    public async void QuickStartLevel(LevelConfigData levelConfig)
     {
-        InitialiizeLevelData();
+        InitialiizeLevelData(levelConfig);
         await SetVisualReadyAsync();
         StartLevel();
     }

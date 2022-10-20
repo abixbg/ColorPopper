@@ -23,6 +23,7 @@ public class LootVisual : MonoBehaviour, ILootPicked
         {
             await MoveToCollectorAsync();
             isActivated = true;
+            Despawn();
         }
     }
 
@@ -64,5 +65,11 @@ public class LootVisual : MonoBehaviour, ILootPicked
         if (loot != LootData)
             return;
         Break();
+    }
+
+    private void Despawn()
+    {
+        Events.Unsubscribe<ILootPicked>(this);
+        Destroy(gameObject);
     }
 }

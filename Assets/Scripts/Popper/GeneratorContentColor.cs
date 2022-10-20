@@ -3,16 +3,14 @@ using UnityEngine;
 
 public class GeneratorContentColor
 {
-    private readonly GameGrid2D<SlotData> grid;
     private readonly ISlotKeyPool<ColorSlotKey> keyPool;
 
-    public GeneratorContentColor(GameGrid2D<SlotData> grid, ISlotKeyPool<ColorSlotKey> keyPool)
+    public GeneratorContentColor(ISlotKeyPool<ColorSlotKey> keyPool)
     {
-        this.grid = grid;
         this.keyPool = keyPool;
     }
 
-    public void AddContent()
+    public void AddContent(GameGrid2D<SlotData> grid)
     {
         for (int i = 0; i < grid.Nodes.Count; i++)
         {

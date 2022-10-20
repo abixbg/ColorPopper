@@ -5,17 +5,16 @@ using UnityEngine;
 public class BubblePoolColors : ISlotKeyPool<ColorSlotKey>
 {
     private readonly List<ColorSlotKey> colorKeys;
+    private readonly ColorPalette _palette;
 
     public int Remaining => colorKeys.Count;
 
     public BubblePoolColors(ColorPalette palette)
     {
+        _palette = palette;
         colorKeys = new List<ColorSlotKey>();
 
-        foreach (var col in palette.Colors)
-        {
-            colorKeys.Add(new ColorSlotKey(col));
-        }
+        CacheColors();
     }
 
     public List<ColorSlotKey> Pool => colorKeys;
@@ -34,6 +33,12 @@ public class BubblePoolColors : ISlotKeyPool<ColorSlotKey>
             newKey = GetRandom();
 
         return newKey;
+    }
+
+    public void Reset()
+    {
+        colorKeys.Clear();
+        CacheColors();
     }
 
     public void Replace(List<ColorSlotKey> keys)
@@ -60,5 +65,13 @@ public class BubblePoolColors : ISlotKeyPool<ColorSlotKey>
         }
 
         return false;
+    }
+
+    private void CacheColors()
+    {
+        foreach (var col in _palette.Colors)
+        {
+            colorKeys.Add(new ColorSlotKey(col));
+        }
     }
 }

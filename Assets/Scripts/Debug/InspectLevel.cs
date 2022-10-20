@@ -22,7 +22,7 @@ public class InspectLevel : MonoBehaviour
     {
         if (_gameManager.Level != null)
         {
-            acceptedColor = _gameManager.Level.AcceptedContent.Current;
+            acceptedColor = _gameManager.Level.AcceptRules.Current;
             time = _gameManager.Level.TimeRemaining;
 
             AllColors = _gameManager.Level.KeyPool.Pool;

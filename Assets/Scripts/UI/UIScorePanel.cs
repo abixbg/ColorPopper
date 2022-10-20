@@ -1,37 +1,30 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using EventBroadcast;
+using Popper.Events;
 
-public class UIScorePanel : MonoBehaviour
+public class UIScorePanel : MonoBehaviour, IPlayerScoreChanged
 {
-
     public Text dotScoreText;
 
-    private ScoreController scoreController;
+    private IEventBus Events => GameManager.current.Events;
 
     private void OnDestroy()
     {
-        scoreController.ScoreChanged -= OnScoreUpdate;
+        Events.Unsubscribe<IPlayerScoreChanged>(this);
     }
-    public void Construct(ScoreController scoreController)
+    public void Construct()
     {
-        this.scoreController = scoreController;
-
-        scoreController.ScoreChanged += OnScoreUpdate;
-    }
-
-    public void SetInitialState()
-    {
-        UpdateValues(0);
-    }
-
-    private void OnScoreUpdate()
-    {
-        UpdateValues(scoreController.ScoreData.Level);
+        Events.Subscribe<IPlayerScoreChanged>(this);
     }
 
     private void UpdateValues(int score)
     {
         dotScoreText.text = score.ToString();
+    }
+
+    void IPlayerScoreChanged.OnUpdatePlayerScoreData(PlayerScoreData data)
+    {
+        UpdateValues(data.LevelPoints);
     }
 }

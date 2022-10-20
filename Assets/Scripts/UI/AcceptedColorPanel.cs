@@ -1,23 +1,24 @@
-using Unity.Mathematics;
-using System.Collections.Generic;
+using EventBroadcast;
+using Popper.Events;
 using UnityEngine;
 using UnityEngine.UI;
-using Popper.Events;
 
 public class AcceptedColorPanel : MonoBehaviour, IAcceptedColorChanged
 {
     [SerializeField] private Image colorImage;
 
+    private IEventBus Events => GameManager.current.Events;
+
     #region Unity MonoBehaviour
     private void OnDestroy()
     {
-        GameManager.current.Events.Unsubscribe<IAcceptedColorChanged>(this);
+        Events.Unsubscribe<IAcceptedColorChanged>(this);
     }
     #endregion
 
     public void Construct()
     {
-        GameManager.current.Events.Subscribe<IAcceptedColorChanged>(this);
+        Events.Subscribe<IAcceptedColorChanged>(this);
     }
 
     public void SetInitialState(Color color)

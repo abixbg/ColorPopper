@@ -1,3 +1,5 @@
+using EventBroadcast;
+using Popper.Events;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,26 +13,25 @@ namespace Popper.UI.Panels
         public UIClockPanel clockPanlel;
         [SerializeField] private AcceptedColorPanel acceptedColorPanel;
         [SerializeField] private Button btnReset;
+        [SerializeField] private Button btnTEST;
 
         public float3 LootCollectionWorldPos => GetCollectorWorldPos(Camera.main);
+
 
         public void Construct(GameManager gameManager, LevelController level, ScoreController score)
         {
             btnReset.onClick.AddListener(delegate {gameManager.CmdRestartScene(); });
+            btnTEST.onClick.AddListener(delegate {gameManager.CmdEndLevel(); });
 
             acceptedColorPanel.Construct();
-            acceptedColorPanel.SetInitialState(level.AcceptedContent.Current.Color);
-
-            scorePanel.Construct(score);
-            scorePanel.SetInitialState();
-
-            clockPanlel.Construct(level.Countdown, level.Stopwatch);
-
+            scorePanel.Construct();
+            clockPanlel.Construct();
         }
 
         private void OnDestroy()
         {
             btnReset.onClick.RemoveAllListeners();
+            btnTEST.onClick.RemoveAllListeners();
         }
 
         private float3 GetCollectorWorldPos(Camera cam)

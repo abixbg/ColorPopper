@@ -29,12 +29,6 @@ public class SlotData : IGridCell, ICellContentMatch
         return match;
     }
 
-    public void Init(bool isLocked, bool isActive)
-    {
-        this.isLocked = isLocked;
-        this.isActive = isActive;
-    }
-
     public void OpenSlot()
     {
         IsActive = false;

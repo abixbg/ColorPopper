@@ -2,26 +2,26 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Popper.Events;
+using EventBroadcast;
 
 public class ScoreController : ISlotStateChanged
 {
     [SerializeField] private PlayerScoreData scoreData;
 
-    private readonly EventBus _events;
+    private IEventBus Events => GameManager.current.Events;
 
-    public ScoreController(EventBus events)
+    public ScoreController()
     {
-        _events = events;
-        _events.Subscribe<ISlotStateChanged>(this);
+        Events.Subscribe<ISlotStateChanged>(this);
+        Events.Broadcast<IPlayerScoreChanged>(s => s.OnUpdatePlayerScoreData(scoreData));
     }
 
     public PlayerScoreData ScoreData => scoreData;
-    public event Action ScoreChanged;
 
     private void AddPointsLevel(int points)
     {
-        scoreData = new PlayerScoreData(scoreData.Level + points, scoreData.Game);
-        ScoreChanged?.Invoke();
+        scoreData = new PlayerScoreData(scoreData.LevelPoints + points, scoreData.Game);
+        Events.Broadcast<IPlayerScoreChanged>(s => s.OnUpdatePlayerScoreData(scoreData));
     }
 
     #region ISlotStateChanged

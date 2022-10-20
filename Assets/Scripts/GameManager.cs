@@ -1,11 +1,12 @@
 ﻿using Popper.Events;
 using Popper.UI;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private LevelConfigAsset levelAsset;
+    [SerializeField] private List<LevelConfigAsset> levelAssets;
+    [SerializeField] private int currentLevelIndex;
 
     public static GameManager current;
 
@@ -33,28 +34,22 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        levelController = new LevelController(levelAsset.Data, events, clock);
-        scoreController = new ScoreController(events);
-
-        soundManager.Construct(events);
         uiManager.Construct(this, levelController, scoreController);
+        soundManager.Construct(events);
 
-        Debug.Log("[Level] Initialilze!");
+        levelController = new LevelController(clock, _boardVisual);
+        scoreController = new ScoreController();
 
-        _boardVisual.Construct(levelController.Grid, levelController);
-        _boardVisual.GenerateBoard();
-        _boardVisual.OnLevelPhaseInitialize();
-        levelController.StartLevel();
-    }
-
-    private void Update()
-    {
-        levelController.Countdown.ConsumeTime(Time.deltaTime);
+        levelController.QuickStartLevel(levelAssets[currentLevelIndex].Data);
     }
 
     public void CmdRestartScene()
     {
-        SceneManager.LoadScene(0, LoadSceneMode.Single);
+        levelController.QuickStartLevel(levelAssets[currentLevelIndex].Data);
     }
 
+    public void CmdEndLevel()
+    {
+        levelController.RestartLevel();
+    }
 }

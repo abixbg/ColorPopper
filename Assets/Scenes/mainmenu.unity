@@ -211,7 +211,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6883161}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1.43}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -333,7 +333,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 14159894}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 2}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -551,7 +551,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 803949101}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -576,10 +576,6 @@ MonoBehaviour:
   dotPrefab: {fileID: 11499190, guid: 4b8651116098bb749b72e3b142aacd31, type: 3}
   lootPrefab: {fileID: 11451340, guid: 98d22bb7e964a6c4faee5fc0423b4271, type: 3}
   gameView: {fileID: 6883168}
-  _boardRect:
-    x: 0
-    y: 0
-  gridSlots: []
 --- !u!1 &843048396
 GameObject:
   m_ObjectHideFlags: 0
@@ -702,7 +698,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f320db19438de746861d0cd7276cd2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelAsset: {fileID: 11400000, guid: 39b3f695ea589104c9553928e72ac403, type: 2}
+  levelAssets:
+  - {fileID: 11400000, guid: 39b3f695ea589104c9553928e72ac403, type: 2}
+  - {fileID: 11400000, guid: 4a5784e79d4714e4cad38b030cd9ad3b, type: 2}
+  currentLevelIndex: 0
   soundManager: {fileID: 843048398}
   uiManager: {fileID: 1023830115}
   _boardVisual: {fileID: 803949103}

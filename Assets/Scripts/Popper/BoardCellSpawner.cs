@@ -1,6 +1,7 @@
 using AGK.GameGrids;
 //using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -34,12 +35,13 @@ public class BoardCellSpawner
         parent = origin;
     }
 
-    public void SpawnCells()
+    public async Task SpawnCellsAsync()
     {
         int index = 0;
         List<PositionData> posData = new List<PositionData>();
 
-        slotVisuals.Clear();
+        if (slotVisuals.Count > 0)
+            Debug.LogAssertion("CellCache wasn't cleared");
 
         for (int i = 0; i < grid.Size.x; i++)
         {
@@ -68,11 +70,22 @@ public class BoardCellSpawner
         {
             var slotVisual = Object.Instantiate(slotPrefab, pos.VisualPosition, quaternion.identity);
             slotVisual.Construct(grid, pos.Position, parent);
+            await slotVisual.Spawn();
             slotVisuals.Add(slotVisual);
         }
 
         SpawnContentVisuals();
         SpawnLootVisuals();
+    }
+
+    public async Task DespawnCells()
+    {
+        foreach (var cell in slotVisuals)
+        {
+            await cell.Despawn();
+        }
+
+        slotVisuals.Clear();
     }
 
     private void SpawnContentVisuals()

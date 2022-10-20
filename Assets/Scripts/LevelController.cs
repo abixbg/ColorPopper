@@ -153,6 +153,7 @@ public class LevelController :
         Debug.Log("[Level] Initialilze!");
 
         Grid.ResetCellsState();
+        KeyPool.Reset();
 
         if (generateNewContent)
         {
@@ -170,7 +171,6 @@ public class LevelController :
         //Reset Time
         Stopwatch.Reset();
         Countdown.Reset(Config.TimeSec);
-        Stopwatch.SetActive(false);
         //#TODO
     }
 

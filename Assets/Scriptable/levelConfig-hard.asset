@@ -15,6 +15,6 @@ MonoBehaviour:
   Data:
     boardSize:
       x: 6
-      y: 6
+      y: 8
     timeSec: 30
-    palette: {fileID: 11400000, guid: 440e6d5a5f404294eb4ba5cb5c498953, type: 2}
+    palette: {fileID: 11400000, guid: ddb0ed78ddc89824ba7b346b5dd8c19e, type: 2}

@@ -33,23 +33,17 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        levelController = new LevelController(levelAsset.Data, events, clock, _boardVisual);
-        scoreController = new ScoreController(events);
-
-        soundManager.Construct(events);
         uiManager.Construct(this, levelController, scoreController);
+        soundManager.Construct(events);
+
+        levelController = new LevelController(levelAsset.Data, clock, _boardVisual);
+        scoreController = new ScoreController();
 
         levelController.QuickStartLevel();
     }
 
-    private void Update()
-    {
-        levelController.Countdown.ConsumeTime(Time.deltaTime);
-    }
-
     public void CmdRestartScene()
     {
-        //SceneManager.LoadScene(0, LoadSceneMode.Single);
         levelController.QuickStartLevel();
     }
 

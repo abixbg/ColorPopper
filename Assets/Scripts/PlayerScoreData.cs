@@ -6,7 +6,7 @@ public struct PlayerScoreData
     [SerializeField] private int currentLevel;
     [SerializeField] private int currentGame;
 
-    public int Level => currentLevel;
+    public int LevelPoints => currentLevel;
     public int Game => currentGame;
 
     public PlayerScoreData(int currentLevel, int currentGame)

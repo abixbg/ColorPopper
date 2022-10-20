@@ -19,9 +19,4 @@ namespace Popper
             return data.IsMatch(accepted);
         }
     }
-
-    public interface IAccepted<TData>
-    {
-        bool IsAccepted(TData other);
-    }
 }

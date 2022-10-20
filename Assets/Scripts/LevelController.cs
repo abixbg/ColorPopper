@@ -2,6 +2,7 @@ using EventBroadcast;
 using Popper;
 using Popper.Events;
 using System.Threading.Tasks;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class LevelController :
@@ -12,23 +13,24 @@ public class LevelController :
 {
     private readonly LevelConfigData _config;
     private readonly LevelGrid _grid;
-    private readonly Countdown _countdown;
     private readonly Stopwatch _stopwatch;
     private readonly BubblePoolColors _keyPool;
-    private readonly IEventBus _events;
     private readonly BoardVisual _boardVisual;
     private readonly GeneratorContentColor _generatorContent;
     private readonly GeneratorLoot _generatorLoot;
 
+    private float bonusTime = 0f;
+
+    private IEventBus Events => GameManager.current.Events;
+
     public LevelConfigData Config => _config;
     public LevelGrid Grid => _grid;
-    public CellMatchExact<ColorSlotKey> AcceptedContent { get; private set; }
-    public Countdown Countdown => _countdown;
+    public CellMatchExact<ColorSlotKey> AcceptRules { get; private set; }
     public Stopwatch Stopwatch => _stopwatch;
     private GeneratorContentColor Content => _generatorContent;
     private GeneratorLoot Loot => _generatorLoot;
     public BubblePoolColors KeyPool => _keyPool;
-    public float TimeRemaining => _countdown.TimeRemaining;   
+    public float TimeRemaining => Config.TimeSec + bonusTime - Stopwatch.TimeSec;
 
 
     public int BoardCellremaining
@@ -39,13 +41,14 @@ public class LevelController :
         }
     }
 
-    public LevelController(LevelConfigData levelConfig, EventBus levelEvents, GameClock clock, BoardVisual boardVisual)
+    public LevelController(LevelConfigData levelConfig, GameClock clock, BoardVisual boardVisual)
     {
         _config = levelConfig;
-        _events = levelEvents;
         _boardVisual = boardVisual;
-        _countdown = new Countdown(levelConfig.TimeSec);
+
         _stopwatch = new Stopwatch(clock);
+        _stopwatch.ValueUpdated += OnStopwatchUpdate;
+
         _keyPool = new BubblePoolColors(levelConfig.Pallete);
         _generatorContent = new GeneratorContentColor(KeyPool);
         _generatorLoot = new GeneratorLoot();
@@ -53,18 +56,18 @@ public class LevelController :
         //Generate CellData
         _grid = new LevelGrid(levelConfig.BoardSize, LevelGrid.Generate(levelConfig.BoardSize));
 
-        AcceptedContent = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandom());
+        AcceptRules = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandom());
 
-        _events.Subscribe<ILootPicked>(this);
-        _events.Subscribe<ILootConsumed>(this);
-        _events.Subscribe<ISlotInput>(this);
-        _events.Subscribe<ISlotStateChanged>(this);
+        Events.Subscribe<ILootPicked>(this);
+        Events.Subscribe<ILootConsumed>(this);
+        Events.Subscribe<ISlotInput>(this);
+        Events.Subscribe<ISlotStateChanged>(this);
     }
 
     #region ISlotClicked
     void ISlotInput.OnClicked(SlotData slot)
     {
-        bool accepted = AcceptedContent.IsAccepted(slot.Content);
+        bool accepted = AcceptRules.IsAccepted(slot.Content);
 
         if (slot.IsActive)
         {
@@ -143,10 +146,16 @@ public class LevelController :
     void ILootConsumed.OnLootConsumed(SlotLoot _)
     {
         Debug.Log("[Level] AddTime!");
-        _countdown.AddTime(3);
+        bonusTime += 3;
     }
     #endregion
 
+
+    private void OnStopwatchUpdate()
+    {
+        LevelTimeData data = new LevelTimeData(Stopwatch.TimeSec, TimeRemaining, bonusTime);
+        Events.Broadcast<ILevelStopwatchUpdate>(s => s.OnValueUpdate(data));
+    }
 
     private void InitialiizeLevelData(bool generateNewContent = true)
     {
@@ -169,8 +178,8 @@ public class LevelController :
         SwitchAcceptedContent();
 
         //Reset Time
-        Stopwatch.Reset();
-        Countdown.Reset(Config.TimeSec);
+        bonusTime = 0f;
+        Stopwatch.Reset();        
         //#TODO
     }
 
@@ -192,7 +201,7 @@ public class LevelController :
     public async void RestartLevel()
     {
         InitialiizeLevelData(false);
-        await SetVisualReadyAsync();    
+        await SetVisualReadyAsync();
         StartLevel();
     }
 
@@ -205,13 +214,13 @@ public class LevelController :
 
     private void SwitchAcceptedContent()
     {
-        AcceptedContent = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandomNew(AcceptedContent.Current));
-        _events.Broadcast<IAcceptedColorChanged>(s => s.OnAcceptedColorChange(AcceptedContent.Current.Color));
+        AcceptRules = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandomNew(AcceptRules.Current));
+        Events.Broadcast<IAcceptedColorChanged>(s => s.OnAcceptedColorChange(AcceptRules.Current.Color));
     }
 
     private bool ValidBoard()
     {
-        bool valid = HaveKeyHoleOnBoard(AcceptedContent.Current);
+        bool valid = HaveKeyHoleOnBoard(AcceptRules.Current);
         return valid;
     }
 

@@ -1,84 +1,83 @@
-﻿using Popper.Events;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class BubblePoolColors : ISlotKeyPool
 {
-    private readonly List<ColorSlotKey> colorKeys;
-
-    public int Remaining => colorKeys.Count;
+    private readonly List<ColorSlotKey> _colorKeys;
 
     public BubblePoolColors(ColorPalette palette)
     {
-        colorKeys = BuildFromPallete(palette);
+        _colorKeys = new List<ColorSlotKey>();
+
+        foreach (var col in palette.Colors)
+        {
+            _colorKeys.Add(new ColorSlotKey(col));
+        }
     }
 
     public BubblePoolColors(List<SlotContent> keys)
     {
-        colorKeys = new List<ColorSlotKey>();
+        _colorKeys = new List<ColorSlotKey>();
 
         foreach (var key in keys)
         {
             if (key is ColorSlotKey)
             {
-                colorKeys.Add((ColorSlotKey)key);
-            }            
+                _colorKeys.Add((ColorSlotKey)key);
+            }
         }
     }
 
-    public List<ColorSlotKey> Pool => colorKeys;
+    public int Remaining => _colorKeys.Count;
+    public List<ColorSlotKey> Pool => _colorKeys;
 
-    public SlotContent GetRandom()
+    #region ISlotKeyPool
+    SlotContent ISlotKeyPool.GetRandom()
     {
-        int index = Random.Range(0, colorKeys.Count);
-        return colorKeys[index];
+        int index = Random.Range(0, _colorKeys.Count);
+        return _colorKeys[index];
     }
 
-    public SlotContent GetRandomNew(SlotContent current)
+    SlotContent ISlotKeyPool.GetRandomNew(SlotContent current)
     {
-        var newKey = GetRandom();
+        var newKey = GetRandomColorKey();
 
-        while (((ColorSlotKey)newKey).Color == ((ColorSlotKey)current).Color && Remaining > 1)
-            newKey = GetRandom();
+        while (newKey.IsMatch(current) && Remaining > 1)
+            newKey = GetRandomColorKey();
 
         return newKey;
+    }
+    #endregion
+
+    private ColorSlotKey GetRandomColorKey()
+    {
+        int index = Random.Range(0, _colorKeys.Count);
+        return _colorKeys[index];
     }
 
     public void Replace(List<ColorSlotKey> keys)
     {
-        colorKeys.Clear();
+        _colorKeys.Clear();
         foreach (var key in keys)
         {
-            colorKeys.Add(key);
+            _colorKeys.Add(key);
         }
     }
 
     public bool Remove(ColorSlotKey key)
     {
-        int found = colorKeys.RemoveAll(k => k.Color == key.Color);
+        int found = _colorKeys.RemoveAll(k => k.Color == key.Color);
         return found > 0;
     }
 
     public bool Contains(ColorSlotKey key)
     {
-        foreach (var k in colorKeys)
+        foreach (var k in _colorKeys)
         {
             if (k.Color == key.Color)
                 return true;
         }
 
         return false;
-    }
-
-    private List<ColorSlotKey> BuildFromPallete(ColorPalette palette)
-    {
-        List<ColorSlotKey> colorKeys = new List<ColorSlotKey>();
-
-        foreach (var col in palette.Colors)
-        {
-            colorKeys.Add(new ColorSlotKey(col));
-        }
-
-        return colorKeys;
     }
 }

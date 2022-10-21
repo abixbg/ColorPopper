@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class GeneratorContentColor
 {
-    private readonly BubblePoolColors keyPool;
+    private readonly ISlotKeyPool keyPool;
 
-    public GeneratorContentColor(BubblePoolColors keyPool)
+    public GeneratorContentColor(ISlotKeyPool keyPool)
     {
         this.keyPool = keyPool;
     }

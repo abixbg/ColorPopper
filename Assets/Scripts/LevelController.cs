@@ -24,6 +24,8 @@ public class LevelController :
     public CellMatchExact<ColorSlotKey> AcceptRules { get; private set; }
     public Stopwatch Stopwatch => _stopwatch;
     public BubblePoolColors KeyPool => _keyPool;
+
+    private ISlotKeyPool Pool => _keyPool;
     public float TimeRemaining => Config.TimeSec + bonusTime - Stopwatch.TimeSec;
 
 
@@ -52,7 +54,7 @@ public class LevelController :
     #region ISlotClicked
     void ISlotInput.OnClicked(SlotData slot)
     {
-        bool accepted = AcceptRules.IsAccepted(slot.Content);
+        bool accepted = AcceptRules.IsAccepted((ColorSlotKey)slot.Content);
 
         if (slot.IsActive)
         {
@@ -143,7 +145,7 @@ public class LevelController :
             Grid.AddLoot(new GeneratorLoot());
 
             _keyPool = new BubblePoolColors(Grid.AllKeys);
-            AcceptRules = new CellMatchExact<ColorSlotKey>((ColorSlotKey)KeyPool.GetRandom());
+            AcceptRules = new CellMatchExact<ColorSlotKey>((ColorSlotKey)Pool.GetRandom());
         }
         else
         {
@@ -213,7 +215,9 @@ public class LevelController :
 
     private void SwitchAcceptedContent()
     {
-        AcceptRules = new CellMatchExact<ColorSlotKey>((ColorSlotKey)_keyPool.GetRandomNew(AcceptRules.Current));
+        var content = Pool.GetRandomNew(AcceptRules.Current);
+
+        AcceptRules = new CellMatchExact<ColorSlotKey>((ColorSlotKey)content);
         Events.Broadcast<IAcceptedColorChanged>(s => s.OnAcceptedColorChange(AcceptRules.Current));
     }
 }

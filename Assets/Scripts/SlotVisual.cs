@@ -43,7 +43,7 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
 
     public void CmdClicked()
     {
-        Debug.Log($"Clicked! active={SlotData.IsActive}", gameObject);
+        //Debug.Log($"Clicked! active={SlotData.IsActive}", gameObject);
         if (SlotData.IsActive == true)
         {
             Events.Broadcast<ISlotInput>(s => s.OnClicked(SlotData));

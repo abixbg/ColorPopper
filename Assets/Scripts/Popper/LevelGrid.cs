@@ -28,4 +28,17 @@ public class LevelGrid : GameGrid2D<SlotData>
             cell.Loot = null;
         }
     }
+
+    public bool HaveKeyHoleOnBoard(SlotContent key)
+    {
+        foreach (var slot in Nodes)
+        {
+            if (slot.Content.IsMatch(key) && slot.IsActive)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

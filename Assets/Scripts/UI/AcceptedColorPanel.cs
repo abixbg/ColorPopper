@@ -31,8 +31,8 @@ public class AcceptedColorPanel : MonoBehaviour, IAcceptedColorChanged
         colorImage.color = color;
     }
 
-    void IAcceptedColorChanged.OnAcceptedColorChange(Color color)
+    void IAcceptedColorChanged.OnAcceptedColorChange(SlotContent key)
     {
-        SetColor(color);
+        SetColor(((ColorSlotKey)key).Color);
     }
 }

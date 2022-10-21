@@ -85,21 +85,18 @@ public class LevelController :
     {
         var key = (ColorSlotKey)slot.Content;
 
-        if (!HaveKeyHoleOnBoard(key))
+        CheckLevelComplete();
+
+        if (!_grid.HaveKeyHoleOnBoard(key))
         {
             GameManager.current.Level.KeyPool.Remove(key);
         }
 
-        bool validBoard = ValidBoard();
+        bool validBoard = _grid.HaveKeyHoleOnBoard(AcceptRules.Current);
         bool randomSwitch = UnityEngine.Random.value <= 0.05f;
         bool hasLoot = slot.Loot != null;
 
-        if (BoardCellremaining < 1)
-        {
-            Debug.Log($"[Level] Completed!");
-            _stopwatch.SetActive(false);
-            return;
-        }
+        
 
         if (!validBoard || randomSwitch || hasLoot)
             SwitchAcceptedContent();
@@ -109,17 +106,12 @@ public class LevelController :
     {
         var key = (ColorSlotKey)slot.Content;
 
-        if (!HaveKeyHoleOnBoard(key))
+        CheckLevelComplete();
+
+        if (!_grid.HaveKeyHoleOnBoard(key))
         {
             GameManager.current.Level.KeyPool.Remove(key);
-        }
-
-        if (BoardCellremaining < 1)
-        {
-            Debug.LogAssertion($"LevelCompleted!");
-            _stopwatch.SetActive(false);
-            return;
-        }
+        }       
 
         SwitchAcceptedContent();
     }
@@ -223,30 +215,21 @@ public class LevelController :
         StartLevel();
     }
 
+    #region Level Rules
+    private void CheckLevelComplete()
+    {
+        if (BoardCellremaining < 1)
+        {
+            Debug.LogAssertion($"LevelCompleted!");
+            Stopwatch.SetActive(false);
+            Events.Broadcast<ILevelStateUpdate>(s => s.OnLevelCompleted());
+        }
+    }
+    #endregion
+
     private void SwitchAcceptedContent()
     {
         AcceptRules = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandomNew(AcceptRules.Current));
-        Events.Broadcast<IAcceptedColorChanged>(s => s.OnAcceptedColorChange(AcceptRules.Current.Color));
-    }
-
-    private bool ValidBoard()
-    {
-        bool valid = HaveKeyHoleOnBoard(AcceptRules.Current);
-        return valid;
-    }
-
-    private bool HaveKeyHoleOnBoard(ColorSlotKey key)
-    {
-        foreach (var slot in _grid.Nodes)
-        {
-            if (slot.Content.IsMatch(key) && slot.IsActive)
-            {
-                //Debug.LogError($"Found: {slot.SlotVisual}", slot.SlotVisual.gameObject);
-                return true;
-            }
-
-        }
-
-        return false;
+        Events.Broadcast<IAcceptedColorChanged>(s => s.OnAcceptedColorChange(AcceptRules.Current));
     }
 }

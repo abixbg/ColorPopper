@@ -12,12 +12,10 @@ public class LevelController :
 {
     private readonly Stopwatch _stopwatch;
     private readonly BoardVisual _boardVisual;
-    private readonly GeneratorLoot _generatorLoot;
 
     private LevelConfigData _config;
     private LevelGrid _grid;
     private BubblePoolColors _keyPool;
-    private GeneratorContentColor _generatorContent;
     private float bonusTime = 0f;
 
     private IEventBus Events => GameManager.current.Events;
@@ -25,8 +23,6 @@ public class LevelController :
     public LevelGrid Grid => _grid;
     public CellMatchExact<ColorSlotKey> AcceptRules { get; private set; }
     public Stopwatch Stopwatch => _stopwatch;
-    private GeneratorContentColor Content => _generatorContent;
-    private GeneratorLoot Loot => _generatorLoot;
     public BubblePoolColors KeyPool => _keyPool;
     public float TimeRemaining => Config.TimeSec + bonusTime - Stopwatch.TimeSec;
 
@@ -46,17 +42,6 @@ public class LevelController :
 
         _stopwatch = new Stopwatch(clock);
         _stopwatch.ValueUpdated += OnStopwatchUpdate;
-
-        _generatorLoot = new GeneratorLoot();
-
-        //_keyPool = new BubblePoolColors(_config.Pallete);
-        //_generatorContent = new GeneratorContentColor(KeyPool);
-
-
-        ////Generate CellData
-        //_grid = new LevelGrid(_config.BoardSize, LevelGrid.Generate(_config.BoardSize));
-
-
 
         Events.Subscribe<ILootPicked>(this);
         Events.Subscribe<ILootConsumed>(this);
@@ -148,25 +133,22 @@ public class LevelController :
         if (generateNewContent)
         {
             _config = config;
-            _keyPool = new BubblePoolColors(_config.Pallete);
-            _generatorContent = new GeneratorContentColor(KeyPool);
-            //Generate CellData
+
+            //Generate empty grid
             _grid = new LevelGrid(_config.BoardSize, LevelGrid.Generate(_config.BoardSize));
 
-            AcceptRules = new CellMatchExact<ColorSlotKey>(KeyPool.GetRandom());
-
-            //Reset
-            Grid.ResetCellsContent();
-
             //Generate new
-            Content.AddContent(Grid);
+            var genPool = new BubblePoolColors(_config.Pallete);
+            Grid.AddContent(new GeneratorContentColor(genPool));
+            Grid.AddLoot(new GeneratorLoot());
 
-            Loot.AddLoot(Grid);
+            _keyPool = new BubblePoolColors(Grid.AllKeys);
+            AcceptRules = new CellMatchExact<ColorSlotKey>(KeyPool.GetRandom());
         }
         else
         {
             Grid.ResetCellsState();
-            KeyPool.Reset();
+            _keyPool = new BubblePoolColors(Grid.AllKeys);
         }
 
         //Set Accepted color

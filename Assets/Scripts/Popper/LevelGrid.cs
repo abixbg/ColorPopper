@@ -1,12 +1,11 @@
 using AGK.GameGrids;
-using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using Unity.Mathematics;
-using UnityEngine;
 
 public class LevelGrid : GameGrid2D<SlotData>
 {
+    public List<SlotContent> AllKeys { get; private set; }
+
     public LevelGrid(int2 size, List<SlotData> nodes) : base(size, nodes)
     {
         ResetCellsState();
@@ -41,5 +40,15 @@ public class LevelGrid : GameGrid2D<SlotData>
         }
 
         return false;
+    }
+
+    public void AddContent(GeneratorContentColor generator)
+    {
+        AllKeys = generator.AddContent(this);
+    }
+
+    public void AddLoot(GeneratorLoot generator)
+    {
+        generator.AddLoot(this);
     }
 }

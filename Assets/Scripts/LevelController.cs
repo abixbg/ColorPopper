@@ -83,20 +83,14 @@ public class LevelController :
     #region ISlotStateChanged
     void ISlotStateChanged.OnSlotOpen(SlotData slot)
     {
-        var key = (ColorSlotKey)slot.Content;
+        if (CheckLevelComplete())
+            return;
 
-        CheckLevelComplete();
-
-        if (!_grid.HaveKeyHoleOnBoard(key))
-        {
-            GameManager.current.Level.KeyPool.Remove(key);
-        }
+        ValidateKeyPool(slot.Content);
 
         bool validBoard = _grid.HaveKeyHoleOnBoard(AcceptRules.Current);
         bool randomSwitch = UnityEngine.Random.value <= 0.05f;
-        bool hasLoot = slot.Loot != null;
-
-        
+        bool hasLoot = slot.Loot != null;     
 
         if (!validBoard || randomSwitch || hasLoot)
             SwitchAcceptedContent();
@@ -104,21 +98,19 @@ public class LevelController :
 
     void ISlotStateChanged.OnSlotBreak(SlotData slot)
     {
-        var key = (ColorSlotKey)slot.Content;
+        if (CheckLevelComplete())
+            return;
 
-        CheckLevelComplete();
-
-        if (!_grid.HaveKeyHoleOnBoard(key))
-        {
-            GameManager.current.Level.KeyPool.Remove(key);
-        }       
-
+        ValidateKeyPool(slot.Content);
         SwitchAcceptedContent();
     }
 
-    void ISlotStateChanged.OnSlotOpenAuto(SlotData _)
+    void ISlotStateChanged.OnSlotOpenAuto(SlotData slot)
     {
+        if (CheckLevelComplete())
+            return;
 
+        ValidateKeyPool(slot.Content);
     }
     #endregion
 
@@ -216,16 +208,26 @@ public class LevelController :
     }
 
     #region Level Rules
-    private void CheckLevelComplete()
+    private bool CheckLevelComplete()
     {
         if (BoardCellremaining < 1)
         {
             Debug.LogAssertion($"LevelCompleted!");
             Stopwatch.SetActive(false);
             Events.Broadcast<ILevelStateUpdate>(s => s.OnLevelCompleted());
+            return true;
         }
+        return false;
     }
     #endregion
+
+    private void ValidateKeyPool(SlotContent key)
+    {
+        if (!_grid.HaveKeyHoleOnBoard(key))
+        {
+            KeyPool.Remove((ColorSlotKey)key);
+        }
+    }
 
     private void SwitchAcceptedContent()
     {

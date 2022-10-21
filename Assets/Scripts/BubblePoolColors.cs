@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Data;
+﻿using Popper.Events;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BubblePoolColors : ISlotKeyPool<ColorSlotKey>
@@ -21,7 +21,7 @@ public class BubblePoolColors : ISlotKeyPool<ColorSlotKey>
 
     public ColorSlotKey GetRandom()
     {
-            int index = Random.Range(0, colorKeys.Count);
+        int index = Random.Range(0, colorKeys.Count);
         return colorKeys[index];
     }
 
@@ -52,7 +52,7 @@ public class BubblePoolColors : ISlotKeyPool<ColorSlotKey>
 
     public bool Remove(ColorSlotKey key)
     {
-        int found = colorKeys.RemoveAll(k=> k.Color == key.Color);
+        int found = colorKeys.RemoveAll(k => k.Color == key.Color);
         return found > 0;
     }
 

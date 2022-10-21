@@ -143,7 +143,7 @@ public class LevelController :
             Grid.AddLoot(new GeneratorLoot());
 
             _keyPool = new BubblePoolColors(Grid.AllKeys);
-            AcceptRules = new CellMatchExact<ColorSlotKey>(KeyPool.GetRandom());
+            AcceptRules = new CellMatchExact<ColorSlotKey>((ColorSlotKey)KeyPool.GetRandom());
         }
         else
         {
@@ -213,7 +213,7 @@ public class LevelController :
 
     private void SwitchAcceptedContent()
     {
-        AcceptRules = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandomNew(AcceptRules.Current));
+        AcceptRules = new CellMatchExact<ColorSlotKey>((ColorSlotKey)_keyPool.GetRandomNew(AcceptRules.Current));
         Events.Broadcast<IAcceptedColorChanged>(s => s.OnAcceptedColorChange(AcceptRules.Current));
     }
 }

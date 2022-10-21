@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BubblePoolColors : ISlotKeyPool<ColorSlotKey>
+public class BubblePoolColors : ISlotKeyPool
 {
     private readonly List<ColorSlotKey> colorKeys;
 
@@ -28,17 +28,17 @@ public class BubblePoolColors : ISlotKeyPool<ColorSlotKey>
 
     public List<ColorSlotKey> Pool => colorKeys;
 
-    public ColorSlotKey GetRandom()
+    public SlotContent GetRandom()
     {
         int index = Random.Range(0, colorKeys.Count);
         return colorKeys[index];
     }
 
-    public ColorSlotKey GetRandomNew(ColorSlotKey current)
+    public SlotContent GetRandomNew(SlotContent current)
     {
         var newKey = GetRandom();
 
-        while (newKey.Color == current.Color && Remaining > 1)
+        while (((ColorSlotKey)newKey).Color == ((ColorSlotKey)current).Color && Remaining > 1)
             newKey = GetRandom();
 
         return newKey;

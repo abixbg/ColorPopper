@@ -3,7 +3,7 @@ using Popper.UI;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, ILevelStateUpdate
 {
     [SerializeField] private List<LevelConfigAsset> levelAssets;
     [SerializeField] private int currentLevelIndex;
@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
         scoreController = new ScoreController();
 
         levelController.QuickStartLevel(levelAssets[currentLevelIndex].Data);
+
+        events.Subscribe<ILevelStateUpdate>(this);
     }
 
     public void CmdRestartScene()
@@ -49,6 +51,11 @@ public class GameManager : MonoBehaviour
     }
 
     public void CmdEndLevel()
+    {
+        levelController.RestartLevel();
+    }
+
+    void ILevelStateUpdate.OnLevelCompleted()
     {
         levelController.RestartLevel();
     }

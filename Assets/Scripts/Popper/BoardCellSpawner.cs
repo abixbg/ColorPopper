@@ -16,12 +16,11 @@ public class BoardCellSpawner
     private readonly LootVisual lootPrefab;
     public readonly float3 origin;
     private readonly Transform parent;
-    private ISlotKeyPool<ColorSlotKey> keyPool;
 
     public float2 CellsBoundingBox => dimentions;
     private readonly List<SlotVisual> slotVisuals = new List<SlotVisual>();
 
-    public BoardCellSpawner(GameGrid2D<SlotData> grid, float cellWorldSize, SlotVisual slotPrefab, Dot dotPrefab, LootVisual lootPrefab, ISlotKeyPool<ColorSlotKey> keyPool, Transform origin)
+    public BoardCellSpawner(GameGrid2D<SlotData> grid, float cellWorldSize, SlotVisual slotPrefab, Dot dotPrefab, LootVisual lootPrefab, Transform origin)
     {
         this.grid = grid;
         dimentions = new float2(grid.Size.x * cellWorldSize + cellWorldSize * 0.5f, grid.Size.y * cellWorldSize + cellWorldSize * 0.5f);
@@ -30,7 +29,6 @@ public class BoardCellSpawner
         this.dotPrefab = dotPrefab;
         this.lootPrefab = lootPrefab;
         this.origin = new float3(origin.position.x, origin.position.y, origin.position.z);
-        this.keyPool = keyPool;
 
         parent = origin;
     }

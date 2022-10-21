@@ -37,13 +37,13 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
     {
         await AnimateScale(1, 0.2f, 25f);
 
-        Events.Unsubscribe<ISlotStateChanged>(this);
+        Events.Unsubscribe<ISlotStateChanged>(this);        
         Destroy(gameObject);
     }
 
     public void CmdClicked()
     {
-        Debug.Log($"Clicked! active={SlotData.IsActive}", gameObject);
+        //Debug.Log($"Clicked! active={SlotData.IsActive}", gameObject);
         if (SlotData.IsActive == true)
         {
             Events.Broadcast<ISlotInput>(s => s.OnClicked(SlotData));

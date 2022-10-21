@@ -2,7 +2,6 @@ using EventBroadcast;
 using Popper;
 using Popper.Events;
 using System.Threading.Tasks;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class LevelController :
@@ -13,12 +12,10 @@ public class LevelController :
 {
     private readonly Stopwatch _stopwatch;
     private readonly BoardVisual _boardVisual;
-    private readonly GeneratorLoot _generatorLoot;
 
     private LevelConfigData _config;
-    private LevelGrid _grid;  
+    private LevelGrid _grid;
     private BubblePoolColors _keyPool;
-    private GeneratorContentColor _generatorContent;
     private float bonusTime = 0f;
 
     private IEventBus Events => GameManager.current.Events;
@@ -26,9 +23,9 @@ public class LevelController :
     public LevelGrid Grid => _grid;
     public CellMatchExact<ColorSlotKey> AcceptRules { get; private set; }
     public Stopwatch Stopwatch => _stopwatch;
-    private GeneratorContentColor Content => _generatorContent;
-    private GeneratorLoot Loot => _generatorLoot;
     public BubblePoolColors KeyPool => _keyPool;
+
+    private ISlotKeyPool Pool => _keyPool;
     public float TimeRemaining => Config.TimeSec + bonusTime - Stopwatch.TimeSec;
 
 
@@ -47,17 +44,6 @@ public class LevelController :
 
         _stopwatch = new Stopwatch(clock);
         _stopwatch.ValueUpdated += OnStopwatchUpdate;
-        
-        _generatorLoot = new GeneratorLoot();
-
-        //_keyPool = new BubblePoolColors(_config.Pallete);
-        //_generatorContent = new GeneratorContentColor(KeyPool);
-
-
-        ////Generate CellData
-        //_grid = new LevelGrid(_config.BoardSize, LevelGrid.Generate(_config.BoardSize));
-
-
 
         Events.Subscribe<ILootPicked>(this);
         Events.Subscribe<ILootConsumed>(this);
@@ -68,7 +54,7 @@ public class LevelController :
     #region ISlotClicked
     void ISlotInput.OnClicked(SlotData slot)
     {
-        bool accepted = AcceptRules.IsAccepted(slot.Content);
+        bool accepted = AcceptRules.IsAccepted((ColorSlotKey)slot.Content);
 
         if (slot.IsActive)
         {
@@ -83,23 +69,14 @@ public class LevelController :
     #region ISlotStateChanged
     void ISlotStateChanged.OnSlotOpen(SlotData slot)
     {
-        var key = (ColorSlotKey)slot.Content;
+        if (CheckLevelComplete())
+            return;
 
-        if (!HaveKeyHoleOnBoard(key))
-        {
-            GameManager.current.Level.KeyPool.Remove(key);
-        }
+        ValidateKeyPool(slot.Content);
 
-        bool validBoard = ValidBoard();
+        bool validBoard = _grid.HaveKeyHoleOnBoard(AcceptRules.Current);
         bool randomSwitch = UnityEngine.Random.value <= 0.05f;
         bool hasLoot = slot.Loot != null;
-
-        if (BoardCellremaining < 1)
-        {
-            Debug.Log($"[Level] Completed!");
-            _stopwatch.SetActive(false);
-            return;
-        }
 
         if (!validBoard || randomSwitch || hasLoot)
             SwitchAcceptedContent();
@@ -107,26 +84,19 @@ public class LevelController :
 
     void ISlotStateChanged.OnSlotBreak(SlotData slot)
     {
-        var key = (ColorSlotKey)slot.Content;
-
-        if (!HaveKeyHoleOnBoard(key))
-        {
-            GameManager.current.Level.KeyPool.Remove(key);
-        }
-
-        if (BoardCellremaining < 1)
-        {
-            Debug.LogAssertion($"LevelCompleted!");
-            _stopwatch.SetActive(false);
+        if (CheckLevelComplete())
             return;
-        }
 
+        ValidateKeyPool(slot.Content);
         SwitchAcceptedContent();
     }
 
-    void ISlotStateChanged.OnSlotOpenAuto(SlotData _)
+    void ISlotStateChanged.OnSlotOpenAuto(SlotData slot)
     {
+        if (CheckLevelComplete())
+            return;
 
+        ValidateKeyPool(slot.Content);
     }
     #endregion
 
@@ -165,24 +135,22 @@ public class LevelController :
         if (generateNewContent)
         {
             _config = config;
-            _keyPool = new BubblePoolColors(_config.Pallete);
-            _generatorContent = new GeneratorContentColor(KeyPool);
-            //Generate CellData
+
+            //Generate empty grid
             _grid = new LevelGrid(_config.BoardSize, LevelGrid.Generate(_config.BoardSize));
 
-            AcceptRules = new CellMatchExact<ColorSlotKey>(KeyPool.GetRandom());
-
-            //Reset
-            Grid.ResetCellsContent();
-
             //Generate new
-            Content.AddContent(Grid);
-            Loot.AddLoot(Grid);
+            var genPool = new BubblePoolColors(_config.Pallete);
+            Grid.AddContent(new GeneratorContentColor(genPool));
+            Grid.AddLoot(new GeneratorLoot());
+
+            _keyPool = new BubblePoolColors(Grid.AllKeys);
+            AcceptRules = new CellMatchExact<ColorSlotKey>((ColorSlotKey)Pool.GetRandom());
         }
         else
         {
             Grid.ResetCellsState();
-            KeyPool.Reset();
+            _keyPool = new BubblePoolColors(Grid.AllKeys);
         }
 
         //Set Accepted color
@@ -190,7 +158,7 @@ public class LevelController :
 
         //Reset Time
         bonusTime = 0f;
-        Stopwatch.Reset();        
+        Stopwatch.Reset();
         //#TODO
     }
 
@@ -206,7 +174,7 @@ public class LevelController :
     public async Task SetVisualReadyAsync()
     {
         //Spawn Visual
-        await _boardVisual.SpawnAsync(Grid, this);
+        await _boardVisual.SpawnAsync(Grid);
     }
 
     public async void RestartLevel()
@@ -223,30 +191,33 @@ public class LevelController :
         StartLevel();
     }
 
+    #region Level Rules
+    private bool CheckLevelComplete()
+    {
+        if (BoardCellremaining < 1)
+        {
+            Debug.LogAssertion($"LevelCompleted!");
+            Stopwatch.SetActive(false);
+            Events.Broadcast<ILevelStateUpdate>(s => s.OnLevelCompleted());
+            return true;
+        }
+        return false;
+    }
+    #endregion
+
+    private void ValidateKeyPool(SlotContent key)
+    {
+        if (!_grid.HaveKeyHoleOnBoard(key))
+        {
+            KeyPool.Remove((ColorSlotKey)key);
+        }
+    }
+
     private void SwitchAcceptedContent()
     {
-        AcceptRules = new CellMatchExact<ColorSlotKey>(_keyPool.GetRandomNew(AcceptRules.Current));
-        Events.Broadcast<IAcceptedColorChanged>(s => s.OnAcceptedColorChange(AcceptRules.Current.Color));
-    }
+        var content = Pool.GetRandomNew(AcceptRules.Current);
 
-    private bool ValidBoard()
-    {
-        bool valid = HaveKeyHoleOnBoard(AcceptRules.Current);
-        return valid;
-    }
-
-    private bool HaveKeyHoleOnBoard(ColorSlotKey key)
-    {
-        foreach (var slot in _grid.Nodes)
-        {
-            if (slot.Content.IsMatch(key) && slot.IsActive)
-            {
-                //Debug.LogError($"Found: {slot.SlotVisual}", slot.SlotVisual.gameObject);
-                return true;
-            }
-
-        }
-
-        return false;
+        AcceptRules = new CellMatchExact<ColorSlotKey>((ColorSlotKey)content);
+        Events.Broadcast<IAcceptedColorChanged>(s => s.OnAcceptedColorChange(AcceptRules.Current));
     }
 }

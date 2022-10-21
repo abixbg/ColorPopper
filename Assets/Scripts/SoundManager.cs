@@ -38,7 +38,7 @@ public class SoundManager :
         PlaySFX("sfx-star_activated");
     }
 
-    void IAcceptedColorChanged.OnAcceptedColorChange(Color _)
+    void IAcceptedColorChanged.OnAcceptedColorChange(SlotContent _)
     {
         PlaySFX("sfx-color_change");
 

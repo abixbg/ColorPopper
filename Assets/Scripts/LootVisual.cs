@@ -12,20 +12,17 @@ public class LootVisual : MonoBehaviour, ILootPicked
 
     public SlotLoot LootData { get; set; }
 
+    #region MonoBehaviour
     private void Start()
     {
         Events.Subscribe<ILootPicked>(this);
     }
 
-    public async Task Activate()
+    private void OnDestroy()
     {
-        if (!isActivated)
-        {
-            await MoveToCollectorAsync();
-            isActivated = true;
-            Despawn();
-        }
+        Events.Unsubscribe<ILootPicked>(this);
     }
+    #endregion
 
     // destroys loot
     public void Break()
@@ -56,7 +53,7 @@ public class LootVisual : MonoBehaviour, ILootPicked
             return;
 
         await MoveToCollectorAsync();
-
+        Despawn();
         Events.Broadcast<ILootConsumed>(sub => sub.OnLootConsumed(loot));
     }
 

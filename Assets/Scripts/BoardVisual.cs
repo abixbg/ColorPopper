@@ -19,7 +19,6 @@ public class BoardVisual : MonoBehaviour
 
     [Header("Services")]
     public CameraScreenFit gameView;
-    private ISlotKeyPool<ColorSlotKey> _colorPool;
     
     private GameGrid2D<SlotData> _grid;
     private float2 _boardRect;
@@ -30,10 +29,9 @@ public class BoardVisual : MonoBehaviour
 
     public Action OnBoardChanged;
 
-    private void Construct(LevelGrid grid, LevelController levelController)
+    private void Construct(LevelGrid grid)
     {
         _grid = grid;
-        _colorPool = levelController.KeyPool;
     }
 
     private async Task GenerateBoard()
@@ -41,7 +39,7 @@ public class BoardVisual : MonoBehaviour
         if (_cellSpawner != null)
             await _cellSpawner.DespawnCells();
 
-        _cellSpawner = new BoardCellSpawner(_grid, CELL_SIZE, slotPrefab, dotPrefab, lootPrefab, _colorPool, gameObject.transform);            
+        _cellSpawner = new BoardCellSpawner(_grid, CELL_SIZE, slotPrefab, dotPrefab, lootPrefab, gameObject.transform);            
         _boardRect = _cellSpawner.CellsBoundingBox;
         BoardBackground.size = new Vector2(BoardRect.x, BoardRect.y);
         OnBoardChanged?.Invoke(); //TODO: this is only neded for safe space modification
@@ -49,9 +47,9 @@ public class BoardVisual : MonoBehaviour
         await _cellSpawner.SpawnCellsAsync();
     }
 
-    public async Task SpawnAsync(LevelGrid grid, LevelController levelController)
+    public async Task SpawnAsync(LevelGrid grid)
     {
-        Construct(grid, levelController);
+        Construct(grid);
         await GenerateBoard();
     }
 

@@ -2,7 +2,6 @@ using EventBroadcast;
 using Popper;
 using Popper.Events;
 using System.Threading.Tasks;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class LevelController :
@@ -16,7 +15,7 @@ public class LevelController :
     private readonly GeneratorLoot _generatorLoot;
 
     private LevelConfigData _config;
-    private LevelGrid _grid;  
+    private LevelGrid _grid;
     private BubblePoolColors _keyPool;
     private GeneratorContentColor _generatorContent;
     private float bonusTime = 0f;
@@ -47,7 +46,7 @@ public class LevelController :
 
         _stopwatch = new Stopwatch(clock);
         _stopwatch.ValueUpdated += OnStopwatchUpdate;
-        
+
         _generatorLoot = new GeneratorLoot();
 
         //_keyPool = new BubblePoolColors(_config.Pallete);
@@ -90,7 +89,7 @@ public class LevelController :
 
         bool validBoard = _grid.HaveKeyHoleOnBoard(AcceptRules.Current);
         bool randomSwitch = UnityEngine.Random.value <= 0.05f;
-        bool hasLoot = slot.Loot != null;     
+        bool hasLoot = slot.Loot != null;
 
         if (!validBoard || randomSwitch || hasLoot)
             SwitchAcceptedContent();
@@ -161,6 +160,7 @@ public class LevelController :
 
             //Generate new
             Content.AddContent(Grid);
+
             Loot.AddLoot(Grid);
         }
         else
@@ -174,7 +174,7 @@ public class LevelController :
 
         //Reset Time
         bonusTime = 0f;
-        Stopwatch.Reset();        
+        Stopwatch.Reset();
         //#TODO
     }
 
@@ -190,7 +190,7 @@ public class LevelController :
     public async Task SetVisualReadyAsync()
     {
         //Spawn Visual
-        await _boardVisual.SpawnAsync(Grid, this);
+        await _boardVisual.SpawnAsync(Grid);
     }
 
     public async void RestartLevel()

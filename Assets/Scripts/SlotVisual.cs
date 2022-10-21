@@ -37,7 +37,7 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
     {
         await AnimateScale(1, 0.2f, 25f);
 
-        Events.Unsubscribe<ISlotStateChanged>(this);
+        Events.Unsubscribe<ISlotStateChanged>(this);        
         Destroy(gameObject);
     }
 

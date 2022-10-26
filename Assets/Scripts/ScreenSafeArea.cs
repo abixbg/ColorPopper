@@ -14,7 +14,7 @@ namespace BlockPuzzle
             _rect = (RectTransform)transform;
         }
 
-        private void Update()
+        private void Start()
         {
             Apply();
         }

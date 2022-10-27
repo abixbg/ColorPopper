@@ -52,7 +52,7 @@ namespace Popper.Events
                     {
                         callback.Invoke(subscriber as T);
                         if (log)
-                            UnityEngine.Debug.Log($"EVENT --> [{typeof(T).Name}]");                       
+                            UnityEngine.Debug.Log($"EVENT --> [{typeof(T).Name}]({callback.Method.Name})");
                     }
                     catch (Exception e)
                     {

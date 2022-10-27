@@ -14,5 +14,10 @@ namespace AGK.UI.Panels
         public GenericPanelStyle Style => style;
 
         public RectTransform RectTransform => (RectTransform)gameObject.transform;
+
+        public virtual void Close()
+        {
+            Destroy(gameObject);
+        }
     }
 }

@@ -1,8 +1,8 @@
-﻿using Popper.Events;
+﻿using EventBroadcast;
+using Popper.Events;
 using Popper.UI;
-using UnityEngine;
 using System.Collections.Generic;
-using EventBroadcast;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour, ILevelStateUpdate, IPlayerRequestLevel
 {
@@ -38,13 +38,11 @@ public class GameManager : MonoBehaviour, ILevelStateUpdate, IPlayerRequestLevel
 
     void Start()
     {
-        uiManager.Construct(this, levelController, scoreController);
+        uiManager.Construct();
         soundManager.Construct(events);
 
         levelController = new LevelController(clock, _boardVisual);
         scoreController = new ScoreController();
-
-        //levelController.QuickStartLevel(levelAssets[currentLevelIndex].Data);
 
         events.Subscribe<ILevelStateUpdate>(this);
         eventsPlayerInput.Subscribe<IPlayerRequestLevel>(this);
@@ -60,6 +58,11 @@ public class GameManager : MonoBehaviour, ILevelStateUpdate, IPlayerRequestLevel
         levelController.RestartLevelAsync();
     }
 
+    void ILevelStateUpdate.OnLevelStartGenerating()
+    {
+        
+    }
+
     void ILevelStateUpdate.OnLevelCompleted()
     {
         events.Broadcast<ILevelStateUpdate>(s => s.OnLevelFinalScore(scoreController.ScoreData));
@@ -67,12 +70,18 @@ public class GameManager : MonoBehaviour, ILevelStateUpdate, IPlayerRequestLevel
 
     void ILevelStateUpdate.OnLevelFinalScore(PlayerScoreData scoreData)
     {
-        
+
     }
 
-    void IPlayerRequestLevel.LevelLoad()
+    void IPlayerRequestLevel.OnLevelLoad()
     {
         if (!levelController.Busy)
             levelController.QuickStartLevel(levelAssets[currentLevelIndex].Data);
+    }
+
+    void IPlayerRequestLevel.OnLevelRetry()
+    {
+        if (!levelController.Busy)
+            levelController.RestartLevelAsync();
     }
 }

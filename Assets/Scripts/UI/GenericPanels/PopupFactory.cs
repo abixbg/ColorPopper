@@ -2,6 +2,7 @@ using AGK.UI.Overlays;
 using AGK.UI.Panels;
 using EventBroadcast;
 using Popper.Events;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Popper
@@ -27,6 +28,11 @@ namespace Popper
             ((IPanelContent<PlayerScoreData>)panel).UpdateData(new PlayerScoreData(14, 78));
         }
 
+        void ILevelStateUpdate.OnLevelStartGenerating()
+        {
+            overlay.CloseAll();
+        }
+
         void ILevelStateUpdate.OnLevelCompleted()
         {
 
@@ -34,7 +40,7 @@ namespace Popper
 
         async void ILevelStateUpdate.OnLevelFinalScore(PlayerScoreData scoreData)
         {
-            var panel = await overlay.SpawnPopupAsync(gameOverPrefab, 2000);
+            var panel = await overlay.SpawnPopupAsync(gameOverPrefab);
             ((IPopupWindow)panel).SetTitle("Game Over", panel.Style.SpriteIcon);
             ((IPopupWindow)panel).SetStyle(panel.Style);
             ((IPanelContent<PlayerScoreData>)panel).UpdateData(scoreData);

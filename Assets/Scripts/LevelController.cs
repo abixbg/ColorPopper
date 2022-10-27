@@ -135,6 +135,8 @@ public class LevelController :
     {
         Debug.Log("[Level] Initialilze!");
 
+        Events.Broadcast<ILevelStateUpdate>(s => s.OnLevelStartGenerating());
+
         if (generateNewContent)
         {
             _config = config;

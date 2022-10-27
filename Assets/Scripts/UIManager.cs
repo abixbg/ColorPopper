@@ -24,10 +24,10 @@ namespace Popper.UI
                 Destroy(gameObject);
         }
 
-        public void Construct(GameManager gameManager, LevelController level, ScoreController score)
+        public void Construct()
         {
             _topPanel = Instantiate(topPanelPrefab, safeArea, false);
-            _topPanel.Construct(gameManager, level, score);
+            _topPanel.Construct();
         }
     }
 }

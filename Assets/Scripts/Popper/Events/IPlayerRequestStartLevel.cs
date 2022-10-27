@@ -5,5 +5,6 @@ using UnityEngine;
 
 public interface IPlayerRequestLevel : IEventSubscriber
 {
-    void LevelLoad();
+    void OnLevelLoad();
+    void OnLevelRetry();
 }

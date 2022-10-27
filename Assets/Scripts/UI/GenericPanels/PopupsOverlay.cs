@@ -1,6 +1,7 @@
 using AGK.UI.Overlay;
 using AGK.UI.Panels;
 using BlockPuzzle;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace AGK.UI.Overlays
@@ -10,12 +11,11 @@ namespace AGK.UI.Overlays
         [SerializeField] private ScreenSafeArea root;
         [SerializeField] private OverlayBlocker blocker;
 
-        public GenericPanel SpawnPopup(GenericPanel panel)
+        public async Task<GenericPanel> SpawnPopupAsync(GenericPanel panel, int delayMS = 0)
         {
+            await Task.Delay(delayMS);
             blocker.SetActive(true);
             var popup = Instantiate(panel, root.transform, false);
-            panel.Init();
-
             return popup;
         }
     }

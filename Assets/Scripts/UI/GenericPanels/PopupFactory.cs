@@ -1,28 +1,43 @@
 using AGK.UI.Overlays;
 using AGK.UI.Panels;
+using EventBroadcast;
+using Popper.Events;
 using UnityEngine;
 
 namespace Popper
 {
-    public class PopupFactory : MonoBehaviour
+    public class PopupFactory : MonoBehaviour, ILevelStateUpdate
     {
         [SerializeField] private PopupsOverlay overlay;
-        [SerializeField] private GameOverPanel gameOverPrefab;
-        [SerializeField] private LevelCompletedPanel levelCompletePrefab;
+        [SerializeField] private GenericPanel gameOverPrefab;
+        [SerializeField] private GenericPanel levelCompletePrefab;
+
+        public IEventBus Events => GameManager.current.Events;
 
         private void Start()
         {
-            SpawnGameOverAsync();
+            Events.Subscribe<ILevelStateUpdate>(this);
         }
 
-        private void SpawnGameOverAsync()
+        private async void SpawnGameOverAsync()
+        {
+            var panel = await overlay.SpawnPopupAsync(gameOverPrefab, 2000);
+            ((IPopupWindow)panel).SetTitle("Game Over", panel.Style.SpriteIcon);
+            ((IPopupWindow)panel).SetStyle(panel.Style);
+            ((IPanelContent<PlayerScoreData>)panel).UpdateData(new PlayerScoreData(14, 78));
+        }
+
+        void ILevelStateUpdate.OnLevelCompleted()
         {
 
-            var panel = overlay.SpawnPopup(gameOverPrefab);
-            ((IPanelContent<PlayerScoreData>)panel).UpdateData(new PlayerScoreData(14, 78));
+        }
 
-            var panel2 = overlay.SpawnPopup(levelCompletePrefab);
-            ((RectTransform)panel2.gameObject.transform).anchoredPosition = new Vector2(0, -720);
+        async void ILevelStateUpdate.OnLevelFinalScore(PlayerScoreData scoreData)
+        {
+            var panel = await overlay.SpawnPopupAsync(gameOverPrefab, 2000);
+            ((IPopupWindow)panel).SetTitle("Game Over", panel.Style.SpriteIcon);
+            ((IPopupWindow)panel).SetStyle(panel.Style);
+            ((IPanelContent<PlayerScoreData>)panel).UpdateData(scoreData);
         }
     }
 }

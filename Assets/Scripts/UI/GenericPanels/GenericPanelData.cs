@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public readonly struct GenericPanelData
+public  struct GenericPanelData
 {
     [SerializeField] private readonly string title;
 

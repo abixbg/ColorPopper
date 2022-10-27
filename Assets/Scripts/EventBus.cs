@@ -38,7 +38,7 @@ namespace Popper.Events
                 _subscribers[key].Remove(subscriber);
         }
 
-        public void Broadcast<T>(Action<T> callback) where T : class, IEventSubscriber
+        public void Broadcast<T>(Action<T> callback, bool log = false) where T : class, IEventSubscriber
         {
             Type key = typeof(T);
 
@@ -51,6 +51,8 @@ namespace Popper.Events
                     try
                     {
                         callback.Invoke(subscriber as T);
+                        if (log)
+                            UnityEngine.Debug.Log($"EVENT --> [{typeof(T).Name}]");                       
                     }
                     catch (Exception e)
                     {

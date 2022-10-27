@@ -1,4 +1,5 @@
 ﻿using AGK.Audio;
+using EventBroadcast;
 using Popper.Events;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ public class SoundManager :
     IAcceptedColorChanged,
     ISlotVisualStateChanged
 {
-    public EventBus _sfxEvents;
+    public IEventBus _sfxEvents;
     private IAudioEventPlayer _player;
 
     [SerializeField] private AudioEventLib eventLibrary;
@@ -20,7 +21,7 @@ public class SoundManager :
         _player = new AudioPlayerMultiTrack(5, clipLibrary, transform);
     }
 
-    public void Construct(EventBus events)
+    public void Construct(IEventBus events)
     {
         _sfxEvents = events;
         _sfxEvents.Subscribe<ILootConsumed>(this);

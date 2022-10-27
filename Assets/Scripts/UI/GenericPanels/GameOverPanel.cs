@@ -7,12 +7,18 @@ public class GameOverPanel : GenericPanel, IPopupWindow, IPanelContent<PlayerSco
     [Header("GameOverPanel")]
     [SerializeField] private TextMeshProUGUI t1;
     [SerializeField] private TextMeshProUGUI t2;
-    [SerializeField] private GenericPanelStyle style;
 
-    string IPopupWindow.Title => "GameOver";
+    void IPopupWindow.SetStyle(GenericPanelStyle style)
+    {
+        ((RectTransform)gameObject.transform).sizeDelta = style.RectSize;
+        background.sprite = style.SpriteBackground;
+    }
 
-    GenericPanelStyle IPopupWindow.Style => style;
-    Sprite IPopupWindow.Icon => style.SpriteIcon;
+    void IPopupWindow.SetTitle(string title, Sprite icon)
+    {
+        this.title.text = title;
+        this.icon.sprite = icon;
+    }
 
     void IPanelContent<PlayerScoreData>.SetInitialState()
     {

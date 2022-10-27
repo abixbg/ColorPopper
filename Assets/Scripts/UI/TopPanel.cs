@@ -17,10 +17,12 @@ namespace Popper.UI.Panels
 
         public float3 LootCollectionWorldPos => GetCollectorWorldPos(Camera.main);
 
+        private IEventBus PlayerInput => GameManager.current.EventsPlayerInput;
+
 
         public void Construct(GameManager gameManager, LevelController level, ScoreController score)
         {
-            btnReset.onClick.AddListener(delegate {gameManager.CmdRestartScene(); });
+            btnReset.onClick.AddListener(PlayerRequestStartLevel);
             btnTEST.onClick.AddListener(delegate {gameManager.CmdEndLevel(); });
 
             acceptedColorPanel.Construct();
@@ -38,6 +40,11 @@ namespace Popper.UI.Panels
         {
             Vector3 point = cam.ScreenToWorldPoint(lootDestination.position);
             return point;
+        }
+
+        private void PlayerRequestStartLevel()
+        {
+            PlayerInput.Broadcast<IPlayerRequestLevel>(s => s.LevelLoad(), true);
         }
     }
 }

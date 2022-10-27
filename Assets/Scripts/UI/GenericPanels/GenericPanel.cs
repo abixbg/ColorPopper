@@ -9,21 +9,10 @@ namespace AGK.UI.Panels
         [SerializeField] protected Image background;
         [SerializeField] protected Image icon;
         [SerializeField] protected TextMeshProUGUI title;
+        [SerializeField] protected GenericPanelStyle style;
 
-        public void Init()
-        {
-            var data = (IPopupWindow)this;
+        public GenericPanelStyle Style => style;
 
-            title.text = data.Title;
-
-            ((RectTransform)gameObject.transform).sizeDelta = data.Style.RectSize;
-            background.sprite = data.Style.SpriteBackground;
-
-            if (icon != null)
-            {
-                icon.sprite = data.Icon;
-                icon.color = Color.white;
-            }
-        }
+        public RectTransform RectTransform => (RectTransform)gameObject.transform;
     }
 }

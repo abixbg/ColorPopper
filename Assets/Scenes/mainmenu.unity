@@ -1074,7 +1074,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9eff7b53d9111141ac0e2be43d66f51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fallbackStyle: {fileID: 11400000, guid: 16e52b9567f84a849b814c555669ff9f, type: 2}
   root: {fileID: 828254712}
   blocker: {fileID: 1031655401}
 --- !u!114 &1859935860
@@ -1191,7 +1190,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   overlay: {fileID: 1859935859}
   gameOverPrefab: {fileID: 8302372402474861524, guid: 228c61f7c6558ec4d9f6ae64621455fb, type: 3}
-  levelCompletePrefab: {fileID: 7949472770995005713, guid: 2805c73cf0ef86440b63ad7c2f8bdc69, type: 3}
+  levelCompletePrefab: {fileID: 8302372402474861524, guid: 228c61f7c6558ec4d9f6ae64621455fb, type: 3}
 --- !u!4 &1984658318
 Transform:
   m_ObjectHideFlags: 0

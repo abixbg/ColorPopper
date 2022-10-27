@@ -8,5 +8,6 @@ namespace Popper.Events
     public interface ILevelStateUpdate : IEventSubscriber
     {
         void OnLevelCompleted();
+        void OnLevelFinalScore(PlayerScoreData scoreData);
     }
 }

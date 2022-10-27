@@ -1,4 +1,5 @@
 using AGK.GameGrids;
+using EventBroadcast;
 using Popper.Events;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ public class SlotData : IGridCell, ICellContentMatch
     public SlotLoot Loot { get; set; }
     public bool IsBroken { get => isLocked; set => isLocked = value; }
     public bool IsActive { get => isActive; set => isActive = value; }
-    private EventBus Events => GameManager.current.Events;
+    private IEventBus Events => GameManager.current.Events;
 
     GridPosition IGridCell.Position { get => _gridPosition; set => _gridPosition = value; }
 

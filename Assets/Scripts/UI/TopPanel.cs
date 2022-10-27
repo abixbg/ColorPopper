@@ -16,12 +16,12 @@ namespace Popper.UI.Panels
         [SerializeField] private Button btnTEST;
 
         public float3 LootCollectionWorldPos => GetCollectorWorldPos(Camera.main);
+        private IEventBus PlayerInput => GameManager.current.EventsPlayerInput;
 
-
-        public void Construct(GameManager gameManager, LevelController level, ScoreController score)
+        public void Construct()
         {
-            btnReset.onClick.AddListener(delegate {gameManager.CmdRestartScene(); });
-            btnTEST.onClick.AddListener(delegate {gameManager.CmdEndLevel(); });
+            btnReset.onClick.AddListener(PlayerRequestStartLevel);
+            btnTEST.onClick.AddListener(PlayerRequestRetryLevel);
 
             acceptedColorPanel.Construct();
             scorePanel.Construct();
@@ -38,6 +38,16 @@ namespace Popper.UI.Panels
         {
             Vector3 point = cam.ScreenToWorldPoint(lootDestination.position);
             return point;
+        }
+
+        private void PlayerRequestStartLevel()
+        {
+            PlayerInput.Broadcast<IPlayerRequestLevel>(s => s.OnLevelLoad(), true);
+        }
+
+        private void PlayerRequestRetryLevel()
+        {
+            PlayerInput.Broadcast<IPlayerRequestLevel>(s => s.OnLevelRetry(), true);
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿using Popper.Events;
+﻿using EventBroadcast;
+using Popper.Events;
 using Popper.UI;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class GameManager : MonoBehaviour, ILevelStateUpdate
+public class GameManager : MonoBehaviour, ILevelStateUpdate, IPlayerRequestLevel
 {
     [SerializeField] private List<LevelConfigAsset> levelAssets;
     [SerializeField] private int currentLevelIndex;
@@ -12,14 +13,16 @@ public class GameManager : MonoBehaviour, ILevelStateUpdate
 
     private LevelController levelController;
     private ScoreController scoreController;
-    private EventBus events;
+    private IEventBus events;
+    private IEventBus eventsPlayerInput;
     [SerializeField] private SoundManager soundManager;
     [SerializeField] private UIManager uiManager;
     [SerializeField] private BoardVisual _boardVisual;
     [SerializeField] private GameClock clock;
 
     public LevelController Level => levelController;
-    public EventBus Events => events;
+    public IEventBus Events => events;
+    public IEventBus EventsPlayerInput => eventsPlayerInput;
     public UIManager UiManager => uiManager;
 
     void Awake()
@@ -30,19 +33,19 @@ public class GameManager : MonoBehaviour, ILevelStateUpdate
             Destroy(gameObject);
 
         events = new EventBus();
+        eventsPlayerInput = new EventBus();
     }
 
     void Start()
     {
-        uiManager.Construct(this, levelController, scoreController);
+        uiManager.Construct();
         soundManager.Construct(events);
 
         levelController = new LevelController(clock, _boardVisual);
         scoreController = new ScoreController();
 
-        levelController.QuickStartLevel(levelAssets[currentLevelIndex].Data);
-
         events.Subscribe<ILevelStateUpdate>(this);
+        eventsPlayerInput.Subscribe<IPlayerRequestLevel>(this);
     }
 
     public void CmdRestartScene()
@@ -52,11 +55,33 @@ public class GameManager : MonoBehaviour, ILevelStateUpdate
 
     public void CmdEndLevel()
     {
-        levelController.RestartLevel();
+        levelController.RestartLevelAsync();
+    }
+
+    void ILevelStateUpdate.OnLevelStartGenerating()
+    {
+        
     }
 
     void ILevelStateUpdate.OnLevelCompleted()
     {
-        levelController.RestartLevel();
+        events.Broadcast<ILevelStateUpdate>(s => s.OnLevelFinalScore(scoreController.ScoreData));
+    }
+
+    void ILevelStateUpdate.OnLevelFinalScore(PlayerScoreData scoreData)
+    {
+
+    }
+
+    void IPlayerRequestLevel.OnLevelLoad()
+    {
+        if (!levelController.Busy)
+            levelController.QuickStartLevel(levelAssets[currentLevelIndex].Data);
+    }
+
+    void IPlayerRequestLevel.OnLevelRetry()
+    {
+        if (!levelController.Busy)
+            levelController.RestartLevelAsync();
     }
 }

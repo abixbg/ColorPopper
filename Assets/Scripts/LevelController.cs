@@ -28,6 +28,9 @@ public class LevelController :
     private ISlotKeyPool Pool => _keyPool;
     public float TimeRemaining => Config.TimeSec + bonusTime - Stopwatch.TimeSec;
 
+    private bool generatingLevel;
+    public bool Busy => generatingLevel;
+
 
     public int BoardCellremaining
     {
@@ -132,6 +135,8 @@ public class LevelController :
     {
         Debug.Log("[Level] Initialilze!");
 
+        Events.Broadcast<ILevelStateUpdate>(s => s.OnLevelStartGenerating());
+
         if (generateNewContent)
         {
             _config = config;
@@ -177,7 +182,7 @@ public class LevelController :
         await _boardVisual.SpawnAsync(Grid);
     }
 
-    public async void RestartLevel()
+    public async void RestartLevelAsync()
     {
         InitialiizeLevelData(_config, false);
         await SetVisualReadyAsync();
@@ -186,8 +191,10 @@ public class LevelController :
 
     public async void QuickStartLevel(LevelConfigData levelConfig)
     {
+        generatingLevel = true;
         InitialiizeLevelData(levelConfig);
         await SetVisualReadyAsync();
+        generatingLevel = false;
         StartLevel();
     }
 

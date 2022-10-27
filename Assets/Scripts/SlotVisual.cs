@@ -1,4 +1,5 @@
 ﻿using AGK.GameGrids;
+using EventBroadcast;
 using Popper.Events;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -17,7 +18,7 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
     private GameGrid2D<SlotData> grid;
     private GridPosition gridPos;
 
-    private EventBus Events => GameManager.current.Events;
+    private IEventBus Events => GameManager.current.Events;
 
     public void Construct(GameGrid2D<SlotData> grid, GridPosition gridPos, Transform parent)
     {

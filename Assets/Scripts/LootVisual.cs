@@ -1,4 +1,5 @@
-﻿using Popper.Events;
+﻿using EventBroadcast;
+using Popper.Events;
 using Popper.UI;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -8,7 +9,7 @@ public class LootVisual : MonoBehaviour, ILootPicked
     private bool isActivated;
 
     private UIManager UI => GameManager.current.UiManager;
-    private EventBus Events => GameManager.current.Events;
+    private IEventBus Events => GameManager.current.Events;
 
     public SlotLoot LootData { get; set; }
 

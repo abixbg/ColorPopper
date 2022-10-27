@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(GameManager))]
 public class InspectLevel : MonoBehaviour
 {
+    public bool enableUpdate = false;
     public ColorSlotKey acceptedColor;
     public float time;
 
@@ -20,7 +21,7 @@ public class InspectLevel : MonoBehaviour
     }
     void Update()
     {
-        if (_gameManager.Level != null)
+        if (_gameManager.Level != null && enableUpdate)
         {
             acceptedColor = _gameManager.Level.AcceptRules.Current;
             time = _gameManager.Level.TimeRemaining;

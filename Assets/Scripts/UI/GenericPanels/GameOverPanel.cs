@@ -1,18 +1,19 @@
 using AGK.UI.Panels;
 using EventBroadcast;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameOverPanel : GenericPanel, IPopupWindow, IPanelContent<PlayerScoreData>
+public class GameOverPanel : GenericPanel, IPopupWindow, ISingleContentBox
 {
     [Header("GameOverPanel")]
-    [SerializeField] private TextMeshProUGUI t1;
-    [SerializeField] private TextMeshProUGUI t2;
+    [SerializeField] private MonoBehaviour contentPrefab;
+    [SerializeField] private RectTransform contentRoot;
     [SerializeField] private Button btnNew;
     [SerializeField] private Button btnRetry;
 
-    private IEventBus PlayerEvents => GameManager.current.EventsPlayerInput; 
+    private IEventBus PlayerEvents => GameManager.current.EventsPlayerInput;
+
+    RectTransform ISingleContentBox.Rect => contentRoot;
 
     private void Start()
     {
@@ -26,24 +27,6 @@ public class GameOverPanel : GenericPanel, IPopupWindow, IPanelContent<PlayerSco
         background.sprite = style.SpriteBackground;
     }
 
-    void IPopupWindow.SetTitle(string title, Sprite icon)
-    {
-        this.title.text = title;
-        this.icon.sprite = icon;
-    }
-
-    void IPanelContent<PlayerScoreData>.SetInitialState()
-    {
-        t1.text = "{time}";
-        t1.text = "{time2}";
-    }
-
-    void IPanelContent<PlayerScoreData>.UpdateData(PlayerScoreData data)
-    {
-        t1.text = data.LevelPoints.ToString();
-        t2.text = data.Game.ToString();
-    }
-
     private void NewLevel()
     {
         PlayerEvents.Broadcast<IPlayerRequestLevel>(s => s.OnLevelLoad());
@@ -52,5 +35,15 @@ public class GameOverPanel : GenericPanel, IPopupWindow, IPanelContent<PlayerSco
     private void RetryLevel()
     {
         PlayerEvents.Broadcast<IPlayerRequestLevel>(s => s.OnLevelRetry());
+    }
+
+    void IPopupWindow.SetTitle(string title)
+    {
+        this.title.text = title;
+    }
+
+    void IPopupWindow.SetIcon(Sprite icon)
+    {
+        this.icon.sprite = icon;
     }
 }

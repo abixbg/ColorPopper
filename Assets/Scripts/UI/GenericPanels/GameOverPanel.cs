@@ -1,5 +1,6 @@
-using AGK.UI.Panels;
 using AGK.Core.EventBroadcast;
+using AGK.UI.Panels;
+using Popper.Events;
 using UnityEngine;
 using UnityEngine.UI;
 

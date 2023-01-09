@@ -55,6 +55,6 @@ public class BoardVisual : MonoBehaviour
 
     public async Task DespawnAsync()
     {
-
+        await Task.CompletedTask;
     }
 }

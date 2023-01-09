@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Popper.Events;
-using EventBroadcast;
+using AGK.Core.EventBroadcast;
 
 public class ScoreController : ISlotStateChanged
 {

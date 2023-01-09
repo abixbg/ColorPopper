@@ -1,4 +1,4 @@
-using EventBroadcast;
+using AGK.Core.EventBroadcast;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

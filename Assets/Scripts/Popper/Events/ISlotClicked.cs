@@ -1,5 +1,4 @@
-using EventBroadcast;
-using UnityEngine;
+using AGK.Core.EventBroadcast;
 
 namespace Popper.Events
 {
@@ -15,7 +14,7 @@ namespace Popper.Events
         void OnSlotBreak(SlotData slot);
     }
 
-    public interface ISlotVisualStateChanged : IEventSubscriber 
+    public interface ISlotVisualStateChanged : IEventSubscriber
     {
         void OnOpenSuccess(SlotData slot);
         void OnBreak(SlotData slot);

@@ -1,5 +1,5 @@
-﻿using AGK.GameGrids;
-using EventBroadcast;
+﻿using AGK.Core.EventBroadcast;
+using AGK.GameGrids;
 using Popper.Events;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -31,14 +31,15 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
 
     public async Task Spawn()
     {
-        await AnimateScale(0.2f, 1f, 25f);
+        await AnimateScale(0.2f, 1f, 5f);
+        //SetScale(1f);
     }
 
     public async Task Despawn()
     {
         await AnimateScale(1, 0.2f, 25f);
 
-        Events.Unsubscribe<ISlotStateChanged>(this);        
+        Events.Unsubscribe<ISlotStateChanged>(this);
         Destroy(gameObject);
     }
 
@@ -96,8 +97,9 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
 
         if (slot.IsBroken)
             return;
-        
+
         await AnimateScale(1, 0.2f, 6f);
+
         Events.Broadcast<ISlotVisualStateChanged>(e => e.OnOpenSuccess(SlotData));
         UpdateVisual();
     }
@@ -116,8 +118,17 @@ public class SlotVisual : MonoBehaviour, ISlotStateChanged
             time += Time.deltaTime * speed;
 
             if (time >= 1)
+            {
                 done = true;
+                SetScale(toScale);
+            }
+
             await Task.Yield();
         }
+    }
+
+    private void SetScale(float toScale)
+    {
+        gameObject.transform.localScale = new Vector3(toScale, toScale, toScale);
     }
 }

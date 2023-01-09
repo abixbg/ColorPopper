@@ -1,5 +1,5 @@
 using AGK.UI.Panels;
-using EventBroadcast;
+using AGK.Core.EventBroadcast;
 using UnityEngine;
 using UnityEngine.UI;
 

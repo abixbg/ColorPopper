@@ -1,8 +1,7 @@
+using AGK.Core.EventBroadcast;
 using AGK.UI.Overlays;
 using AGK.UI.Panels;
-using EventBroadcast;
 using Popper.Events;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Popper

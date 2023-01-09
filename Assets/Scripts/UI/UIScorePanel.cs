@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using EventBroadcast;
+﻿using AGK.Core.EventBroadcast;
 using Popper.Events;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class UIScorePanel : MonoBehaviour, IPlayerScoreChanged
 {

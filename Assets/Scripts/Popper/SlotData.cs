@@ -1,5 +1,5 @@
 using AGK.GameGrids;
-using EventBroadcast;
+using AGK.Core.EventBroadcast;
 using Popper.Events;
 using UnityEngine;
 

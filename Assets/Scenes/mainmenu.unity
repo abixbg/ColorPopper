@@ -879,6 +879,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 611155eed8cd8c84fbc296ec5e0cc584, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableUpdate: 0
   acceptedColor:
     color: {r: 0, g: 0, b: 0, a: 0}
   time: 0
@@ -1191,6 +1192,7 @@ MonoBehaviour:
   overlay: {fileID: 1859935859}
   gameOverPrefab: {fileID: 8302372402474861524, guid: 228c61f7c6558ec4d9f6ae64621455fb, type: 3}
   levelCompletePrefab: {fileID: 8302372402474861524, guid: 228c61f7c6558ec4d9f6ae64621455fb, type: 3}
+  scoreContentPrefab: {fileID: 273474647012139267, guid: 86afc5f99a46ff04d9842d9daf5c9dc3, type: 3}
 --- !u!4 &1984658318
 Transform:
   m_ObjectHideFlags: 0

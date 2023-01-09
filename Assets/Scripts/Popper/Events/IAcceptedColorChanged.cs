@@ -1,5 +1,4 @@
-using EventBroadcast;
-using UnityEngine;
+using AGK.Core.EventBroadcast;
 
 namespace Popper.Events
 {

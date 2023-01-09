@@ -1,5 +1,5 @@
 ﻿using AGK.Audio;
-using EventBroadcast;
+using AGK.Core.EventBroadcast;
 using Popper.Events;
 using UnityEngine;
 
@@ -31,7 +31,9 @@ public class SoundManager :
 
     public void PlaySFX(string key)
     {
-        _player.PlaySound(eventLibrary.GetEventData(key), out _);
+        var eventKey = new AudioEventKey(key);
+
+        _player.PlaySound(eventLibrary.GetResource(eventKey), out _);
     }
 
     void ILootConsumed.OnLootConsumed(SlotLoot _)

@@ -1,4 +1,4 @@
-﻿using EventBroadcast;
+﻿using AGK.Core.EventBroadcast;
 using Popper.Events;
 using Popper.UI;
 using System.Threading.Tasks;

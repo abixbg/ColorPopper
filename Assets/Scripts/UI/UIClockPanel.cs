@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using AGK.Core.EventBroadcast;
 using Popper.Events;
-using EventBroadcast;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class UIClockPanel : MonoBehaviour, ILevelStopwatchUpdate
 {

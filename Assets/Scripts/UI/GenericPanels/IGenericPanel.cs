@@ -3,6 +3,7 @@ using UnityEngine;
 
 public interface IPopupWindow
 {
-    void SetTitle(string title, Sprite icon);
+    void SetTitle(string title);
+    void SetIcon(Sprite icon);
     void SetStyle(GenericPanelStyle Style);
 }

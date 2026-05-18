@@ -8,6 +8,21 @@
         "com.unity.nuget.newtonsoft-json": "3.2.1"
       }
     },
+    "com.abixinteractive.agk.unityclient": {
+      "version": "file:D:/AbixInteractive/Internal/ScavengerKings/repo/ScavengerKings/Assets/AGKPackages/AGKUnityClient",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "com.abixinteractive.agkunity": {
+      "version": "file:D:/AbixInteractive/Internal/AGK/repo/packages/UnityEngine",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.mathematics": "1.2.1",
+        "com.unity.inputsystem": "1.5.1"
+      }
+    },
     "com.abixinteractive.legacyagk": {
       "version": "file:D:/AbixInteractive/Internal/AGK/repo/packages/UnityLegacy",
       "depth": 0,

@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "com.abixinteractive.agk": "file:D:/AbixInteractive/Internal/ScavengerKings/repo/ScavengerKings/Assets/AGKPackages/AGK",
+    "com.abixinteractive.agk.unityclient": "file:D:/AbixInteractive/Internal/ScavengerKings/repo/ScavengerKings/Assets/AGKPackages/AGKUnityClient",
+    "com.abixinteractive.agkunity": "file:D:/AbixInteractive/Internal/AGK/repo/packages/UnityEngine",
     "com.abixinteractive.legacyagk": "file:D:/AbixInteractive/Internal/AGK/repo/packages/UnityLegacy",
     "com.unity.collab-proxy": "2.0.4",
     "com.unity.ide.rider": "3.0.21",

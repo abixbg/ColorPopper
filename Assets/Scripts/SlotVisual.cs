@@ -1,4 +1,4 @@
-﻿using AGK.Core.EventBroadcast;
+﻿using AGK.EventBroadcast;
 using AGK.GameGrids;
 using Popper.Events;
 using System.Threading.Tasks;

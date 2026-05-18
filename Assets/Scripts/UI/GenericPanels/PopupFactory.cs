@@ -1,4 +1,4 @@
-using AGK.Core.EventBroadcast;
+using AGK.EventBroadcast;
 using AGK.UI.Overlays;
 using AGK.UI.Panels;
 using Popper.Events;

@@ -1,4 +1,4 @@
-using AGK.Core.EventBroadcast;
+using AGK.EventBroadcast;
 
 namespace Popper.Events
 {

@@ -1,4 +1,4 @@
-using AGK.Core.EventBroadcast;
+using AGK.EventBroadcast;
 using Popper.Events;
 using Unity.Mathematics;
 using UnityEngine;
@@ -42,12 +42,12 @@ namespace Popper.UI.Panels
 
         private void PlayerRequestStartLevel()
         {
-            PlayerInput.Broadcast<IPlayerRequestLevel>(s => s.OnLevelLoad(), true);
+            PlayerInput.Broadcast<IPlayerRequestLevel>(s => s.OnLevelLoad());
         }
 
         private void PlayerRequestRetryLevel()
         {
-            PlayerInput.Broadcast<IPlayerRequestLevel>(s => s.OnLevelRetry(), true);
+            PlayerInput.Broadcast<IPlayerRequestLevel>(s => s.OnLevelRetry());
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using AGK.Core.EventBroadcast;
+﻿using AGK.EventBroadcast;
 using Popper.Events;
 using Popper.UI;
 using System.Collections.Generic;
@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour, ILevelStateUpdate, IPlayerRequestLevel
 
     void ILevelStateUpdate.OnLevelStartGenerating()
     {
-        
+
     }
 
     void ILevelStateUpdate.OnLevelCompleted()

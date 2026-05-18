@@ -1,0 +1,21 @@
+{
+    "name": "ColorPopper",
+    "rootNamespace": "",
+    "references": [
+        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:34eecc9c647a2b44d99fa835f945e099",
+        "GUID:7945f52ea867f62429a8095dc5281fc3",
+        "GUID:47b2e1741f6a50a43a6bd4e8a7014383",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:c31a123955019cb4fa00582c00e081d9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

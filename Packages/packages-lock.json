@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.abixinteractive.agk": {
-      "version": "file:D:/AbixInteractive/Internal/ScavengerKings/repo/ScavengerKings/Assets/AGKPackages/AGK",
+      "version": "file:D:/AbixInteractive/Internal/AGK/repo/packages/AGK",
       "depth": 0,
       "source": "local",
       "dependencies": {
@@ -9,7 +9,7 @@
       }
     },
     "com.abixinteractive.agk.unityclient": {
-      "version": "file:D:/AbixInteractive/Internal/ScavengerKings/repo/ScavengerKings/Assets/AGKPackages/AGKUnityClient",
+      "version": "file:D:/AbixInteractive/Internal/AGK/repo/packages/AGKUnityClient",
       "depth": 0,
       "source": "local",
       "dependencies": {}

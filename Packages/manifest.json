@@ -2,8 +2,8 @@
   "dependencies": {
     "com.abixinteractive.agk": "file:D:/AbixInteractive/Internal/AGK/repo/packages/AGK",
     "com.abixinteractive.agk.unityclient": "file:D:/AbixInteractive/Internal/AGK/repo/packages/AGKUnityClient",
-    "com.abixinteractive.agkunity": "file:D:/AbixInteractive/Internal/AGK/repo/packages/UnityEngine",
-    "com.abixinteractive.legacyagk": "file:D:/AbixInteractive/Internal/AGK/repo/packages/UnityLegacy",
+    "com.abixinteractive.agkunity": "file:D:/AbixInteractive/Internal/AGK/repo/packages/LegacyAGK",
+    "com.abixinteractive.legacyagk.unity": "file:D:/AbixInteractive/Internal/AGK/repo/packages/LegacyAGKUnity",
     "com.unity.collab-proxy": "2.0.4",
     "com.unity.ide.rider": "3.0.21",
     "com.unity.ide.visualstudio": "2.0.18",

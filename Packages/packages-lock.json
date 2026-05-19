@@ -12,10 +12,12 @@
       "version": "file:D:/AbixInteractive/Internal/AGK/repo/packages/AGKUnityClient",
       "depth": 0,
       "source": "local",
-      "dependencies": {}
+      "dependencies": {
+        "com.unity.inputsystem": "1.5.1"
+      }
     },
     "com.abixinteractive.agkunity": {
-      "version": "file:D:/AbixInteractive/Internal/AGK/repo/packages/UnityEngine",
+      "version": "file:D:/AbixInteractive/Internal/AGK/repo/packages/LegacyAGK",
       "depth": 0,
       "source": "local",
       "dependencies": {
@@ -23,8 +25,8 @@
         "com.unity.inputsystem": "1.5.1"
       }
     },
-    "com.abixinteractive.legacyagk": {
-      "version": "file:D:/AbixInteractive/Internal/AGK/repo/packages/UnityLegacy",
+    "com.abixinteractive.legacyagk.unity": {
+      "version": "file:D:/AbixInteractive/Internal/AGK/repo/packages/LegacyAGKUnity",
       "depth": 0,
       "source": "local",
       "dependencies": {
